@@ -1,0 +1,17 @@
+---
+import SiteAnnouncement from "./site-announcement/SiteAnnouncement.astro";
+import SiteFooter from "./site-footer/SiteFooter.astro";
+import SiteHeader from "./site-header/SiteHeader.astro";
+
+type Props = { showHeader?: boolean; showFooter?: boolean };
+
+const { showHeader = true, showFooter = true } = Astro.props;
+---
+
+<div class="flex min-h-svh flex-col">
+  {/* Above the header, in the flow: the bar is page content that scrolls away, not chrome that stays. */}
+  <SiteAnnouncement />
+  {showHeader && <SiteHeader />}
+  <main class="flex-1"><slot /></main>
+  {showFooter && <SiteFooter />}
+</div>

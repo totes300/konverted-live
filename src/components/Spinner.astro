@@ -1,0 +1,17 @@
+---
+import { cx } from "~/features/style/utils";
+
+// An indeterminate progress ring for a control that is waiting on the network.
+type Props = { class?: string };
+
+const { class: className } = Astro.props;
+---
+
+{/* A full ring with its top quarter erased, so the spin has something to read against. */}
+<span
+  aria-hidden="true"
+  class={cx(
+    'inline-block size-[1em] shrink-0 animate-spin rounded-full border-2 border-current border-t-transparent motion-reduce:animate-none',
+    className
+  )}
+/>

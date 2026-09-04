@@ -1,0 +1,52 @@
+---
+import { stegaClean } from "@sanity/client/stega";
+import Button from "~/components/Button.astro";
+import { CtaSectionQ } from "~/features/page-builder/queries";
+import SectionFrame from "~/features/page-builder/SectionFrame.astro";
+import type { SectionProps } from "~/features/page-builder/types";
+import SanityLinkIcon from "~/features/sanity/link/SanityLinkIcon.astro";
+import type { CtaSectionQResult } from "~/sanity/types";
+import { getDraftModeProps } from "../../../sanity/lib/draft-mode";
+import { loadQuery } from "../../../sanity/lib/load-query";
+import SanityRichText from "../../../sanity/rich-text/SanityRichText.astro";
+
+type Props = SectionProps;
+
+const { docId, sectionKey } = Astro.props;
+
+const { data: section } = await loadQuery<CtaSectionQResult>({
+  query: CtaSectionQ,
+  params: { docId, sectionKey },
+  ...getDraftModeProps(Astro),
+});
+
+const { headline, cta, text } = section?.content ?? {};
+---
+
+{
+  section?.content && (
+    <SectionFrame
+      settings={section.settings}
+      id={stegaClean(section.settings?.hash) ?? undefined}
+      data-page-builder-section="ctaSection"
+    >
+      {/* The card is its own box inside the frame: its padding would otherwise merge over the
+          frame's page gutter and run the card to the viewport edges on a phone. */}
+      <div class="flex flex-col items-start gap-24 rounded-8 border border-white/10 bg-white/5 p-24 lg:p-40">
+        {headline && <h2 class="text-headline-10 text-balance whitespace-pre-line">{headline}</h2>}
+        <SanityRichText animated value={text} class="text-body-10" />
+        {cta?.href && (
+          <Button
+            href={cta.href}
+            target={cta.openInNewTab ? '_blank' : undefined}
+            rel={cta.openInNewTab ? 'noopener noreferrer' : undefined}
+            download={cta.canDownload ? '' : undefined}
+          >
+            {cta.text}
+            <SanityLinkIcon link={cta} slot="right-icon" />
+          </Button>
+        )}
+      </div>
+    </SectionFrame>
+  )
+}

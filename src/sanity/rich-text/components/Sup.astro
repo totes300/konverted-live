@@ -1,0 +1,9 @@
+<!--
+  `leading-[0]` is what keeps the raise from inflating line-height: the inline box has no height to
+  push the line box open with, whichever way the glyph is lifted. So the lift is `vertical-align` and
+  not `position: relative`, which would make the mark an `offsetParent` and hand AnimatedText's line
+  splitter an offset measured from the page instead of from the paragraph, breaking the sentence
+  around every superscript. `0.4em` of the mark's own `0.6em` is the same rise as the `top: -0.4em`
+  it replaces.
+-->
+<sup class="align-[0.4em] text-[0.6em] leading-[0]"><slot /></sup>

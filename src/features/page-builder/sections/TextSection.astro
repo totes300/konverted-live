@@ -1,0 +1,35 @@
+---
+import { stegaClean } from "@sanity/client/stega";
+import { TextSectionQ } from "~/features/page-builder/queries";
+import SectionFrame from "~/features/page-builder/SectionFrame.astro";
+import type { SectionProps } from "~/features/page-builder/types";
+import type { TextSectionQResult } from "~/sanity/types";
+import { getDraftModeProps } from "../../../sanity/lib/draft-mode";
+import { loadQuery } from "../../../sanity/lib/load-query";
+import SanityRichText from "../../../sanity/rich-text/SanityRichText.astro";
+
+type Props = SectionProps;
+
+const { docId, sectionKey } = Astro.props;
+
+const { data: section } = await loadQuery<TextSectionQResult>({
+  query: TextSectionQ,
+  params: { docId, sectionKey },
+  ...getDraftModeProps(Astro),
+});
+---
+
+{
+  section?.content && (
+    <SectionFrame
+      settings={section.settings}
+      id={stegaClean(section.settings?.hash) ?? undefined}
+      data-page-builder-section="textSection"
+    >
+      {section.content.headline && (
+        <h1 class="mb-24 text-balance whitespace-pre-line text-headline-10">{section.content.headline}</h1>
+      )}
+      <SanityRichText animated value={section.content.text} class="text-body-10" />
+    </SectionFrame>
+  )
+}

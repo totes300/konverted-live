@@ -1,0 +1,92 @@
+---
+import Icon from "~/components/Icon/Icon.astro";
+import Marquee from "~/components/Marquee/Marquee.astro";
+import { cx } from "~/features/style/utils";
+import type { SiteAnnouncementQResult } from "~/sanity/types";
+import { getDraftModeProps } from "../../../sanity/lib/draft-mode";
+import { loadQuery } from "../../../sanity/lib/load-query";
+import { ANNOUNCEMENT_COOKIE_NAME } from "./dismissal";
+import { SiteAnnouncementQ } from "./query";
+
+// The bar at the very top of every page. It is page content, not chrome: it sits above the header
+// in the flow and scrolls away with the first screen, so a sticky header pins the moment the bar
+// has cleared and the two never overlap. It always server-renders when the CMS switch is on: page
+// responses are cached, so the dismissal cookie can only be read in the browser, which the inline
+// guard below does before the first paint.
+const { data: site } = await loadQuery<SiteAnnouncementQResult>({
+  query: SiteAnnouncementQ,
+  ...getDraftModeProps(Astro),
+});
+
+const announcement = site?.announcement;
+const text = announcement?.enabled ? announcement.text : undefined;
+const link = announcement?.link;
+const isDark = announcement?.theme !== "light";
+---
+
+{
+  text && (
+    <Fragment>
+      <site-announcement
+        class={cx('relative flex h-36 items-center overflow-hidden', isDark ? 'bg-white/10 text-white' : 'bg-white text-black')}
+      >
+        {/* The bar has no gutter of its own, so the line runs off both edges rather than stopping
+            short of them, and `reserve` is what keeps a run that does fit clear of the close button.
+            Which leaves an overflowing run travelling under that button, so it is faded out before
+            it reaches it. `mask-l` rather than `mask-r`: its gradient runs to the left, which is what
+            lets both stops be written as plain distances from the right edge. */}
+        <Marquee
+          gap={40}
+          reserve={40}
+          class="min-w-0 flex-1 data-overflow:mask-l-from-transparent data-overflow:mask-l-from-40 data-overflow:mask-l-to-black data-overflow:mask-l-to-80"
+        >
+          <span class="flex items-center gap-8 font-pixel-square text-caption uppercase">
+            <span>{text}</span>
+
+            {link?.href && (
+              <a
+                href={link.href}
+                target={link.openInNewTab ? '_blank' : undefined}
+                rel={link.openInNewTab ? 'noopener noreferrer' : undefined}
+                class="underline underline-offset-4 transition-opacity duration-200 ease-out hover:opacity-70 motion-reduce:transition-none"
+              >
+                {link.text}
+              </a>
+            )}
+          </span>
+        </Marquee>
+
+        {/* Runs to the bar's own edge rather than sitting a gutter in from it, so the corner is part
+            of the target. Its width is the mask's transparent stop above, so the button owns exactly
+            the strip the content has fully faded out of and never takes a click off a legible link. */}
+        <button
+          type="button"
+          data-announcement-close
+          aria-label="Dismiss announcement"
+          class="absolute inset-y-0 right-0 flex w-40 touch-manipulation items-center justify-end pr-12 transition-opacity duration-200 ease-out hover:opacity-70 motion-reduce:transition-none"
+        >
+          <Icon name="close" class="size-16" />
+        </button>
+      </site-announcement>
+
+      {/* Runs while the bar is still being parsed, so a returning visitor never sees it flash in and
+          out. Removing the element is the whole fix: nothing below reserves room for it.
+          `is:inline` is never bundled, so this is the one reader that cannot use `hasCookie`
+          (~/lib/cookies); keep the two in step. */}
+      <script is:inline define:vars={{ cookieName: ANNOUNCEMENT_COOKIE_NAME }}>
+        {
+          const bar = document.currentScript?.previousElementSibling
+          const dismissed = document.cookie.split('; ').some((cookie) => cookie.startsWith(`${cookieName}=`))
+
+          if (bar?.matches('site-announcement') && dismissed) {
+            bar.remove()
+          }
+        }
+      </script>
+    </Fragment>
+  )
+}
+
+<script>
+  import './SiteAnnouncementElement'
+</script>

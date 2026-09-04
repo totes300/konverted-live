@@ -1,0 +1,37 @@
+---
+import { getImageSrc } from "~/features/sanity/media/image/utils";
+import { type MediaValue, resolveVideoOptions, type VideoProps } from "./types";
+
+// Plain <video> for uploaded files (`videoFile`) and external URLs (`videoUrl`).
+type Props = { media: MediaValue; width?: number; priority?: boolean; class?: string; videoProps?: VideoProps };
+
+const { media, priority = false, class: className, videoProps } = Astro.props;
+
+const source = media.type === "videoUrl" ? media.videoUrl : media.videoFile;
+const mimeType = media.videoFile?.mimeType ?? undefined;
+const options = resolveVideoOptions(media, videoProps);
+const aspectRatio = media.aspectRatio ?? source?.dimensions?.aspectRatio ?? undefined;
+
+// The cover is required on both of these types, so there is always a poster to paint: the element
+// shows the still immediately instead of a black box while the file is fetched. It is also where the
+// natural aspect ratio comes from, which is what reserves the right box before any of it loads.
+const poster = media.videoCover?._id ? getImageSrc(media.videoCover, { width: 960, aspectRatio }) : undefined;
+---
+
+{
+  source?.url && (
+    <video
+      class={className}
+      preload={priority ? 'auto' : 'metadata'}
+      poster={poster}
+      autoplay={options.autoPlay}
+      muted={options.muted}
+      loop={options.loop}
+      controls={!options.noControls}
+      playsinline
+      style={aspectRatio ? { aspectRatio: String(aspectRatio) } : undefined}
+    >
+      <source src={source.url} type={mimeType} />
+    </video>
+  )
+}
