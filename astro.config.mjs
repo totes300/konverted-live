@@ -123,6 +123,9 @@ export default defineConfig({
       // Optional: only needed when the Sanity publish webhook (/api/revalidate) is wired up.
       // Unset means the endpoint answers 500 and cache invalidation stays manual.
       SANITY_REVALIDATE_SECRET: envField.string({ context: "server", access: "secret", optional: true }),
+      // Optional: the host's rebuild trigger, POSTed by /api/redeploy behind the Studio's
+      // "Redeploy site" button. Unset means that button reports the endpoint is not configured.
+      VERCEL_DEPLOY_HOOK_URL: envField.string({ context: "server", access: "secret", optional: true }),
       // Store rendered routes in Vercel's Runtime Cache instead of the in-process one, so the
       // cache is shared by every instance. Not a secret, but it sits with the runtime-read vars on
       // purpose: a public var is inlined at build time, which `vercel deploy --prebuilt` would bake

@@ -1,26 +1,48 @@
 import { Button, Card, Stack, Text } from "@sanity/ui";
 import { useToast } from "@sanity/ui/toast";
+import * as React from "react";
 import type { ArrayOfObjectsInputProps } from "sanity";
+import { sanityConfig } from "../config";
+
+type RedeployResponse = {
+  ok?: boolean;
+  error?: string;
+};
 
 /**
- * The `redirects` array editor plus a placeholder "Redeploy site" button. Redirects are read at
- * build time from the host's own config, so edits only go live after a rebuild. How that rebuild is
- * triggered differs per project (a Vercel deploy hook, a GitHub Actions dispatch, etc.), so it is
- * intentionally left unimplemented: clicking logs and toasts a reminder. Wire it up in `handleRedeploy`.
+ * The `redirects` array editor plus a "Redeploy site" button. Redirects are read at build time from
+ * the host's own config, so edits only go live after a rebuild. The button posts to the host's
+ * redeploy endpoint, which keeps the actual deploy trigger server-side.
  */
 function RedirectsDeployInput(props: ArrayOfObjectsInputProps) {
   const toast = useToast();
+  const [isRedeploying, setIsRedeploying] = React.useState(false);
 
-  const handleRedeploy = () => {
-    // TODO: attach this project's redeploy trigger (Vercel deploy hook, GitHub Actions workflow
-    // dispatch, etc.). Until then this is a no-op that only notifies the editor.
-    console.warn("[redeploy] Not wired up yet. Attach a deploy trigger in RedirectsDeployInput.handleRedeploy.");
-    toast.push({
-      status: "warning",
-      title: "Redeploy not wired up",
-      description:
-        "This button needs a deploy trigger attached (e.g. a Vercel deploy hook or a GitHub Actions dispatch). See RedirectsDeployInput.handleRedeploy.",
-    });
+  const handleRedeploy = async () => {
+    setIsRedeploying(true);
+
+    try {
+      const res = await fetch(sanityConfig.endpoints.redeploy, { method: "POST" });
+      const payload = (await res.json()) as RedeployResponse;
+
+      if (!res.ok || !payload.ok) {
+        throw new Error(payload.error || "Redeploy request failed.");
+      }
+
+      toast.push({
+        status: "success",
+        title: "Redeploy started",
+        description: "The site is rebuilding. Redirect changes go live once the build finishes.",
+      });
+    } catch (error) {
+      toast.push({
+        status: "error",
+        title: "Redeploy failed",
+        description: error instanceof Error ? error.message : "Unknown error.",
+      });
+    } finally {
+      setIsRedeploying(false);
+    }
   };
 
   return (
@@ -39,7 +61,12 @@ function RedirectsDeployInput(props: ArrayOfObjectsInputProps) {
             </Text>
           </Stack>
 
-          <Button text="Redeploy site" tone="primary" onClick={handleRedeploy} />
+          <Button
+            text={isRedeploying ? "Starting..." : "Redeploy site"}
+            tone="primary"
+            disabled={isRedeploying}
+            onClick={handleRedeploy}
+          />
         </Stack>
       </Card>
     </Stack>

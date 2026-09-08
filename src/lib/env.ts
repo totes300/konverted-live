@@ -22,6 +22,7 @@ export {
   SANITY_API_EDIT_TOKEN,
   SANITY_API_VIEW_TOKEN,
   SANITY_REVALIDATE_SECRET,
+  VERCEL_DEPLOY_HOOK_URL,
 } from "astro:env/server";
 
 // The only read of the raw site URL: normalized here so nothing downstream defends against a slash.

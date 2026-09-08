@@ -127,4 +127,4 @@ Redirects are fetched in `astro.config.mjs` (`fetchRedirects()`) and baked into 
 Implications:
 
 - Updating redirects in Sanity does not hot-update a running server
-- A rebuild/redeploy is required for redirect changes to apply. The Settings document's **Redirects** field renders a **Redeploy site** button (`sanity/inputs/redeploy-input.tsx`); it is a placeholder that logs a warning and shows a toast until you attach your project's rebuild trigger in `handleRedeploy` (a deploy hook, a GitHub `workflow_dispatch`, a box-local script). See [Deployment](../deployment.md).
+- A rebuild/redeploy is required for redirect changes to apply. The Settings document's **Redirects** field renders a **Redeploy site** button (`sanity/inputs/redeploy-input.tsx`) that posts to `/api/redeploy`, which POSTs the rebuild trigger in `VERCEL_DEPLOY_HOOK_URL` (a Vercel Deploy Hook, a GitHub `workflow_dispatch` URL, anything that answers a POST). Unset that var and the button reports the endpoint is not configured. See [Deployment](../deployment.md).

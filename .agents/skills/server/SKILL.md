@@ -59,5 +59,5 @@ Apply when adding or editing an endpoint in `src/pages/api/`, the auth/env helpe
 - `src/pages/api/revalidate.ts`: signed Sanity webhook, tag invalidation.
 - `src/pages/api/cache-purge.ts`: empties the whole route cache; bearer-authenticated with `SANITY_REVALIDATE_SECRET`.
 - `src/pages/api/draft-mode/enable.ts`, `disable.ts`: preview cookie handshake (redirects).
-- `src/pages/api/agents/image-alt-text.ts`, `src/pages/api/seo-screenshot.ts`: the other Studio-triggered endpoints.
+- `src/pages/api/agents/image-alt-text.ts`, `src/pages/api/seo-screenshot.ts`, `src/pages/api/redeploy.ts`: the other Studio-triggered endpoints.
 - `src/features/api/auth.ts`: `isApiAuthorized` origin/referer gate.

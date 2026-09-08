@@ -33,5 +33,5 @@ Astro's config-level redirects match exact paths; pattern and wildcard syntax is
 ## Notes
 
 - Redirects are resolved at build time
-- Rebuild the app after redirect changes (the **Redeploy site** button next to the field is the placeholder seam for that trigger; see [Revalidation and Caching](../sanity/revalidation-and-caching.md))
+- Rebuild the app after redirect changes; the **Redeploy site** button next to the field does it through `/api/redeploy`, which needs `VERCEL_DEPLOY_HOOK_URL` set (see [Deployment](../deployment.md))
 - Duplicate `from` values are blocked by schema validation

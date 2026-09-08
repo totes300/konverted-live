@@ -49,6 +49,7 @@ fails the build. The remaining server secrets are optional and their features ch
 | `SANITY_API_VIEW_TOKEN`                       | build   | **Required.** Draft-mode preview and authenticated reads |
 | `SANITY_API_EDIT_TOKEN`                       | build   | **Required.** Contact form writes, AI generation, SEO screenshot |
 | `SANITY_REVALIDATE_SECRET`                    | runtime | Signs the `/api/revalidate` webhook (only if you use it) |
+| `VERCEL_DEPLOY_HOOK_URL`                      | runtime | Rebuild trigger POSTed by `/api/redeploy`, behind the Studio's **Redeploy site** button |
 | `RESEND_API_KEY` / `RESEND_EMAIL_FROM`        | runtime | Contact form notification emails                     |
 | `BASIC_AUTH_USERNAME` / `BASIC_AUTH_PASSWORD` | runtime | HTTP Basic Auth credentials (toggles live in Sanity) |
 | `ROUTE_CACHE_VERCEL_RUNTIME`                   | runtime | `true` to store routes in Vercel's Runtime Cache, shared across instances; `false` (default) uses the in-process store |
@@ -73,9 +74,13 @@ Details and the full tag model:
 
 The one exception is **redirects**: they are fetched from Sanity in `astro.config.mjs` at build
 time and baked in, so a redirect change in the Studio needs a rebuild and redeploy. The Settings
-document's **Redeploy site** button (`sanity/inputs/redeploy-input.tsx`, on the Redirects field) is
-a placeholder seam you can point at your hosting's rebuild trigger; on Vercel, create a Deploy Hook
-(Project Settings, Git, Deploy Hooks) and POST to it from `handleRedeploy`.
+document's **Redeploy site** button (`sanity/inputs/redeploy-input.tsx`, on the Redirects field)
+triggers that rebuild: it posts to `/api/redeploy`, which POSTs the URL in `VERCEL_DEPLOY_HOOK_URL`.
+On Vercel, create a Deploy Hook (Project Settings, Git, Deploy Hooks) and set that env var to its
+URL; on another host, point the same var at that host's rebuild trigger. The URL stays server-side
+on purpose, because the Studio bundle is public: `/api/redeploy` is origin-gated with
+`isApiAuthorized`, the same gate the other Studio-triggered endpoints use. Leave the var unset and
+the button reports that the endpoint is not configured.
 
 ## Deploying to another host
 

@@ -114,9 +114,9 @@ export const sanityConfig = {
   reservedStudioPaths: [studioBasePath, studioMountPath].filter((path): path is string => Boolean(path)),
 
   /**
-   * Host endpoints the Studio calls. `draftMode*` are joined to `appUrl`; `seoScreenshot`,
-   * `generateLlmsTxt`, and `generatePageMarkdown` are fetched same-origin. A host implements these
-   * routes itself; the paths below are what this project serves them at.
+   * Host endpoints the Studio calls. `draftMode*` are joined to `appUrl`; the rest are fetched
+   * same-origin. A host implements these routes itself; the paths below are what this project
+   * serves them at.
    */
   endpoints: {
     draftModeEnable: "/api/draft-mode/enable",
@@ -125,5 +125,6 @@ export const sanityConfig = {
     generateLlmsTxt: "/api/agents/llms-txt",
     generatePageMarkdown: "/api/agents/page-markdown",
     imageAltText: "/api/agents/image-alt-text",
+    redeploy: "/api/redeploy",
   },
 };
