@@ -20,8 +20,10 @@ const ARROW = "absolute inset-0 size-full transition-transform duration-200 ease
       href="/"
       class="hover:text-accent flex h-44 shrink-0 items-center text-ink transition-colors duration-200 ease-out motion-reduce:transition-none lg:h-auto"
     >
-      {/* The wordmark is artwork, not a glyph: it is sized by its own 133:22 box, inside a 44px target. */}
-      <span class="block h-20 w-121 lg:h-26 lg:w-157">
+      {/* The wordmark is artwork, not a glyph: it is sized by its own 133:22 box, inside a 44px target.
+          Its height is read against the CTA beside it, which is why the phone box is not the smallest
+          legible one: a 20px wordmark next to a 44px button reads as a logo the button outgrew. */}
+      <span class="block h-24 w-145 lg:h-26 lg:w-157">
         <Icon name="konverted-wordmark" class="size-full" />
       </span>
       <span class="sr-only">{site?.name}</span>
@@ -42,7 +44,7 @@ const ARROW = "absolute inset-0 size-full transition-transform duration-200 ease
             target={cta.openInNewTab ? '_blank' : undefined}
             rel={cta.openInNewTab ? 'noopener noreferrer' : undefined}
             download={cta.canDownload ? '' : undefined}
-            class="group/cta hover:bg-ink/80 bg-ink text-paper"
+            class="group/cta hover:bg-ink/80 bg-ink px-16 text-paper lg:px-24"
           >
             {cta.text}
             <span slot="right-icon" class="relative block size-20 overflow-hidden">
