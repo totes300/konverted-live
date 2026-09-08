@@ -62,8 +62,11 @@ type Props = { name: IconName; class?: string };
 const { name, class: className } = Astro.props;
 ---
 
+{/* The default box is per axis, not `size-[1em]`: tailwind-merge does not clear a `size-*` against
+    a caller's `h-*` plus `w-*`, so the shorthand survived into the class list and left the cascade,
+    not the caller, deciding the width. */}
 <span
   aria-hidden="true"
-  class={cx('inline-flex size-[1em] shrink-0 *:size-full', className)}
+  class={cx('inline-flex h-[1em] w-[1em] shrink-0 *:size-full', className)}
   set:html={icons[name]}
 />

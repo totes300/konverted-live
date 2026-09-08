@@ -20,8 +20,10 @@ const year = new Date().getFullYear();
     {
       tagline && (
         <p class="flex items-center gap-10 font-display text-title text-ink">
-          {/* Sized in `em` so the mark rides the line as a glyph rather than sitting beside it as a logo. */}
-          <Icon name="webos-pixel" class="h-[0.72em] w-auto shrink-0 text-accent" />
+          {/* Sized in `em` so the mark rides the line as a glyph rather than sitting beside it as a logo;
+              square, because a width left to resolve from the child's `size-full` is circular and
+              WebKit answers it with a box wide enough to push the tagline into a column. */}
+          <Icon name="webos-pixel" class="size-[0.72em] shrink-0 text-accent" />
           {tagline}
         </p>
       )
