@@ -39,8 +39,8 @@ export const teamSection = defineField({
       options: {
         layout: "radio",
         list: [
-          { title: "Stage — dark, the moments drift past on a filmstrip", value: "stage" },
-          { title: "Postcards — the pile that deals out on scroll", value: "postcards" },
+          { title: "Stage: dark, the moments drift past on a filmstrip", value: "stage" },
+          { title: "Postcards: the pile that deals out on scroll", value: "postcards" },
         ],
       },
       description:
@@ -107,7 +107,7 @@ export const teamSection = defineField({
       const count = Array.isArray(moments) ? moments.length : 0;
       return {
         title: title ?? "Team",
-        subtitle: `Team — ${count} moment${count === 1 ? "" : "s"}`,
+        subtitle: `Team: ${count} moment${count === 1 ? "" : "s"}`,
       };
     },
   },

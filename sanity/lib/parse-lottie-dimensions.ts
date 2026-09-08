@@ -1,6 +1,6 @@
 /**
  * Reads Lottie / Bodymovin JSON `w` and `h` so we can reserve space and avoid layout shift.
- * Does not require a Lottie runtime — only JSON.parse.
+ * Does not require a Lottie runtime, only JSON.parse.
  */
 export function parseLottieJsonDimensions(json: unknown): { width: number; height: number } | null {
   if (!json || typeof json !== "object") {
@@ -19,7 +19,7 @@ export function parseLottieJsonDimensions(json: unknown): { width: number; heigh
 }
 
 /**
- * Resolves width/height from a Bodymovin JSON file (UTF-8). Binary dotLottie (`.lottie`) is not read here — use a `.json` export for “Generate”, or set dimensions manually.
+ * Resolves width/height from a Bodymovin JSON file (UTF-8). Binary dotLottie (`.lottie`) is not read here, so use a `.json` export for “Generate”, or set dimensions manually.
  */
 export function parseLottieAssetDimensionsFromBuffer(buffer: ArrayBuffer): {
   width: number;

@@ -34,7 +34,7 @@ export const site = defineType({
       name: "name",
       type: "string",
       title: "Site Name",
-      initialValue: "The Content Architecture",
+      initialValue: "Konverted Web Agency",
       validation: (R) => R.required(),
     }),
     defineField({
@@ -115,13 +115,20 @@ export const site = defineType({
       group: "header",
       name: "header",
       type: "object",
+      description: "The header carries the logo and one call to action. It has no navigation links by design.",
       fields: [
+        createLinkField({
+          name: "cta",
+          title: "Call to action",
+          description: "The single button in the header.",
+          validation: (R) => R.required(),
+        }),
         defineField({
-          name: "links",
-          type: "array",
-          title: "Links",
-          validation: (R) => R.required().min(1),
-          of: [createLinkField({ title: "Link", validation: (R) => R.required() })],
+          name: "availability",
+          type: "string",
+          title: "Availability",
+          description:
+            'Optional scarcity line beside the button, e.g. "2 project slots left for Q4". Rendered in brackets, and only from large screens up. On a phone the header has no room for it, so put it in the announcement bar instead.',
         }),
       ],
     }),
@@ -150,17 +157,11 @@ export const site = defineType({
       type: "object",
       fields: [
         defineField({
-          name: "links",
-          type: "array",
-          title: "Links",
-          validation: (R) => R.required().min(1),
-          of: [createLinkField({ title: "Link", validation: (R) => R.required() })],
-        }),
-        defineField({
-          name: "legalLinks",
-          type: "array",
-          title: "Legal Links",
-          of: [createLinkField({ title: "Link", validation: (R) => R.required() })],
+          name: "tagline",
+          type: "string",
+          title: "Tagline",
+          description: "The line that closes the site, stamped with the brand mark. The footer carries no navigation.",
+          validation: (R) => R.required(),
         }),
       ],
     }),

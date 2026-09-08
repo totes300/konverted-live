@@ -34,6 +34,7 @@ declare global {
     "venn-diagram": import("./features/page-builder/sections/IntersectionSection/VennDiagramElement").VennDiagramElement;
     "team-moments": import("./features/page-builder/sections/TeamSection/TeamMomentsElement").TeamMomentsElement;
     "case-study-card": import("./features/case-study/CaseStudyCardElement").CaseStudyCardElement;
+    "case-study-cursor": import("./features/case-study/CaseStudyCursorElement").CaseStudyCursorElement;
     "token-meter": import("./features/style/token-meter/TokenMeterElement").TokenMeterElement;
     "rive-canvas": import("./sanity/media/RiveElement") | null;
   }

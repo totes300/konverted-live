@@ -1,4 +1,6 @@
 ---
+import AnimatedText from "~/components/AnimatedText/AnimatedText.astro";
+import CaseStudyCursor from "~/features/case-study/CaseStudyCursor.astro";
 import { type CaseStudyCardFragmentResult, isFullWidthCard, isVideoCard } from "~/features/case-study/fragment";
 import { cx } from "~/features/style/utils";
 import SanityImage from "../../sanity/media/SanityImage.astro";
@@ -39,7 +41,7 @@ const services = (caseStudy.services ?? []).filter((service): service is string 
   caseStudy.href && (images.length > 0 || video) && (
     <case-study-card class={cx("block", className)} data-cycle-ms={card?.cycleMs ?? undefined}>
       <a href={caseStudy.href} class="block">
-        <div class={cx("relative overflow-hidden bg-paper-deep", stageRatio)}>
+        <CaseStudyCursor class={cx("overflow-hidden bg-paper-deep", stageRatio)}>
           {images.map((image, index) => (
             <div data-card-frame data-active={index === 0 ? "" : undefined} class="absolute inset-0 opacity-0 data-active:opacity-100">
               <SanityImage
@@ -56,11 +58,28 @@ const services = (caseStudy.services ?? []).filter((service): service is string 
               videoProps={{ autoPlay: false, loop: true, muted: true, noControls: true }}
             />
           )}
-        </div>
+        </CaseStudyCursor>
 
-        <div class="mt-16 flex flex-col gap-4 lg:flex-row lg:items-baseline lg:justify-between lg:gap-24">
-          <Heading class="text-title uppercase text-ink">{caseStudy.title}</Heading>
-          {services.length > 0 && <p class="text-title text-ink-soft">({services.join(", ")})</p>}
+        {/* The caption waits behind the stage and drops out from under its bottom edge as the row
+            scrolls in, so the name arrives after the work it belongs to; the services follow a beat
+            later, which reads as one line settling rather than two firing at once.
+
+            Neither half breaks mid-phrase: the title never, the services from `lg`, where they have
+            a row to themselves rather than the phone's full column width. At the narrow end of that
+            row the pair still wants more than the column has, so it wraps rather than collides: the
+            services drop under the title whole. Both carry the same size, separated by ink alone, so
+            the split reads as depth rather than hierarchy. */}
+        <div class="mt-16 flex flex-col gap-4 lg:flex-row lg:flex-wrap lg:items-baseline lg:justify-between lg:gap-24">
+          <Heading class="text-body-10 whitespace-nowrap uppercase text-ink">
+            <AnimatedText from="above">{caseStudy.title}</AnimatedText>
+          </Heading>
+          {services.length > 0 && (
+            <p class="text-body-10 text-ink-soft/80 lg:whitespace-nowrap">
+              <AnimatedText from="above" animationDelay={0.12}>
+                ({services.join(", ")})
+              </AnimatedText>
+            </p>
+          )}
         </div>
       </a>
     </case-study-card>

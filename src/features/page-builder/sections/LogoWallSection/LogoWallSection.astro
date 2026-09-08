@@ -23,7 +23,7 @@ const logos = (section?.content?.logos ?? []).filter((logo) => Boolean(logo.url)
 const swapMs = section?.content?.swapMs ?? 1500;
 
 /** The wall's shape: three by two on the phone, four by two from `lg` up. Everything past the last
-    slot is still rendered — hidden, as the pool the cycle draws its next logo from. */
+    slot is still rendered but hidden, as the pool the cycle draws its next logo from. */
 const MOBILE_SLOTS = 6;
 const SLOTS = 8;
 

@@ -18,8 +18,8 @@ export type SectionLayoutSettings = {
 
 /**
  * The classes a section's root carries. Three widths, editor-picked: capped to the content column
- * (default), full bleed with the page margin kept, or edge to edge with no margin at all — the
- * last for sections whose insides own their proportions (the hero's linear composition, the
+ * (default), full bleed with the page margin kept, or edge to edge with no margin at all. The
+ * last is for sections whose insides own their proportions (the hero's linear composition, the
  * gallery's stage that animates out to the viewport edge).
  */
 export function sectionLayout(settings?: SectionLayoutSettings | null) {

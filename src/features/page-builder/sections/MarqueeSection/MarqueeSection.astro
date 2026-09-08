@@ -6,6 +6,7 @@ import type { SectionProps } from "~/features/page-builder/types";
 import type { MarqueeSectionQResult } from "~/sanity/types";
 import { getDraftModeProps } from "../../../../sanity/lib/draft-mode";
 import { loadQuery } from "../../../../sanity/lib/load-query";
+import SanityMedia from "../../../../sanity/media/SanityMedia.astro";
 import { MARK_BASE, MARK_CORNER, MARK_VIEWBOX } from "./mark";
 
 type Props = SectionProps;
@@ -30,6 +31,14 @@ const RUNS = 3;
 
 // The morph source's document id; keyed by the section so two strips on one page stay independent.
 const markId = `marquee-mark-${sectionKey}`;
+
+const tile = section?.content?.tile?.type ? section.content.tile : null;
+
+// Opt-out rather than opt-in: the strips that already run carry the mark, this one gives way to the tile.
+const showMark = section?.content?.showMark !== false;
+
+// The tile drifts past at a fraction of a line, so it plays as decoration rather than as a player.
+const TILE_VIDEO = { autoPlay: true, loop: true, muted: true, noControls: true };
 ---
 
 {/* The strip's line is meant to overflow the viewport on both sides, so the section runs Edge to
@@ -45,23 +54,40 @@ const markId = `marquee-mark-${sectionKey}`;
       {/* Decorative from here down: the run repeats, so only the heading is read out. */}
       <marquee-strip class="block overflow-x-clip" aria-hidden="true">
         {/* The morph animates these source squares once; every mark on the strip mirrors them via <use>. */}
-        <svg class="absolute size-0" focusable="false">
-          <defs>
-            <g id={markId} data-marquee-mark>
-              {MARK_BASE.map((cell) => (
-                <rect x={cell.x} y={cell.y} width={cell.s} height={cell.s} rx={cell.s * MARK_CORNER} fill="currentColor" />
-              ))}
-            </g>
-          </defs>
-        </svg>
-        <div data-marquee-track class="flex w-max items-center gap-[0.24em] font-display text-display-20 text-accent uppercase">
+        {showMark && (
+          <svg class="absolute size-0" focusable="false">
+            <defs>
+              <g id={markId} data-marquee-mark>
+                {MARK_BASE.map((cell) => (
+                  <rect x={cell.x} y={cell.y} width={cell.s} height={cell.s} rx={cell.s * MARK_CORNER} fill="currentColor" />
+                ))}
+              </g>
+            </defs>
+          </svg>
+        )}
+        <div data-marquee-track class="flex w-max items-center gap-[0.24em] font-display text-display-15 text-accent uppercase">
           {Array.from({ length: RUNS }, () =>
-            words.map((word) => (
+            words.map((word, index) => (
               <>
                 <span>{word}</span>
-                <svg viewBox={MARK_VIEWBOX} class="aspect-[143/142] h-[0.38em]">
-                  <use href={`#${markId}`} />
-                </svg>
+                {/* Closing the pass rather than sitting between words: one tile punctuates the phrase. */}
+                {tile && index === words.length - 1 ? (
+                  /* `cap` is the font's own cap height, so the tile stands exactly as tall as the letters. */
+                  <span class="flex h-[1cap] shrink-0 overflow-hidden rounded-8">
+                    <SanityMedia
+                      media={tile}
+                      class="h-full w-auto max-w-none object-cover"
+                      imageProps={{ sizes: "90vw lg:40vw" }}
+                      videoProps={TILE_VIDEO}
+                    />
+                  </span>
+                ) : (
+                  showMark && (
+                    <svg viewBox={MARK_VIEWBOX} class="aspect-[143/142] h-[0.38em]">
+                      <use href={`#${markId}`} />
+                    </svg>
+                  )
+                )}
               </>
             ))
           )}
@@ -70,7 +96,7 @@ const markId = `marquee-mark-${sectionKey}`;
       {/* The lead-in to the case studies. Its own box inside the frame: the section runs edge to
           edge for the strip, so the copy brings back the page gutter and the content column. */}
       {(section?.content?.statement || section?.content?.lede) && (
-        <div class="mx-auto mt-96 flex max-w-(--page-width) flex-col items-center gap-24 px-(--page-gutter) text-center lg:mt-160">
+        <div class="mx-auto mt-(--section-block) flex max-w-(--page-width) flex-col items-center gap-24 px-(--page-gutter) text-center">
           {section.content.statement && (
             <p class="max-w-[24ch] font-display text-headline-20 text-accent">{section.content.statement}</p>
           )}

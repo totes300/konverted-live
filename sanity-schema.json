@@ -528,7 +528,7 @@
   },
   {
     "type": "type",
-    "name": "sectionContent.appLink",
+    "name": "tile",
     "value": {
       "type": "object",
       "attributes": {
@@ -539,94 +539,100 @@
             "of": [
               {
                 "type": "string",
-                "value": "internal"
+                "value": "image"
               },
               {
                 "type": "string",
-                "value": "external"
+                "value": "videoMux"
               },
               {
                 "type": "string",
-                "value": "email"
+                "value": "videoFile"
               },
               {
                 "type": "string",
-                "value": "phone"
-              },
-              {
-                "type": "string",
-                "value": "file"
-              },
-              {
-                "type": "string",
-                "value": "params"
+                "value": "videoUrl"
               }
             ]
           },
           "optional": true
         },
-        "external": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "string"
-          },
-          "optional": true
-        },
-        "email": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "string"
-          },
-          "optional": true
-        },
-        "phone": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "string"
-          },
-          "optional": true
-        },
-        "file": {
+        "videoFile": {
           "type": "objectAttribute",
           "value": {
             "type": "inline",
-            "name": "sectionContent.appLink.file"
+            "name": "tile.videoFile"
           },
           "optional": true
         },
-        "canDownload": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "boolean"
-          },
-          "optional": true
-        },
-        "paramsHref": {
+        "videoUrl": {
           "type": "objectAttribute",
           "value": {
             "type": "string"
           },
           "optional": true
         },
-        "internal": {
+        "image": {
           "type": "objectAttribute",
           "value": {
             "type": "inline",
-            "name": "sectionContent.appLink.internal"
+            "name": "tile.image"
           },
           "optional": true
         },
-        "customText": {
+        "video": {
           "type": "objectAttribute",
           "value": {
-            "type": "string"
+            "type": "inline",
+            "name": "mux.video"
           },
           "optional": true
         },
-        "openInNewTab": {
+        "videoCover": {
           "type": "objectAttribute",
           "value": {
-            "type": "boolean"
+            "type": "inline",
+            "name": "tile.videoCover"
+          },
+          "optional": true
+        },
+        "animatedThumbnail": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "tile.animatedThumbnail"
+          },
+          "optional": true
+        },
+        "riveFile": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "tile.riveFile"
+          },
+          "optional": true
+        },
+        "riveDimensions": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "tile.riveDimensions"
+          },
+          "optional": true
+        },
+        "lottieFile": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "tile.lottieFile"
+          },
+          "optional": true
+        },
+        "lottieDimensions": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "tile.lottieDimensions"
           },
           "optional": true
         }
@@ -639,11 +645,11 @@
     "value": {
       "type": "object",
       "attributes": {
-        "portrait": {
+        "portraitMedia": {
           "type": "objectAttribute",
           "value": {
             "type": "inline",
-            "name": "portrait"
+            "name": "portraitMedia"
           },
           "optional": true
         },
@@ -655,13 +661,6 @@
           "optional": true
         },
         "role": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "string"
-          },
-          "optional": true
-        },
-        "note": {
           "type": "objectAttribute",
           "value": {
             "type": "string"
@@ -1916,7 +1915,7 @@
   },
   {
     "type": "type",
-    "name": "sectionContent.appLink.file",
+    "name": "tile.videoFile",
     "value": {
       "type": "object",
       "attributes": {
@@ -1932,7 +1931,7 @@
           "type": "objectAttribute",
           "value": {
             "type": "inline",
-            "name": "appLink.file.media"
+            "name": "tile.videoFile.media"
           },
           "optional": true
         },
@@ -1948,39 +1947,234 @@
   },
   {
     "type": "type",
-    "name": "sectionContent.appLink.internal",
+    "name": "tile.image",
     "value": {
       "type": "object",
       "attributes": {
-        "link": {
+        "asset": {
           "type": "objectAttribute",
           "value": {
-            "type": "union",
-            "of": [
-              {
-                "type": "inline",
-                "name": "page.reference"
-              },
-              {
-                "type": "inline",
-                "name": "legalPage.reference"
-              },
-              {
-                "type": "inline",
-                "name": "article.reference"
-              },
-              {
-                "type": "inline",
-                "name": "blog.reference"
-              }
-            ]
+            "type": "inline",
+            "name": "sanity.imageAsset.reference"
           },
           "optional": true
         },
-        "sectionTarget": {
+        "media": {
           "type": "objectAttribute",
           "value": {
-            "type": "string"
+            "type": "inline",
+            "name": "tile.image.media"
+          },
+          "optional": true
+        },
+        "hotspot": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "sanity.imageHotspot"
+          },
+          "optional": true
+        },
+        "crop": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "sanity.imageCrop"
+          },
+          "optional": true
+        },
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "image"
+          }
+        }
+      }
+    }
+  },
+  {
+    "type": "type",
+    "name": "tile.videoCover",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "asset": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "sanity.imageAsset.reference"
+          },
+          "optional": true
+        },
+        "media": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "tile.videoCover.media"
+          },
+          "optional": true
+        },
+        "hotspot": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "sanity.imageHotspot"
+          },
+          "optional": true
+        },
+        "crop": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "sanity.imageCrop"
+          },
+          "optional": true
+        },
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "image"
+          }
+        }
+      }
+    }
+  },
+  {
+    "type": "type",
+    "name": "tile.animatedThumbnail",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "enabled": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "boolean"
+          },
+          "optional": true
+        },
+        "start": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "end": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "type": "type",
+    "name": "tile.riveFile",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "asset": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "sanity.fileAsset.reference"
+          },
+          "optional": true
+        },
+        "media": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "tile.riveFile.media"
+          },
+          "optional": true
+        },
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "file"
+          }
+        }
+      }
+    }
+  },
+  {
+    "type": "type",
+    "name": "tile.riveDimensions",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "width": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "height": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "type": "type",
+    "name": "tile.lottieFile",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "asset": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "sanity.fileAsset.reference"
+          },
+          "optional": true
+        },
+        "media": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "tile.lottieFile.media"
+          },
+          "optional": true
+        },
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "file"
+          }
+        }
+      }
+    }
+  },
+  {
+    "type": "type",
+    "name": "tile.lottieDimensions",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "width": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "height": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
           },
           "optional": true
         }
@@ -2466,7 +2660,152 @@
   },
   {
     "type": "type",
-    "name": "portrait",
+    "name": "portraitMedia",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "union",
+            "of": [
+              {
+                "type": "string",
+                "value": "image"
+              },
+              {
+                "type": "string",
+                "value": "videoMux"
+              },
+              {
+                "type": "string",
+                "value": "videoFile"
+              },
+              {
+                "type": "string",
+                "value": "videoUrl"
+              }
+            ]
+          },
+          "optional": true
+        },
+        "videoFile": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "portraitMedia.videoFile"
+          },
+          "optional": true
+        },
+        "videoUrl": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "image": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "portraitMedia.image"
+          },
+          "optional": true
+        },
+        "video": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "mux.video"
+          },
+          "optional": true
+        },
+        "videoCover": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "portraitMedia.videoCover"
+          },
+          "optional": true
+        },
+        "animatedThumbnail": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "portraitMedia.animatedThumbnail"
+          },
+          "optional": true
+        },
+        "riveFile": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "portraitMedia.riveFile"
+          },
+          "optional": true
+        },
+        "riveDimensions": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "portraitMedia.riveDimensions"
+          },
+          "optional": true
+        },
+        "lottieFile": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "portraitMedia.lottieFile"
+          },
+          "optional": true
+        },
+        "lottieDimensions": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "portraitMedia.lottieDimensions"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "type": "type",
+    "name": "portraitMedia.videoFile",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "asset": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "sanity.fileAsset.reference"
+          },
+          "optional": true
+        },
+        "media": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "portraitMedia.videoFile.media"
+          },
+          "optional": true
+        },
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "file"
+          }
+        }
+      }
+    }
+  },
+  {
+    "type": "type",
+    "name": "portraitMedia.image",
     "value": {
       "type": "object",
       "attributes": {
@@ -2482,7 +2821,7 @@
           "type": "objectAttribute",
           "value": {
             "type": "inline",
-            "name": "portrait.media"
+            "name": "portraitMedia.image.media"
           },
           "optional": true
         },
@@ -2508,6 +2847,194 @@
             "type": "string",
             "value": "image"
           }
+        }
+      }
+    }
+  },
+  {
+    "type": "type",
+    "name": "portraitMedia.videoCover",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "asset": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "sanity.imageAsset.reference"
+          },
+          "optional": true
+        },
+        "media": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "portraitMedia.videoCover.media"
+          },
+          "optional": true
+        },
+        "hotspot": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "sanity.imageHotspot"
+          },
+          "optional": true
+        },
+        "crop": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "sanity.imageCrop"
+          },
+          "optional": true
+        },
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "image"
+          }
+        }
+      }
+    }
+  },
+  {
+    "type": "type",
+    "name": "portraitMedia.animatedThumbnail",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "enabled": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "boolean"
+          },
+          "optional": true
+        },
+        "start": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "end": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "type": "type",
+    "name": "portraitMedia.riveFile",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "asset": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "sanity.fileAsset.reference"
+          },
+          "optional": true
+        },
+        "media": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "portraitMedia.riveFile.media"
+          },
+          "optional": true
+        },
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "file"
+          }
+        }
+      }
+    }
+  },
+  {
+    "type": "type",
+    "name": "portraitMedia.riveDimensions",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "width": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "height": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "type": "type",
+    "name": "portraitMedia.lottieFile",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "asset": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "sanity.fileAsset.reference"
+          },
+          "optional": true
+        },
+        "media": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "portraitMedia.lottieFile.media"
+          },
+          "optional": true
+        },
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "file"
+          }
+        }
+      }
+    }
+  },
+  {
+    "type": "type",
+    "name": "portraitMedia.lottieDimensions",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "width": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "height": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
+          },
+          "optional": true
         }
       }
     }
@@ -2539,17 +3066,20 @@
           },
           "optional": true
         },
-        "underline": {
+        "lede": {
           "type": "objectAttribute",
           "value": {
             "type": "string"
           },
           "optional": true
         },
-        "lede": {
+        "points": {
           "type": "objectAttribute",
           "value": {
-            "type": "string"
+            "type": "array",
+            "of": {
+              "type": "string"
+            }
           },
           "optional": true
         },
@@ -3191,13 +3721,6 @@
           },
           "optional": true
         },
-        "code": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "string"
-          },
-          "optional": true
-        },
         "services": {
           "type": "objectAttribute",
           "value": {
@@ -3208,11 +3731,10 @@
           },
           "optional": true
         },
-        "appLink": {
+        "since": {
           "type": "objectAttribute",
           "value": {
-            "type": "inline",
-            "name": "sectionContent.appLink"
+            "type": "string"
           },
           "optional": true
         },
@@ -3258,6 +3780,21 @@
           "type": "objectAttribute",
           "value": {
             "type": "string"
+          },
+          "optional": true
+        },
+        "tile": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "tile"
+          },
+          "optional": true
+        },
+        "showMark": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "boolean"
           },
           "optional": true
         },
@@ -7168,187 +7705,173 @@
         "value": {
           "type": "object",
           "attributes": {
-            "links": {
+            "cta": {
               "type": "objectAttribute",
               "value": {
-                "type": "array",
-                "of": {
-                  "type": "object",
-                  "attributes": {
-                    "type": {
-                      "type": "objectAttribute",
-                      "value": {
-                        "type": "union",
-                        "of": [
-                          {
-                            "type": "string",
-                            "value": "internal"
+                "type": "object",
+                "attributes": {
+                  "type": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "union",
+                      "of": [
+                        {
+                          "type": "string",
+                          "value": "internal"
+                        },
+                        {
+                          "type": "string",
+                          "value": "external"
+                        },
+                        {
+                          "type": "string",
+                          "value": "email"
+                        },
+                        {
+                          "type": "string",
+                          "value": "phone"
+                        },
+                        {
+                          "type": "string",
+                          "value": "file"
+                        },
+                        {
+                          "type": "string",
+                          "value": "params"
+                        }
+                      ]
+                    },
+                    "optional": true
+                  },
+                  "external": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "email": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "phone": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "file": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "object",
+                      "attributes": {
+                        "asset": {
+                          "type": "objectAttribute",
+                          "value": {
+                            "type": "inline",
+                            "name": "sanity.fileAsset.reference"
                           },
-                          {
-                            "type": "string",
-                            "value": "external"
+                          "optional": true
+                        },
+                        "media": {
+                          "type": "objectAttribute",
+                          "value": {
+                            "type": "unknown"
                           },
-                          {
-                            "type": "string",
-                            "value": "email"
-                          },
-                          {
-                            "type": "string",
-                            "value": "phone"
-                          },
-                          {
+                          "optional": true
+                        },
+                        "_type": {
+                          "type": "objectAttribute",
+                          "value": {
                             "type": "string",
                             "value": "file"
-                          },
-                          {
-                            "type": "string",
-                            "value": "params"
-                          }
-                        ]
-                      },
-                      "optional": true
-                    },
-                    "external": {
-                      "type": "objectAttribute",
-                      "value": {
-                        "type": "string"
-                      },
-                      "optional": true
-                    },
-                    "email": {
-                      "type": "objectAttribute",
-                      "value": {
-                        "type": "string"
-                      },
-                      "optional": true
-                    },
-                    "phone": {
-                      "type": "objectAttribute",
-                      "value": {
-                        "type": "string"
-                      },
-                      "optional": true
-                    },
-                    "file": {
-                      "type": "objectAttribute",
-                      "value": {
-                        "type": "object",
-                        "attributes": {
-                          "asset": {
-                            "type": "objectAttribute",
-                            "value": {
-                              "type": "inline",
-                              "name": "sanity.fileAsset.reference"
-                            },
-                            "optional": true
-                          },
-                          "media": {
-                            "type": "objectAttribute",
-                            "value": {
-                              "type": "unknown"
-                            },
-                            "optional": true
-                          },
-                          "_type": {
-                            "type": "objectAttribute",
-                            "value": {
-                              "type": "string",
-                              "value": "file"
-                            }
                           }
                         }
-                      },
-                      "optional": true
-                    },
-                    "canDownload": {
-                      "type": "objectAttribute",
-                      "value": {
-                        "type": "boolean"
-                      },
-                      "optional": true
-                    },
-                    "paramsHref": {
-                      "type": "objectAttribute",
-                      "value": {
-                        "type": "string"
-                      },
-                      "optional": true
-                    },
-                    "internal": {
-                      "type": "objectAttribute",
-                      "value": {
-                        "type": "object",
-                        "attributes": {
-                          "link": {
-                            "type": "objectAttribute",
-                            "value": {
-                              "type": "union",
-                              "of": [
-                                {
-                                  "type": "inline",
-                                  "name": "page.reference"
-                                },
-                                {
-                                  "type": "inline",
-                                  "name": "legalPage.reference"
-                                },
-                                {
-                                  "type": "inline",
-                                  "name": "article.reference"
-                                },
-                                {
-                                  "type": "inline",
-                                  "name": "blog.reference"
-                                }
-                              ]
-                            },
-                            "optional": true
-                          },
-                          "sectionTarget": {
-                            "type": "objectAttribute",
-                            "value": {
-                              "type": "string"
-                            },
-                            "optional": true
-                          }
-                        }
-                      },
-                      "optional": true
-                    },
-                    "customText": {
-                      "type": "objectAttribute",
-                      "value": {
-                        "type": "string"
-                      },
-                      "optional": true
-                    },
-                    "openInNewTab": {
-                      "type": "objectAttribute",
-                      "value": {
-                        "type": "boolean"
-                      },
-                      "optional": true
-                    },
-                    "_type": {
-                      "type": "objectAttribute",
-                      "value": {
-                        "type": "string",
-                        "value": "appLink"
                       }
-                    }
+                    },
+                    "optional": true
                   },
-                  "rest": {
-                    "type": "object",
-                    "attributes": {
-                      "_key": {
-                        "type": "objectAttribute",
-                        "value": {
-                          "type": "string"
+                  "canDownload": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "boolean"
+                    },
+                    "optional": true
+                  },
+                  "paramsHref": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "internal": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "object",
+                      "attributes": {
+                        "link": {
+                          "type": "objectAttribute",
+                          "value": {
+                            "type": "union",
+                            "of": [
+                              {
+                                "type": "inline",
+                                "name": "page.reference"
+                              },
+                              {
+                                "type": "inline",
+                                "name": "legalPage.reference"
+                              },
+                              {
+                                "type": "inline",
+                                "name": "article.reference"
+                              },
+                              {
+                                "type": "inline",
+                                "name": "blog.reference"
+                              }
+                            ]
+                          },
+                          "optional": true
+                        },
+                        "sectionTarget": {
+                          "type": "objectAttribute",
+                          "value": {
+                            "type": "string"
+                          },
+                          "optional": true
                         }
                       }
-                    }
+                    },
+                    "optional": true
+                  },
+                  "customText": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "openInNewTab": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "boolean"
+                    },
+                    "optional": true
                   }
                 }
+              },
+              "optional": true
+            },
+            "availability": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "string"
               },
               "optional": true
             }
@@ -7554,371 +8077,10 @@
         "value": {
           "type": "object",
           "attributes": {
-            "links": {
+            "tagline": {
               "type": "objectAttribute",
               "value": {
-                "type": "array",
-                "of": {
-                  "type": "object",
-                  "attributes": {
-                    "type": {
-                      "type": "objectAttribute",
-                      "value": {
-                        "type": "union",
-                        "of": [
-                          {
-                            "type": "string",
-                            "value": "internal"
-                          },
-                          {
-                            "type": "string",
-                            "value": "external"
-                          },
-                          {
-                            "type": "string",
-                            "value": "email"
-                          },
-                          {
-                            "type": "string",
-                            "value": "phone"
-                          },
-                          {
-                            "type": "string",
-                            "value": "file"
-                          },
-                          {
-                            "type": "string",
-                            "value": "params"
-                          }
-                        ]
-                      },
-                      "optional": true
-                    },
-                    "external": {
-                      "type": "objectAttribute",
-                      "value": {
-                        "type": "string"
-                      },
-                      "optional": true
-                    },
-                    "email": {
-                      "type": "objectAttribute",
-                      "value": {
-                        "type": "string"
-                      },
-                      "optional": true
-                    },
-                    "phone": {
-                      "type": "objectAttribute",
-                      "value": {
-                        "type": "string"
-                      },
-                      "optional": true
-                    },
-                    "file": {
-                      "type": "objectAttribute",
-                      "value": {
-                        "type": "object",
-                        "attributes": {
-                          "asset": {
-                            "type": "objectAttribute",
-                            "value": {
-                              "type": "inline",
-                              "name": "sanity.fileAsset.reference"
-                            },
-                            "optional": true
-                          },
-                          "media": {
-                            "type": "objectAttribute",
-                            "value": {
-                              "type": "unknown"
-                            },
-                            "optional": true
-                          },
-                          "_type": {
-                            "type": "objectAttribute",
-                            "value": {
-                              "type": "string",
-                              "value": "file"
-                            }
-                          }
-                        }
-                      },
-                      "optional": true
-                    },
-                    "canDownload": {
-                      "type": "objectAttribute",
-                      "value": {
-                        "type": "boolean"
-                      },
-                      "optional": true
-                    },
-                    "paramsHref": {
-                      "type": "objectAttribute",
-                      "value": {
-                        "type": "string"
-                      },
-                      "optional": true
-                    },
-                    "internal": {
-                      "type": "objectAttribute",
-                      "value": {
-                        "type": "object",
-                        "attributes": {
-                          "link": {
-                            "type": "objectAttribute",
-                            "value": {
-                              "type": "union",
-                              "of": [
-                                {
-                                  "type": "inline",
-                                  "name": "page.reference"
-                                },
-                                {
-                                  "type": "inline",
-                                  "name": "legalPage.reference"
-                                },
-                                {
-                                  "type": "inline",
-                                  "name": "article.reference"
-                                },
-                                {
-                                  "type": "inline",
-                                  "name": "blog.reference"
-                                }
-                              ]
-                            },
-                            "optional": true
-                          },
-                          "sectionTarget": {
-                            "type": "objectAttribute",
-                            "value": {
-                              "type": "string"
-                            },
-                            "optional": true
-                          }
-                        }
-                      },
-                      "optional": true
-                    },
-                    "customText": {
-                      "type": "objectAttribute",
-                      "value": {
-                        "type": "string"
-                      },
-                      "optional": true
-                    },
-                    "openInNewTab": {
-                      "type": "objectAttribute",
-                      "value": {
-                        "type": "boolean"
-                      },
-                      "optional": true
-                    },
-                    "_type": {
-                      "type": "objectAttribute",
-                      "value": {
-                        "type": "string",
-                        "value": "appLink"
-                      }
-                    }
-                  },
-                  "rest": {
-                    "type": "object",
-                    "attributes": {
-                      "_key": {
-                        "type": "objectAttribute",
-                        "value": {
-                          "type": "string"
-                        }
-                      }
-                    }
-                  }
-                }
-              },
-              "optional": true
-            },
-            "legalLinks": {
-              "type": "objectAttribute",
-              "value": {
-                "type": "array",
-                "of": {
-                  "type": "object",
-                  "attributes": {
-                    "type": {
-                      "type": "objectAttribute",
-                      "value": {
-                        "type": "union",
-                        "of": [
-                          {
-                            "type": "string",
-                            "value": "internal"
-                          },
-                          {
-                            "type": "string",
-                            "value": "external"
-                          },
-                          {
-                            "type": "string",
-                            "value": "email"
-                          },
-                          {
-                            "type": "string",
-                            "value": "phone"
-                          },
-                          {
-                            "type": "string",
-                            "value": "file"
-                          },
-                          {
-                            "type": "string",
-                            "value": "params"
-                          }
-                        ]
-                      },
-                      "optional": true
-                    },
-                    "external": {
-                      "type": "objectAttribute",
-                      "value": {
-                        "type": "string"
-                      },
-                      "optional": true
-                    },
-                    "email": {
-                      "type": "objectAttribute",
-                      "value": {
-                        "type": "string"
-                      },
-                      "optional": true
-                    },
-                    "phone": {
-                      "type": "objectAttribute",
-                      "value": {
-                        "type": "string"
-                      },
-                      "optional": true
-                    },
-                    "file": {
-                      "type": "objectAttribute",
-                      "value": {
-                        "type": "object",
-                        "attributes": {
-                          "asset": {
-                            "type": "objectAttribute",
-                            "value": {
-                              "type": "inline",
-                              "name": "sanity.fileAsset.reference"
-                            },
-                            "optional": true
-                          },
-                          "media": {
-                            "type": "objectAttribute",
-                            "value": {
-                              "type": "unknown"
-                            },
-                            "optional": true
-                          },
-                          "_type": {
-                            "type": "objectAttribute",
-                            "value": {
-                              "type": "string",
-                              "value": "file"
-                            }
-                          }
-                        }
-                      },
-                      "optional": true
-                    },
-                    "canDownload": {
-                      "type": "objectAttribute",
-                      "value": {
-                        "type": "boolean"
-                      },
-                      "optional": true
-                    },
-                    "paramsHref": {
-                      "type": "objectAttribute",
-                      "value": {
-                        "type": "string"
-                      },
-                      "optional": true
-                    },
-                    "internal": {
-                      "type": "objectAttribute",
-                      "value": {
-                        "type": "object",
-                        "attributes": {
-                          "link": {
-                            "type": "objectAttribute",
-                            "value": {
-                              "type": "union",
-                              "of": [
-                                {
-                                  "type": "inline",
-                                  "name": "page.reference"
-                                },
-                                {
-                                  "type": "inline",
-                                  "name": "legalPage.reference"
-                                },
-                                {
-                                  "type": "inline",
-                                  "name": "article.reference"
-                                },
-                                {
-                                  "type": "inline",
-                                  "name": "blog.reference"
-                                }
-                              ]
-                            },
-                            "optional": true
-                          },
-                          "sectionTarget": {
-                            "type": "objectAttribute",
-                            "value": {
-                              "type": "string"
-                            },
-                            "optional": true
-                          }
-                        }
-                      },
-                      "optional": true
-                    },
-                    "customText": {
-                      "type": "objectAttribute",
-                      "value": {
-                        "type": "string"
-                      },
-                      "optional": true
-                    },
-                    "openInNewTab": {
-                      "type": "objectAttribute",
-                      "value": {
-                        "type": "boolean"
-                      },
-                      "optional": true
-                    },
-                    "_type": {
-                      "type": "objectAttribute",
-                      "value": {
-                        "type": "string",
-                        "value": "appLink"
-                      }
-                    }
-                  },
-                  "rest": {
-                    "type": "object",
-                    "attributes": {
-                      "_key": {
-                        "type": "objectAttribute",
-                        "value": {
-                          "type": "string"
-                        }
-                      }
-                    }
-                  }
-                }
+                "type": "string"
               },
               "optional": true
             }

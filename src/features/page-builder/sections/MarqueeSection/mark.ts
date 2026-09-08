@@ -33,8 +33,8 @@ const mirrorY = (cells: MarkCell[]): MarkCell[] => cells.map(({ x, y, s }) => ({
 /**
  * One lap of the morph: the drawn mark carried through its four orientations, one axis flipped at
  * a time (right, then down, then left, then back). Every frame is the logo itself rather than an
- * arrangement invented for the animation, and a reflection only ever slides a square — none of
- * them resizes — so the motion stays small and the mark stays readable throughout. It ends back on
+ * arrangement invented for the animation, and a reflection only ever slides a square, and none of
+ * them resizes, so the motion stays small and the mark stays readable throughout. It ends back on
  * the drawn mark, so the loop is seamless.
  */
 export const MARK_LOOP: MarkCell[][] = [mirrorX(MARK_BASE), mirrorY(mirrorX(MARK_BASE)), mirrorY(MARK_BASE), MARK_BASE];

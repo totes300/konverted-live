@@ -12,8 +12,8 @@ const MORPH_STAGGER = 0.05;
 
 // Two motions in one element. The strip scrubs right-to-left over the section's full travel
 // through the viewport, with the distance re-measured on refresh so a resize never bakes stale
-// pixels in. The mark morphs its nine source squares between formations on a loop — every <use>
-// instance along the strip mirrors the same squares, so one timeline animates them all — and an
+// pixels in. The mark morphs its nine source squares between formations on a loop. Every <use>
+// instance along the strip mirrors the same squares, so one timeline animates them all, and an
 // IntersectionObserver parks the loop while the strip is off screen. Reduced motion skips both:
 // the strip stands still at the start of its run, the mark stays the drawn logo.
 export class MarqueeStripElement extends HTMLElement {

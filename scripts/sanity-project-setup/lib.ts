@@ -1,5 +1,5 @@
 /**
- * Helpers for `scripts/sanity-project-setup/setup.ts` — env merging and Sanity CLI.
+ * Helpers for `scripts/sanity-project-setup/setup.ts`: env merging and Sanity CLI.
  */
 
 import { spawnSync } from "node:child_process";

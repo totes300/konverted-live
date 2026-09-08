@@ -27,7 +27,7 @@ const { data: section } = await loadQuery<StatementSectionQResult>({
       data-page-builder-section="statementSection"
       class="lg:grid lg:grid-cols-[1fr_4fr] lg:gap-x-24"
     >
-      <h2 class="mb-24 text-eyebrow text-accent uppercase lg:mb-0 lg:pt-12">( {section.content.headline} )</h2>
+      <h2 class="mb-(--section-header) text-eyebrow text-accent uppercase lg:mb-0 lg:pt-12">( {section.content.headline} )</h2>
       <GradientWaveText>
         <p data-gradient-wave-text class="font-display text-headline-10 text-ink">
           {section.content.statement}

@@ -30,7 +30,7 @@ const isPostcards = stegaClean(content?.layout) === "postcards";
 {/* Both layouts want the editor's Edge to Edge width: the stage paints its ink to the viewport
     edges and the postcard row runs there too, so each brings the page gutter back for its copy. On
     a wide screen the postcards end on a full-bleed video, which wants the next section hard against
-    it, so that layout takes back the page's gap below itself — and a pixel more: the stage's clip
+    it, so that layout takes back the page's gap below itself, and a pixel more: the stage's clip
     edge lands on a fraction, and the video layer's anti-aliased last row let the page background
     through as a hairline. */}
 {
@@ -38,7 +38,11 @@ const isPostcards = stegaClean(content?.layout) === "postcards";
     <SectionFrame
       settings={section.settings}
       id={stegaClean(section.settings?.hash) ?? undefined}
-      class={isPostcards ? "lg:-mb-[calc(var(--section-gap)+1px)]" : "bg-ink py-64 text-paper lg:py-96"}
+      class={
+        isPostcards
+          ? "lg:-mb-[calc(var(--section-gap)+1px)]"
+          : "-my-(--section-surface-inset) bg-ink py-(--section-block) text-paper"
+      }
       data-page-builder-section="teamSection"
     >
       {isPostcards ? <TeamPostcards content={content} /> : <TeamStage content={content} />}

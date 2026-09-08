@@ -2,7 +2,7 @@ import { defineQuery } from "groq";
 import { CaseStudyCardFunctions, caseStudyCard } from "~/features/case-study/fragment";
 import { SECTION_SETTINGS } from "~/features/page-builder/section-layout";
 import { RichTextFunctions, richText } from "~/features/rich-text/fragment";
-import { LinkFn, link } from "~/features/sanity/link/fragment";
+import { link } from "~/features/sanity/link/fragment";
 import { ImageFragment, MediaFunctions, media } from "~/features/sanity/media/fragment";
 
 // Every section self-fetches its own slice by docId + sectionKey (see the section components).
@@ -144,25 +144,25 @@ export const WebosSectionQ =
     ${SECTION_SETTINGS},
 }`);
 
-export const MarqueeSectionQ =
-  defineQuery(`*[_id == $docId][0].pageBuilder.sectionsArray[_type == "marqueeSectionField" && _key == $sectionKey][0]{
+export const MarqueeSectionQ = defineQuery(`${MediaFunctions}
+*[_id == $docId][0].pageBuilder.sectionsArray[_type == "marqueeSectionField" && _key == $sectionKey][0]{
     "content": sectionContent{
       headline,
       statement,
       lede,
+      showMark,
+      "tile": ${media("tile")},
     },
     ${SECTION_SETTINGS},
 }`);
 
 export const CaseStudySectionQ = defineQuery(`${CaseStudyCardFunctions}
-${LinkFn}
 *[_id == $docId][0].pageBuilder.sectionsArray[_type == "caseStudySectionField" && _key == $sectionKey][0]{
     "content": sectionContent{
       label,
       title,
-      code,
       services,
-      "link": ${link("appLink")},
+      since,
       "caseStudies": caseStudies[]->{
         ...${caseStudyCard("@")}
       },
@@ -249,13 +249,13 @@ export const TeamSectionQ = defineQuery(`${MediaFunctions}
     ${SECTION_SETTINGS},
 }`);
 
-export const LeadFormSectionQ =
-  defineQuery(`*[_id == $docId][0].pageBuilder.sectionsArray[_type == "leadFormSectionField" && _key == $sectionKey][0]{
+export const LeadFormSectionQ = defineQuery(`${MediaFunctions}
+*[_id == $docId][0].pageBuilder.sectionsArray[_type == "leadFormSectionField" && _key == $sectionKey][0]{
     "content": sectionContent{
       eyebrow,
       headline,
-      underline,
       lede,
+      points,
       bookingIntro,
       calLink,
       calNamespace,
@@ -263,12 +263,9 @@ export const LeadFormSectionQ =
       contact{
         name,
         role,
-        note,
         email,
         phone,
-        "portrait": portrait{
-          ${ImageFragment}
-        },
+        "portrait": ${media("portraitMedia")},
       },
     },
     ${SECTION_SETTINGS},

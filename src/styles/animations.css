@@ -63,10 +63,19 @@
     }
   }
 
+  /* The cursor's circular caption turning inside its disc; the centre mark stays still, so the
+     rotation reads as the label orbiting rather than the whole cursor spinning. */
+  @keyframes ringSpin {
+    to {
+      rotate: 360deg;
+    }
+  }
+
   --animate-fade-in: fadeIn 400ms ease-in-out;
   --animate-fade-out: fadeOut 400ms ease-in-out;
   --animate-mark-cell: markCell 2.8s ease-in-out infinite;
   --animate-marquee: marquee 20s linear infinite;
+  --animate-ring-spin: ringSpin 16s linear infinite;
   --animate-drift-slow: driftA 14s ease-in-out infinite alternate;
   --animate-drift-slower: driftB 20s ease-in-out infinite alternate;
 }

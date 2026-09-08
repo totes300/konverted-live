@@ -179,10 +179,14 @@ export class AnimatedTextElement extends HTMLElement {
 
     const lines = this.#splits.flatMap((split) => split.lines);
 
+    // Which side of its mask a line waits on. `above` is for copy that sits under something solid
+    // (a card's image), so the line drops down out from behind that edge instead of rising past it.
+    const fromY = this.getAttribute("data-from") === "above" ? -100 : 100;
+
     if (lines.length > 0) {
       this.#tween = gsap.fromTo(
         lines,
-        { yPercent: 100, opacity: 0 },
+        { yPercent: fromY, opacity: 0 },
         {
           yPercent: 0,
           opacity: 1,

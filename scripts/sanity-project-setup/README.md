@@ -21,7 +21,7 @@ If the target `.env` file does not exist but **`.env.example`** does, the script
 
 - `npm run sanity:cli -- login`
 - Organization id/slug from [manage](https://www.sanity.io/manage) if you create a **new** project
-- First run may not have a `.env` yet — the npm script ignores `MISSING_ENV_FILE` so dotenvx does not fail; the wizard can create `.env` from `.env.example`.
+- First run may not have a `.env` yet, so the npm script ignores `MISSING_ENV_FILE` so dotenvx does not fail; the wizard can create `.env` from `.env.example`.
 
 ## Run
 

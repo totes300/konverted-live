@@ -37,7 +37,7 @@ export const webosSection = defineField({
       rows: 5,
       description: "The explanation under the headline, two or three sentences: what WebOS is and what the team gets.",
       initialValue:
-        "Every site we build comes with WebOS, an AI‑ready manual of your brand: the positioning, voice, design rules and page components an AI agent needs to work on your website. Your team asks for a new page or a change in plain language, and the result stays on brand, with no designer or developer ticket.",
+        "Every site we build comes with WebOS, an AI-ready manual of your brand: the positioning, voice, design rules and page components an AI agent needs to work on your website. Your team asks for a new page or a change in plain language, and the result stays on brand, with no designer or developer ticket.",
     }),
     defineField({
       name: "items",

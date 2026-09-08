@@ -37,7 +37,7 @@ export const solutionSection = defineField({
       rows: 3,
       description: "Supporting copy under the headline.",
       initialValue:
-        "We shape the strategy and messaging, create a distinctive brand and conversion-focused web design, then build it into a fast, modular website powered by WebOS - ready for your team to edit, extend and grow with AI.",
+        "We shape the strategy and messaging, create a distinctive brand and conversion-focused web design, then build it into a fast, modular website powered by WebOS, ready for your team to edit, extend and grow with AI.",
     }),
     defineField({
       name: "items",
@@ -86,7 +86,7 @@ export const solutionSection = defineField({
     prepare({ title, subtitle }) {
       return {
         title: title ?? "Solution",
-        subtitle: subtitle ? `Solution — ${subtitle}` : "Solution",
+        subtitle: subtitle ? `Solution: ${subtitle}` : "Solution",
       };
     },
   },

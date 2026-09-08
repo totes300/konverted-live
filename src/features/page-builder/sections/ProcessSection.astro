@@ -3,6 +3,7 @@ import { stegaClean } from "@sanity/client/stega";
 import Icon from "~/components/Icon/Icon.astro";
 import { ProcessSectionQ } from "~/features/page-builder/queries";
 import SectionFrame from "~/features/page-builder/SectionFrame.astro";
+import SectionHeader from "~/features/page-builder/SectionHeader.astro";
 import type { SectionProps } from "~/features/page-builder/types";
 import type { ProcessSectionQResult } from "~/sanity/types";
 import { getDraftModeProps } from "../../../sanity/lib/draft-mode";
@@ -77,10 +78,7 @@ const MARK = [
       id={stegaClean(section.settings?.hash) ?? undefined}
       data-page-builder-section="processSection"
     >
-      <p class="text-eyebrow text-accent uppercase">( {section.content.eyebrow} )</p>
-      <div class="mt-16 border-t border-line lg:mt-20" />
-
-      <div class={`mt-48 items-end lg:mt-72 ${ROW}`}>
+      <SectionHeader eyebrow={section.content.eyebrow} class={`items-end ${ROW}`}>
         <h2 class="font-display text-headline-20 whitespace-pre-line text-accent lg:col-span-7">
           {headlineParts ? (
             <>
@@ -101,11 +99,11 @@ const MARK = [
             {section.content.lede}
           </p>
         )}
-      </div>
+      </SectionHeader>
 
       {/* Below `lg` the timeline is a simplification, not a reflow: same beats stacked, durations
-          kept, ruler dropped — a 1044px track scaled to a phone renders "Design concept" at 4px. */}
-      <div class="mt-64 flex flex-col gap-40 lg:hidden">
+          kept, ruler dropped. A 1044px track scaled to a phone renders "Design concept" at 4px. */}
+      <div class="mt-(--section-block) flex flex-col gap-(--section-group) lg:hidden">
         <div class="flex flex-col gap-16">
           <div class="flex flex-col gap-4">
             <span class={`${LANE_TITLE} text-ink`}>{section.content.oldTitle}</span>
@@ -156,7 +154,7 @@ const MARK = [
         </div>
       </div>
 
-      <div class="mt-96 hidden lg:block">
+      <div class="mt-(--section-block) hidden lg:block">
         <div class={`items-end pb-12 ${ROW}`}>
           <span class={`text-eyebrow uppercase lg:col-span-3 ${MUTED}`}>{section.content.timelineLabel}</span>
 
@@ -199,7 +197,7 @@ const MARK = [
         <div class="h-px bg-line" />
 
         {/* The four steps are deliberately not boxes: a box here means calendar time, so a second row
-            of them would read as extra days. They ride a rail that stops early — the empty right-hand
+            of them would read as extra days. They ride a rail that stops early, and the empty right-hand
             side of the track is the section's argument. */}
         <div class={`items-center py-32 ${ROW}`}>
           <div class="flex flex-col gap-4 lg:col-span-3">
@@ -245,7 +243,7 @@ const MARK = [
       </div>
 
       {section.content.closingTitle && (
-        <div class={`mt-48 ${ROW}`}>
+        <div class={`mt-(--section-block) ${ROW}`}>
           <div class={`flex flex-col gap-12 ${TRACK}`}>
             <p class={`${LANE_TITLE} text-accent`}>{section.content.closingTitle}</p>
             {section.content.closingText && <p class="max-w-[84ch] text-cta text-ink-soft">{section.content.closingText}</p>}

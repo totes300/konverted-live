@@ -69,7 +69,7 @@ export const logoStripSection = defineField({
 
       return {
         title: statement || "Logo strip",
-        subtitle: `Logo strip — ${count} logo${count === 1 ? "" : "s"}`,
+        subtitle: `Logo strip: ${count} logo${count === 1 ? "" : "s"}`,
         media,
       };
     },

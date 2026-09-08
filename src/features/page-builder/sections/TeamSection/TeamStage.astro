@@ -1,6 +1,7 @@
 ---
 import Icon from "~/components/Icon/Icon.astro";
 import Marquee from "~/components/Marquee/Marquee.astro";
+import SectionHeader from "~/features/page-builder/SectionHeader.astro";
 import type { TeamSectionQResult } from "~/sanity/types";
 import SanityMedia from "../../../../sanity/media/SanityMedia.astro";
 
@@ -23,10 +24,7 @@ const STRIP_SPEED = 60;
 ---
 
 <div class="mx-auto w-full max-w-(--page-width) px-(--page-gutter)">
-  <p class="text-eyebrow uppercase">( {content.eyebrow} )</p>
-  <div class="mt-16 border-t border-paper/20 lg:mt-20" />
-
-  <div class="mt-48 lg:mt-72 lg:grid lg:grid-cols-12 lg:gap-x-24">
+  <SectionHeader eyebrow={content.eyebrow} tone="inverse" class="lg:grid lg:grid-cols-12 lg:gap-x-24">
     <div class="flex flex-col gap-32 lg:col-span-8 lg:col-start-5 lg:gap-40">
       <h2 class="font-display text-headline-20 whitespace-pre-line">{content.headline}</h2>
 
@@ -39,13 +37,13 @@ const STRIP_SPEED = 60;
         </div>
       )}
     </div>
-  </div>
+  </SectionHeader>
 </div>
 
 {/* Every moment sits at one height and keeps its own width, so portraits and landscapes share the
     row the way prints share a lightbox. The strip is decorative past the first pass: the copies
     the loop adds are hidden from readers by the marquee. */}
-<Marquee loop="always" speed={STRIP_SPEED} gap={24} class="mt-64 w-full lg:mt-96">
+<Marquee loop="always" speed={STRIP_SPEED} gap={24} class="mt-(--section-block) w-full">
   <ul class="flex list-none items-start gap-12 lg:gap-24">
     {moments.map((moment) => (
       <li class="shrink-0">
@@ -71,7 +69,7 @@ const STRIP_SPEED = 60;
 </Marquee>
 
 {content.outro && (
-  <div class="mx-auto mt-64 w-full max-w-(--page-width) px-(--page-gutter) lg:mt-80">
+  <div class="mx-auto mt-(--section-block) w-full max-w-(--page-width) px-(--page-gutter)">
     <div class="border-t border-paper/20" />
     <div class="mt-40 lg:grid lg:grid-cols-12 lg:gap-x-24">
       <p class="text-body-20 whitespace-pre-line text-paper/80 lg:col-span-6 lg:col-start-7">{content.outro}</p>

@@ -1,0 +1,44 @@
+---
+import { cx } from "~/features/style/utils";
+
+// The opening every section shares: a label, the hairline under it, and the headline block it
+// introduces. It owns the two distances between those three, `--section-rule` and
+// `--section-header`, so the rhythm is defined once rather than re-typed per section. The gap from
+// here to the section's content is the caller's, on the next element: `mt-(--section-block)`.
+type Props = {
+  /** The label above the rule, set in the `( … )` the design wraps it in. Use the slot to compose it. */
+  eyebrow?: string | null;
+  /** `accent` and `muted` sit on paper and differ only in how loud the rule is; `inverse` on a dark surface. */
+  tone?: "accent" | "muted" | "inverse";
+  /** Classes for the block holding the headline, e.g. the section's own `lg:` grid. */
+  class?: string;
+};
+
+const { eyebrow, tone = "muted", class: className } = Astro.props;
+
+const RULE = {
+  accent: "border-accent",
+  muted: "border-line",
+  inverse: "border-paper/25",
+} as const;
+
+// On paper the label is always accent; on a dark surface it takes the section's own ink.
+const label = tone === "inverse" ? "text-current" : "text-accent";
+
+const hasLabel = Boolean(eyebrow) || Astro.slots.has("eyebrow");
+---
+
+{
+  hasLabel && (
+    <>
+      <p class={cx("text-eyebrow uppercase", Astro.slots.has("eyebrow") && "flex items-center gap-12", label)}>
+        {Astro.slots.has("eyebrow") ? <slot name="eyebrow" /> : `( ${eyebrow} )`}
+      </p>
+      <div class={cx("mt-(--section-rule) border-t", RULE[tone])} />
+    </>
+  )
+}
+
+<div class={cx(hasLabel && "mt-(--section-header)", className)}>
+  <slot />
+</div>

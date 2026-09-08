@@ -116,7 +116,7 @@ export class GalleryCyclerElement extends HTMLElement {
 
   /**
    * Every frame but the first is `loading="lazy"`, so a cycle that started on arrival would cut to
-   * images that are still downloading and paint nothing — the gallery flickers until the loop has
+   * images that are still downloading and paint nothing, so the gallery flickers until the loop has
    * been round once and the browser cache has caught up. Promote the set to eager and wait for the
    * decodes before the first cut. This runs only once the section is on screen, so a visitor who
    * never reaches the gallery still downloads nothing.

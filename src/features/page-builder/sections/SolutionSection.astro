@@ -3,6 +3,7 @@ import { stegaClean } from "@sanity/client/stega";
 import Icon from "~/components/Icon/Icon.astro";
 import { SolutionSectionQ } from "~/features/page-builder/queries";
 import SectionFrame from "~/features/page-builder/SectionFrame.astro";
+import SectionHeader from "~/features/page-builder/SectionHeader.astro";
 import type { SectionProps } from "~/features/page-builder/types";
 import type { SolutionSectionQResult } from "~/sanity/types";
 import { getDraftModeProps } from "../../../sanity/lib/draft-mode";
@@ -29,7 +30,7 @@ const headlineParts =
 
 const items = section?.content?.items ?? [];
 
-/** The card stage's Figma proportions (384x377 at the 1440 artboard). */
+/** The card stage's Figma proportions (384x377 at the 1440 artboard); phones run 3:2, since three near-square cards at column width are three screens. */
 const STAGE_RATIO = 384 / 377;
 ---
 
@@ -40,11 +41,8 @@ const STAGE_RATIO = 384 / 377;
       id={stegaClean(section.settings?.hash) ?? undefined}
       data-page-builder-section="solutionSection"
     >
-      <p class="text-eyebrow text-accent uppercase">( {section.content.eyebrow} )</p>
-      <div class="mt-16 border-t border-accent lg:mt-20" />
-
       {/* Header row: the arrow keeps the artboard's left column (495/1360), the copy the rest. */}
-      <div class="mt-48 lg:mt-72 lg:grid lg:grid-cols-[495fr_865fr]">
+      <SectionHeader eyebrow={section.content.eyebrow} tone="accent" class="lg:grid lg:grid-cols-[495fr_865fr]">
         <Icon name="solution-arrow" class="aspect-[45/49] h-auto w-32 text-accent lg:w-[3.125vw]" />
         <div class="mt-32 lg:mt-0">
           <h2 class="font-display text-headline-20 whitespace-pre-line text-accent">
@@ -66,16 +64,16 @@ const STAGE_RATIO = 384 / 377;
           </h2>
           {section.content.lede && <p class="mt-32 text-body-20 text-ink-soft">{section.content.lede}</p>}
         </div>
-      </div>
+      </SectionHeader>
 
       {items.length > 0 && (
-        <div class="mt-96 flex flex-col gap-64 lg:mt-128 lg:grid lg:grid-cols-3 lg:gap-x-[4.706%]">
+        <div class="mt-(--section-block) flex flex-col gap-(--section-group) lg:grid lg:grid-cols-3 lg:gap-x-[4.706%]">
           {items.map((item, index) => (
             <div class="flex flex-col">
               <p class="text-body-10 text-accent">( {(index + 1).toString().padStart(2, "0")} )</p>
               <div class="mt-24 flex flex-col gap-32 border-t border-line pt-36 lg:mt-36">
                 {/* The stage keeps its surface while the image is still to come. */}
-                <div class="overflow-hidden bg-paper-deep" style={`aspect-ratio: ${STAGE_RATIO}`}>
+                <div class="aspect-[3/2] overflow-hidden bg-paper-deep lg:aspect-(--stage-ratio)" style={`--stage-ratio: ${STAGE_RATIO}`}>
                   {item.image && (
                     <SanityImage
                       media={{ type: "image", image: item.image, aspectRatio: STAGE_RATIO }}

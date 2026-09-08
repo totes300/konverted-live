@@ -39,6 +39,7 @@ These are the global one-liners. Authoritative detail lives in the skill named o
 - Responsive: mobile-first. Base utilities are the phone; `md:` etc. only add going wider. Never `max-*` variants. See `mobile-first`.
 - Scroll: listen to native scroll only (`window` events, ScrollTrigger defaults). Never bind to the Lenis instance; Lenis drives the native scroller and is not mounted in draft mode. Only `src/components/Lenis/` imports `lenis` (Biome-enforced). See `custom-elements`.
 - Sanity: define queries with `defineQuery` (from `groq`), fragments live beside their feature, fetch via `loadQuery`, render with the `.astro` helpers; types are generated, not hand-edited. See `sanity`.
+- Vertical rhythm: structural spacing comes from the `--section-*` ladder in `src/styles/tailwind.css` (`rule` < `header` < `group` < `block` < `gap`), never a hand-written `mt-96 lg:mt-128`. Nothing inside a section may reach `--section-gap`. The eyebrow/rule/headline opening is `SectionHeader.astro`. See `tailwind`, `section-anatomy`.
 - Page builder sections self-fetch their own GROQ slice by `docId` + `sectionKey` and register in `PageSections.astro`. Each section renders `SectionFrame.astro` as its outermost element and forwards `sectionSettings`, so shared layout switches (Full Bleed today) reach every section at once. Use the Plop generator. See `section-anatomy`, `section-colocation` and `scaffolding-plop`.
 - Server endpoints live in `src/pages/api/` (file-based routing). See `server`.
 

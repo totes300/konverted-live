@@ -6,7 +6,7 @@ import { createSeoField } from "../fields/create-seo-field";
 import { createUriField } from "../fields/create-uri-field";
 
 /**
- * The work index singleton: the page that lists every `caseStudy`. Modelled on the blog index —
+ * The work index singleton: the page that lists every `caseStudy`. Modelled on the blog index:
  * a routed document with the same tabs, no page builder, and a URI pinned to the case-study route.
  */
 export const work = defineType({

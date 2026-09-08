@@ -298,7 +298,7 @@ export class TeamMomentsElement extends HTMLElement {
       );
 
       // One growth, linear, starting the instant the rise does. Split into an arrival that settles at
-      // an entry size and a later swell — which is what this used to be — the hero slides in at what
+      // an entry size and a later swell (which is what this used to be), the hero slides in at what
       // reads as a fixed width and only grows once it has already landed. Tied straight to the
       // scroll it gets bigger the whole way up, which is the thing being watched.
       timeline.fromTo(

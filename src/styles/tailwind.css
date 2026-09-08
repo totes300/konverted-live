@@ -9,7 +9,7 @@
 @theme {
   /* The fluid scale's reference points (px). The max is the 1440 Figma artboard: every fluid
      token carries the size authored there, hits it exactly at this viewport, and keeps scaling
-     proportionally beyond it — this is a reference, not a cap (see typography.css). */
+     proportionally beyond it: this is a reference, not a cap (see typography.css). */
   --layout-min-w: 375;
   --layout-max-w: 1440;
 
@@ -54,17 +54,47 @@
     /* The content column's width, as `max-w-(--page-width)`. The page is fully fluid, so the cap
        never binds and the fluid `--page-gutter` alone shapes the column: 100vw minus two gutters,
        which is 1344px at the 1440 artboard and stays that proportion of wider viewports. The token
-       is kept as the seam — give it a length again and every container re-caps at once. */
+       is kept as the seam: give it a length again and every container re-caps at once. */
     --page-width: 100vw;
 
-    /* The rhythm between page builder sections, as `gap-(--section-gap)`. Named rather than written
-       into `PageSections.astro` so a section can cancel it (`-mt-(--section-gap)`) and weld itself to
-       the one above without restating the two values. */
-    --section-gap: --spacing(80);
+    /* The vertical rhythm: one token per structural role, spent instead of a hand-written number.
+       The rungs stay ~1.5x apart because that is what makes proximity read, since the eye groups by the
+       widest gap it can see, so a section boundary only lands as a boundary while it is wider than
+       anything inside a section. A section that writes its own `mt-96` next to an 80px gap inverts
+       that, which is what it did on phones. The whole ladder compresses to roughly 0.6x below `lg`:
+       a distance that is one beat on the 1440 artboard is dead air on an 844px screen. */
+
+    /* Eyebrow to its hairline rule. */
+    --section-rule: --spacing(16);
+
+    /* The rule to the headline it introduces. */
+    --section-header: --spacing(32);
+
+    /* Between repeated peers: cards in a grid, rows in a list. */
+    --section-group: --spacing(40);
+
+    /* Header to content, and between two major blocks of one section. */
+    --section-block: --spacing(64);
+
+    /* Between page builder sections, as `gap-(--section-gap)`. Named rather than written into
+       `PageSections.astro` so a section can cancel it (`-mt-(--section-gap)`) and weld itself to the
+       one above without restating the two values. The widest rung; nothing inside a section may
+       reach it. */
+    --section-gap: --spacing(112);
 
     @variant lg {
-      --section-gap: --spacing(120);
+      --section-rule: --spacing(20);
+      --section-header: --spacing(72);
+      --section-group: --spacing(72);
+      --section-block: --spacing(112);
+      --section-gap: --spacing(176);
     }
+
+    /* What a section that paints its own background pulls off the page's gap, as `-my-(--section-
+       surface-inset)`. Its colour edge is already the strongest boundary the page can draw, so the
+       full gap on top of its own padding reads as a hole; it keeps `--section-block` of paper
+       outside and spends the rest inside, where the band needs it. */
+    --section-surface-inset: calc(var(--section-gap) - var(--section-block));
 
     /* The page's side margin, as `px-(--page-gutter)`. Every page-level container reads it, so the
        distance from the viewport to the content is one value rather than a pair per container.
@@ -76,7 +106,7 @@
       --page-gutter: max(--spacing(48), 3.333vw);
     }
 
-    /* The side margin the linear (vw-proportional) compositions share from `lg` up — the hero
+    /* The side margin the linear (vw-proportional) compositions share from `lg` up. The hero
        headline and the gallery's rest state read it so their left edges sit on one line. It is
        deliberately tighter than `--page-gutter` (39px vs 48px at the 1440 artboard): the Figma
        runs its showcase pieces on this margin, the ordinary content column on the gutter. */

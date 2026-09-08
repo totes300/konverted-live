@@ -1,5 +1,5 @@
 ---
-import SiteNavLink from "~/features/site/SiteNavLink.astro";
+import Icon from "~/components/Icon/Icon.astro";
 import type { SiteFooterQResult } from "~/sanity/types";
 import { getDraftModeProps } from "../../../sanity/lib/draft-mode";
 import { loadQuery } from "../../../sanity/lib/load-query";
@@ -7,27 +7,25 @@ import { SiteFooterQ } from "./query";
 
 const { data: siteFooter } = await loadQuery<SiteFooterQResult>({ query: SiteFooterQ, ...getDraftModeProps(Astro) });
 
-const links = [...(siteFooter?.footer?.links ?? []), ...(siteFooter?.footer?.legalLinks ?? [])];
+const tagline = siteFooter?.footer?.tagline;
 const year = new Date().getFullYear();
 ---
 
-{
-  siteFooter?.footer?.links && (
-    <footer>
-      <div class="mx-auto flex max-w-(--page-width) flex-col gap-16 px-(--page-gutter) py-48 lg:flex-row lg:items-center lg:justify-between">
-        <p class="text-body-10">
-          © {year} {siteFooter.name}
+{/* The tagline leads on a phone and the copyright follows it; `lg:flex-row-reverse` puts the
+    copyright back on the left of the row without reordering the markup. */}
+<footer>
+  <div
+    class="mx-auto flex max-w-(--page-width) flex-col gap-16 px-(--page-gutter) py-48 lg:flex-row-reverse lg:items-center lg:justify-between"
+  >
+    {
+      tagline && (
+        <p class="flex items-center gap-10 font-display text-title text-ink">
+          {/* Sized in `em` so the mark rides the line as a glyph rather than sitting beside it as a logo. */}
+          <Icon name="webos-pixel" class="h-[0.72em] w-auto shrink-0 text-accent" />
+          {tagline}
         </p>
-        <nav>
-          <ul class="flex gap-24">
-            {links.map((link, i) => (
-              <li>
-                <SiteNavLink link={link} animationDelay={i * 0.1} viewport={{ margin: '0px' }} />
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </div>
-    </footer>
-  )
-}
+      )
+    }
+    <p class="text-body-10 text-ink-soft">© {year} {siteFooter?.name}</p>
+  </div>
+</footer>

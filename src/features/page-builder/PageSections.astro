@@ -51,7 +51,7 @@ const sections = {
 ---
 
 {/* Rhythm between sections only; each section's `SectionFrame` owns its own width. */}
-<div class="flex w-full flex-col gap-(--section-gap) py-64 lg:py-96">
+<div class="flex w-full flex-col gap-(--section-gap) py-(--section-block)">
   {(pageSections ?? []).map((section, index) => {
     const Component = sections[section._type as keyof typeof sections]
     return Component ? <Component docId={docId} docType={docType} sectionKey={section._key} isFirst={index === 0} /> : null

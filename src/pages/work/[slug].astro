@@ -66,29 +66,33 @@ const pageJsonLd = jsonLdGraph([
   <JsonLd data={pageJsonLd} />
   <SiteShell showHeader={page.showHeader} showFooter={page.showFooter}>
     <article>
-      <header class="mx-auto w-full max-w-(--page-width) px-(--page-gutter) pt-48 lg:pt-64">
-        <div class="lg:grid lg:grid-cols-2 lg:gap-x-32">
-          <h1 class="font-display text-headline-20 text-accent">{page.title}</h1>
-          {page.lede && <p class="mt-24 text-body-20 text-ink-soft lg:mt-0">{page.lede}</p>}
-        </div>
+      <header class="mx-auto flex w-full max-w-(--page-width) flex-col items-center px-(--page-gutter) pt-48 lg:pt-64">
+        <h1 class="text-center text-display font-medium text-ink uppercase">{page.title}</h1>
+        {page.lede && <p class="mt-24 max-w-[52ch] text-center text-body-20 text-ink lg:mt-32">{page.lede}</p>}
       </header>
 
-      {/* The cover is the page's own image, so the card can rest on a different cut for the grid. */}
-      {page.cover?._id && (
-        <div class="mt-40 w-full lg:mt-56">
+      {/* The focus line rides on the cover rather than the header: it labels the image it sits on. */}
+      <div
+        class="mx-auto mt-(--section-block) flex w-full max-w-(--page-width) flex-col gap-(--section-rule) px-(--page-gutter)"
+      >
+        {services.length > 0 && (
+          <div class="flex flex-col items-center gap-4 text-center text-eyebrow uppercase">
+            <p class="text-ink-soft">( Project focus )</p>
+            <p class="font-medium text-ink">{services.join(", ")}</p>
+          </div>
+        )}
+
+        {/* The cover is the page's own image, so the card can rest on a different cut for the grid. */}
+        {page.cover?._id && (
           <SanityImage media={{ type: "image", image: page.cover }} priority sizes="100vw" class="w-full object-cover" />
-        </div>
-      )}
+        )}
+      </div>
 
       {/* The overview column: the label sits in the left margin, everything readable in the right one. */}
       <div class="mx-auto w-full max-w-(--page-width) px-(--page-gutter) pt-64 lg:grid lg:grid-cols-2 lg:gap-x-32 lg:pt-96">
         <p class="text-eyebrow text-accent uppercase">( Overview )</p>
         <div class="mt-24 lg:mt-0">
           {page.content && <SanityRichText value={page.content} class="text-body-20 text-ink" />}
-
-          {services.length > 0 && (
-            <p class="mt-32 text-body-10 text-ink-soft">({services.join(", ")})</p>
-          )}
 
           {facts.length > 0 && (
             <dl class="mt-48 grid grid-cols-2 gap-x-32 gap-y-24">

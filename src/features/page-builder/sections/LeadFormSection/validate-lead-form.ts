@@ -9,12 +9,12 @@ export const LEAD_NEEDS = [
   { value: "website", label: "A new website" },
   { value: "brand", label: "A brand and messaging system" },
   { value: "webos", label: "WebOS for our team" },
-  { value: "unsure", label: "Not sure yet — let's talk" },
+  { value: "unsure", label: "Not sure yet, let's talk" },
 ] as const;
 
 /**
  * The homepage form, kept to what a first reply actually needs: three answers and consent. Everything
- * else is optional on purpose — each extra required field is a share of the submissions that never
+ * else is optional on purpose: each extra required field is a share of the submissions that never
  * arrive, and anything missing is one question on the call.
  */
 const LeadFormSchema = z.object({

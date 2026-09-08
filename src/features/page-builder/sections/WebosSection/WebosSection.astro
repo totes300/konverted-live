@@ -3,6 +3,7 @@ import { stegaClean } from "@sanity/client/stega";
 import Icon from "~/components/Icon/Icon.astro";
 import { WebosSectionQ } from "~/features/page-builder/queries";
 import SectionFrame from "~/features/page-builder/SectionFrame.astro";
+import SectionHeader from "~/features/page-builder/SectionHeader.astro";
 import type { SectionProps } from "~/features/page-builder/types";
 import type { WebosSectionQResult } from "~/sanity/types";
 import { getDraftModeProps } from "../../../../sanity/lib/draft-mode";
@@ -39,15 +40,9 @@ const items = section?.content?.items ?? [];
       id={stegaClean(section.settings?.hash) ?? undefined}
       data-page-builder-section="webosSection"
     >
-      {section.content.eyebrow && (
-        <>
-          <p class="text-eyebrow text-accent uppercase">( {section.content.eyebrow} )</p>
-          <div class="mt-16 border-t border-accent lg:mt-20" />
-        </>
-      )}
       {/* Editorial stagger: the headline runs wide on the left, the supporting copy steps down into
           the right half under it, so neither column ends up with a hole whatever the copy length. */}
-      <div class="mt-48 lg:mt-72">
+      <SectionHeader eyebrow={section.content.eyebrow} tone="accent">
         <h2 class="max-w-[25ch] font-display text-headline-20 whitespace-pre-line text-accent">
           {headlineParts ? (
             <>
@@ -67,12 +62,12 @@ const items = section?.content?.items ?? [];
             {section.content.body}
           </p>
         )}
-      </div>
+      </SectionHeader>
 
       {/* The diagram is design-owned artwork, not CMS content, and purely decorative to a reader.
           Proportions come from the Figma panel (1220x530): every length is a percentage, so the
           whole stage scales with the fluid page. */}
-      <webos-diagram class="mt-96 block lg:mt-128">
+      <webos-diagram class="mt-(--section-block) block">
         <div aria-hidden="true" class="relative isolate overflow-hidden rounded-16 bg-accent lg:aspect-[1220/530]">
           {/* The atmosphere, layered under the figures: two blurred gradient washes drifting slowly
               against each other, the dot grid, and a grain pass on top. All decorative, all
@@ -112,7 +107,7 @@ const items = section?.content?.items ?? [];
       </webos-diagram>
 
       {items.length > 0 && (
-        <div class="mt-64 flex flex-col gap-64 lg:mt-96 lg:grid lg:grid-cols-3 lg:gap-x-[4.706%]">
+        <div class="mt-(--section-block) flex flex-col gap-(--section-group) lg:grid lg:grid-cols-3 lg:gap-x-[4.706%]">
           {items.map((item, index) => (
             <div class="flex flex-col">
               <p class="text-body-10 text-accent">( {(index + 1).toString().padStart(2, "0")} )</p>

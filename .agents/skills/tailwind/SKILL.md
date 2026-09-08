@@ -15,6 +15,7 @@ Styling is Tailwind-first. The design tokens live in CSS `@theme` blocks, loaded
 - The spacing scale is 1 unit = 1px (`--spacing: 0.0625rem`). NEVER write px arbitrary values (`mb-[16px]`, `gap-[8px]`, `inset-[24px]`, `px-[40px]`); always use scale utilities (`mb-16`, `gap-8`, `inset-24`, `px-40`). For border-radius use the `--radius-*` tokens (`rounded-8`), never `rounded-[6px]`.
 - Tailwind loads via `Web.astro` (which imports `tailwind.css`), so utilities work on every page.
 - Page-level containers are `mx-auto w-full max-w-(--page-width) px-(--page-gutter)`, and header-relative offsets read `--header-height`. Never restate the underlying values or the breakpoint at a use site (`max-w-1200`, `px-16 lg:px-48`).
+- **Structural vertical rhythm is spent from the ladder, never hand-written.** `--section-rule`, `--section-header`, `--section-group`, `--section-block`, `--section-gap` (`:root` in `tailwind.css`) are one token per role, widest last, and each already carries its own `lg` value. Write `mt-(--section-block)`, not `mt-96 lg:mt-128`. A hand-written number is how a gap inside a section grew past the gap between two, which inverts the hierarchy the ladder exists to hold. Item-internal distances (a title to its paragraph, an icon to its label) stay ordinary utilities.
 - Add `isolate` to the parent of any element using a `z-*` utility, unless an ancestor already establishes a stacking context.
 - Keep z-index values small (`z-1`, `z-2`, `z-3`). Never reach for a big or arbitrary number (`z-50`, `z-[51]`, `z-60`) to "clear" something; add `isolate` to the right parent instead (see Stacking contexts below).
 - Inline a class string at the use site for one or two occurrences. Extract a named const only at three or more uses.
@@ -54,7 +55,7 @@ Apply when styling any `.astro` or component, adding utilities, editing `src/sty
 
 ## Reference Files
 
-- `src/styles/tailwind.css`: entry point (`@import` chain), `@theme` (layout bounds, breakpoints, spacing, radii), the base-layer shell measurements (`--header-height`, `--page-width`, `--page-gutter`), the `hover` custom variant, and the `scrollbar-invisible` utility.
+- `src/styles/tailwind.css`: entry point (`@import` chain), `@theme` (layout bounds, breakpoints, spacing, radii), the base-layer shell measurements (`--header-height`, `--page-width`, `--page-gutter`), the vertical rhythm ladder (`--section-*`), the `hover` custom variant, and the `scrollbar-invisible` utility.
 - `src/styles/colors.css`: the palette, deliberately minimal (black, white, plus `current`/`transparent`/`inherit`; Tailwind's default palette is reset).
 - `src/styles/typography.css`: font tokens (`sans`, `mono`, five `pixel-*` faces) and the fluid type scales (`caption`, `cta`, `body-10`, `body-15`, `body-20`, `headline-10`, `headline-20`) with weight/line-height/letter-spacing.
 - `src/styles/fonts.css`: Geist variable faces via `@fontsource-variable`, plus `@font-face` for the Geist Pixel faces self-hosted from `public/fonts/geist-pixel/`.

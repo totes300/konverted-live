@@ -4,7 +4,7 @@ The site can send notification emails for form submissions using Resend.
 
 ## Behavior
 
-- A form POSTs `FormData` to its own endpoint — `/api/contact-form` or `/api/lead-form` — and both share the validation plumbing, see [Forms](./forms.md).
+- A form POSTs `FormData` to its own endpoint (`/api/contact-form` or `/api/lead-form`) and both share the validation plumbing, see [Forms](./forms.md).
 - Submissions are persisted to Sanity first (`contactFormSubmission`, `leadFormSubmission`).
 - Email notifications are best-effort and non-blocking.
 - If email sending fails, the submission still succeeds and the error is logged server-side.

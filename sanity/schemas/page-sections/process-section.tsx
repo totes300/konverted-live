@@ -43,7 +43,7 @@ export const processSection = defineField({
       rows: 4,
       description: "The paragraph beside the headline.",
       initialValue:
-        "Your marketing team connects an LLM straight to the site and starts prompting. By the end of the day there is a finished landing page, campaign page — whatever they thought of that morning — built out of your own brand system rather than a generic AI layout.",
+        "Your marketing team connects an LLM straight to the site and starts prompting. By the end of the day there is a finished landing page or campaign page, whatever they thought of that morning, built out of your own brand system rather than a generic AI layout.",
     }),
     defineField({
       name: "timelineLabel",
@@ -54,20 +54,20 @@ export const processSection = defineField({
     defineField({
       name: "oldTitle",
       type: "string",
-      title: "Old lane — title",
+      title: "Old lane title",
       initialValue: "The old way",
       validation: (R) => R.required(),
     }),
     defineField({
       name: "oldCaption",
       type: "string",
-      title: "Old lane — caption",
+      title: "Old lane caption",
       initialValue: "Eight days, and six hand-offs",
     }),
     defineField({
       name: "oldSteps",
       type: "array",
-      title: "Old lane — steps",
+      title: "Old lane steps",
       description:
         "Each step's duration is its width on the ruler, so the lane's total is the sum of these days. Keep that sum at eight or under; past that the lane stops being readable.",
       of: [
@@ -97,27 +97,27 @@ export const processSection = defineField({
     defineField({
       name: "newTitle",
       type: "string",
-      title: "New lane — title",
+      title: "New lane title",
       initialValue: "With WebOS",
       validation: (R) => R.required(),
     }),
     defineField({
       name: "newCaption",
       type: "string",
-      title: "New lane — caption",
+      title: "New lane caption",
       initialValue: "Idea to live in a single day",
     }),
     defineField({
       name: "newLabel",
       type: "string",
-      title: "New lane — block label",
+      title: "New lane block label",
       description: "The label inside the accent block that occupies the single day.",
       initialValue: "WebOS",
     }),
     defineField({
       name: "newSteps",
       type: "array",
-      title: "New lane — steps",
+      title: "New lane steps",
       description: "The hours inside that one day. They ride a connector rail rather than boxes, so they carry no duration.",
       of: [
         defineArrayMember({
@@ -158,13 +158,13 @@ export const processSection = defineField({
     defineField({
       name: "closingTitle",
       type: "string",
-      title: "Closing — title",
+      title: "Closing title",
       initialValue: "An idea in the morning, live in the afternoon.",
     }),
     defineField({
       name: "closingText",
       type: "text",
-      title: "Closing — text",
+      title: "Closing text",
       rows: 3,
       initialValue:
         "Same strategy, same design system, same standards. What disappears is the hand-off: every step above happens inside your own brand system, so the page that goes live is one you would have signed off anyway.",
@@ -178,7 +178,7 @@ export const processSection = defineField({
     prepare({ title, subtitle }) {
       return {
         title: title ?? "Process",
-        subtitle: subtitle ? `Process — ${subtitle}` : "Process",
+        subtitle: subtitle ? `Process: ${subtitle}` : "Process",
       };
     },
   },

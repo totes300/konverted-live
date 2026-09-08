@@ -13,7 +13,7 @@ function normalizeSitePath(path: string) {
   return trimmed.replace(/\/+$/, "") || "/";
 }
 
-/** Slug `current` may be `path` or `/path` — align with a leading slash when comparing. */
+/** Slug `current` may be `path` or `/path`, so align with a leading slash when comparing. */
 function comparableUriPath(value: string): string {
   const t = value.trim();
   if (t === "" || t === "/") {

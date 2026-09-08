@@ -75,7 +75,7 @@ export const logoWallSection = defineField({
       const count = Array.isArray(logos) ? logos.length : 0;
       return {
         title: [metric, statement].filter(Boolean).join(" ") || "Logo wall",
-        subtitle: `Logo wall — ${count} logo${count === 1 ? "" : "s"}`,
+        subtitle: `Logo wall: ${count} logo${count === 1 ? "" : "s"}`,
         media,
       };
     },

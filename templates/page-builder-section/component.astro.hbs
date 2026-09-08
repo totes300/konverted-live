@@ -5,6 +5,7 @@ import { loadQuery } from '../../../sanity/lib/load-query'
 import type { {{pascalCase name}}QResult } from '~/sanity/types'
 import { {{pascalCase name}}Q } from '~/features/page-builder/queries'
 import SectionFrame from '~/features/page-builder/SectionFrame.astro'
+import SectionHeader from '~/features/page-builder/SectionHeader.astro'
 import { SECTION_SETTINGS } from '~/features/page-builder/section-layout'
 import type { SectionProps } from '~/features/page-builder/types'
 
@@ -27,9 +28,16 @@ const { data: section } = await loadQuery<{{pascalCase name}}QResult>({
       settings={section.settings}
       id={stegaClean(section.settings?.hash) ?? undefined}
       data-page-builder-section="{{camelCase name}}"
-      class="bg-[red] py-64"
     >
-      <code>{JSON.stringify(section.content)}</code>
+      {/* Structural rhythm is spent from the ladder in `src/styles/tailwind.css`, never hand-written:
+          `--section-block` between blocks, `--section-group` between peers. */}
+      <SectionHeader eyebrow={section.content.title}>
+        <h2 class="font-display text-headline-20 text-accent">{section.content.title}</h2>
+      </SectionHeader>
+
+      <div class="mt-(--section-block)">
+        <code>{JSON.stringify(section.content)}</code>
+      </div>
     </SectionFrame>
   )
 }

@@ -58,7 +58,7 @@ export class VennDiagramElement extends HTMLElement {
         .from(left, { xPercent: -TRAVEL * axis.x, yPercent: -TRAVEL * axis.y }, 0)
         .from(right, { xPercent: TRAVEL * axis.x, yPercent: TRAVEL * axis.y }, 0)
         // The fill rides inside the right circle, so what it has to cross is the gap between the two
-        // sides — both travels, not one — to sit on the left circle in the stage's own space.
+        // sides (both travels, not one) to sit on the left circle in the stage's own space.
         .from(lens, { xPercent: -2 * TRAVEL * axis.x, yPercent: -2 * TRAVEL * axis.y }, 0)
         .from(labels, { autoAlpha: 0, duration: 0.45 }, 0.1)
         // Last, and on its own ease: the mark belongs to the overlap, so it arrives with it.

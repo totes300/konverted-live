@@ -137,12 +137,12 @@ const sectionLayoutFields = [
       layout: "radio",
       list: [
         { title: "Content column", value: "column" },
-        { title: "Full bleed — margin kept", value: "bleed" },
+        { title: "Full bleed: margin kept", value: "bleed" },
         { title: "Edge to edge", value: "edge" },
       ],
     },
     description:
-      "Content column caps the section to the page column. Full bleed drops the cap but keeps the page margin. Edge to edge runs the section to both viewport edges with no margin — the section lays out its own insides.",
+      "Content column caps the section to the page column. Full bleed drops the cap but keeps the page margin. Edge to edge runs the section to both viewport edges with no margin, and the section lays out its own insides.",
   }),
 ];
 

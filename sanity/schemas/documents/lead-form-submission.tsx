@@ -45,7 +45,7 @@ export const leadFormSubmission = defineType({
     },
     prepare: ({ name, email, createdAt }) => {
       return {
-        title: [name, email].filter(Boolean).join(" — "),
+        title: [name, email].filter(Boolean).join(" · "),
         subtitle: createdAt,
       };
     },

@@ -37,8 +37,9 @@ const frameEditAttribute = (imageKey: string | undefined) =>
     : undefined;
 ---
 
-{/* One column on a phone; from `lg` it is two, and a full-row frame spans both — which is what lets
-    consecutive half-row frames pair up beside each other. */}
+{/* One column on a phone; from `lg` it is two, and a full-row frame spans both, which is what lets
+    consecutive half-row frames pair up beside each other. Paired frames stretch to the taller of the
+    two and crop to it, so a row never reads as one frame hanging below its neighbour. */}
 {
   images.length > 0 && (
     <SectionFrame
@@ -46,7 +47,7 @@ const frameEditAttribute = (imageKey: string | undefined) =>
       settings={section?.settings}
       id={stegaClean(section?.settings?.hash) ?? undefined}
       data-page-builder-section="imageGridSection"
-      class="grid items-start gap-x-32 gap-y-32 lg:grid-cols-2 lg:gap-y-64"
+      class="grid gap-x-32 gap-y-32 lg:grid-cols-2 lg:gap-y-64"
     >
       {images.map((image, index) => {
         const isFull = isFullRow(image);
@@ -55,7 +56,7 @@ const frameEditAttribute = (imageKey: string | undefined) =>
           <SanityImage
             media={{ type: "image", image }}
             sizes={isFull ? "100vw" : "100vw lg:50vw"}
-            class={cx("w-full", isFull && "lg:col-span-2")}
+            class={cx("w-full", isFull ? "lg:col-span-2" : "h-full object-cover")}
             priority={isFirst && index === 0}
             data-sanity={frameEditAttribute(image._key ?? undefined)}
           />

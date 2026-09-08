@@ -58,7 +58,7 @@ export const intersectionSection = defineField({
     prepare({ title, subtitle }) {
       return {
         title: title ?? "Intersection",
-        subtitle: subtitle ? `Intersection — ${subtitle}` : "Intersection",
+        subtitle: subtitle ? `Intersection: ${subtitle}` : "Intersection",
       };
     },
   },

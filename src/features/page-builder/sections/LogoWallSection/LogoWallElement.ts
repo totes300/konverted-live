@@ -24,7 +24,7 @@ function shuffle(values: number[]) {
 
 // The wall holds every logo in the editor's order but only shows a slotful of them: the rest are
 // rendered hidden and rotate in one slot at a time, so a long client list stays a calm grid. Which
-// slot changes next is shuffled — the content order is the editor's, the sweep order is not, and a
+// slot changes next is shuffled: the content order is the editor's, the sweep order is not, and a
 // left-to-right march would read as a machine. CSS owns how many slots are on the wall (the extra
 // column appears at `lg`), so the element reads that back rather than mirroring the breakpoint.
 export class LogoWallElement extends HTMLElement {

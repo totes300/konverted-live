@@ -1,0 +1,60 @@
+---
+import Icon from "~/components/Icon/Icon.astro";
+import { cx } from "~/features/style/utils";
+
+// Stands in for the pointer over whatever stage it wraps. The caption is set around the inside of the
+// disc rather than under it: on the disc it stays legible over any client artwork, and it makes the
+// cursor one turning object instead of a mark with a label trailing it.
+type Props = { class?: string };
+
+const { class: className } = Astro.props;
+
+// The caption runs twice, each pass on an exact half circle with a square holding the seam. The square
+// is given two letters' worth of arc and sits in the middle of it, so it reads as a mark between the
+// passes rather than a glyph in them, and the two joins stay in register.
+const PHRASE = [..."See case study"];
+const SEAM_SLOTS = 2;
+const SLOT = 180 / (PHRASE.length + SEAM_SLOTS);
+
+const RING = [0, 1].flatMap((half) => {
+  const seam = 90 + half * 180;
+
+  return [
+    { glyph: null, angle: seam },
+    ...PHRASE.map((glyph, index) => ({ glyph, angle: seam + (SEAM_SLOTS / 2 + 0.5 + index) * SLOT })),
+  ];
+});
+
+const DISC =
+  "flex size-120 -translate-x-1/2 -translate-y-1/2 scale-60 items-center justify-center rounded-full " +
+  "bg-paper opacity-0 transition-[opacity,scale] duration-250 ease-out group-data-active/cursor:scale-100 " +
+  "group-data-active/cursor:opacity-100 motion-reduce:transition-none";
+
+const SLIVER = "absolute top-5 bottom-1/2 left-1/2 origin-bottom";
+---
+
+<case-study-cursor class={cx("group/cursor relative isolate block data-active:cursor-none", className)}>
+  <slot />
+
+  <span data-cursor aria-hidden="true" class="pointer-events-none absolute top-0 left-0 z-1 block">
+    <span class={DISC}>
+      <span
+        class="absolute inset-0 animate-ring-spin font-pixel-square text-micro text-ink uppercase motion-reduce:animate-none"
+      >
+        {
+          RING.map(({ glyph, angle }) => (
+            <span class={SLIVER} style={{ transform: `translateX(-50%) rotate(${angle}deg)` }}>
+              {glyph ?? <span class="mt-2 block size-6 bg-ink" />}
+            </span>
+          ))
+        }
+      </span>
+
+      <Icon name="solution-arrow" class="size-30 text-ink" />
+    </span>
+  </span>
+</case-study-cursor>
+
+<script>
+  import "./CaseStudyCursorElement";
+</script>

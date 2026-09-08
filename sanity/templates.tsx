@@ -19,7 +19,7 @@ const pageSingletonTemplate = {
 /**
  * Omit default “new document” templates for singleton-only schema types (`site`, `siteSettings`,
  * `blog`, `work`), for API-only types, and for agent scratch types. Document ids like `homepage` are
- * not `schemaType` values — do not use `SINGLETON_IDS` values for this filter.
+ * not `schemaType` values, so do not use `SINGLETON_IDS` values for this filter.
  */
 const SCHEMA_TYPES_SINGLETON_VIA_DESK_ONLY: readonly string[] = ["site", "siteSettings", "blog", "work"];
 

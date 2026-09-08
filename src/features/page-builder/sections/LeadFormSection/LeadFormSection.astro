@@ -4,11 +4,12 @@ import CalEmbed from "~/components/CalEmbed/CalEmbed.astro";
 import Icon from "~/components/Icon/Icon.astro";
 import { LeadFormSectionQ } from "~/features/page-builder/queries";
 import SectionFrame from "~/features/page-builder/SectionFrame.astro";
+import SectionHeader from "~/features/page-builder/SectionHeader.astro";
 import type { SectionProps } from "~/features/page-builder/types";
 import type { LeadFormSectionQResult } from "~/sanity/types";
 import { getDraftModeProps } from "../../../../sanity/lib/draft-mode";
 import { loadQuery } from "../../../../sanity/lib/load-query";
-import SanityImage from "../../../../sanity/media/SanityImage.astro";
+import SanityMedia from "../../../../sanity/media/SanityMedia.astro";
 
 type Props = SectionProps;
 
@@ -20,19 +21,17 @@ const { data: section } = await loadQuery<LeadFormSectionQResult>({
   ...getDraftModeProps(Astro),
 });
 
-// The hand-drawn underline wraps an exact phrase of the headline, so the split happens on the
-// clean value: stega characters inside `headline` would keep `underline` from ever matching.
-const headline = stegaClean(section?.content?.headline) ?? "";
-const underline = stegaClean(section?.content?.underline) ?? "";
-const underlineAt = underline ? headline.indexOf(underline) : -1;
-const headlineParts =
-  underlineAt >= 0 ? { before: headline.slice(0, underlineAt), after: headline.slice(underlineAt + underline.length) } : null;
-
 const contact = section?.content?.contact;
+const points = section?.content?.points ?? [];
 
 // Cleaned: both reach the booker as a URL, and a stega character in one is a 404 rather than a booking.
 const calLink = stegaClean(section?.content?.calLink) ?? "";
 const calNamespace = stegaClean(section?.content?.calNamespace) ?? "default";
+
+// A byline portrait is a still even when it is a video: it sits at thumbnail size beside a name.
+const PORTRAIT_VIDEO = { autoPlay: true, loop: true, muted: true, noControls: true };
+
+const CONTACT_LINK = "text-caption text-ink underline underline-offset-4 hover:text-accent";
 ---
 
 {
@@ -42,57 +41,49 @@ const calNamespace = stegaClean(section?.content?.calNamespace) ?? "default";
       id={stegaClean(section.settings?.hash) ?? undefined}
       data-page-builder-section="leadFormSection"
     >
-      <p class="text-eyebrow text-accent uppercase">( {section.content.eyebrow} )</p>
-      <div class="mt-16 border-t border-line lg:mt-20" />
+      <SectionHeader eyebrow={section.content.eyebrow} class="lg:grid lg:grid-cols-12 lg:gap-x-48">
+        <div class="flex flex-col lg:col-span-6">
+          {/* `headline-15`, not `headline-20`: this title shares its row with the booker, on half a column. */}
+          <h2 class="font-display text-headline-15 whitespace-pre-line text-accent">{section.content.headline}</h2>
 
-      <div class="mt-48 lg:mt-72 lg:grid lg:grid-cols-12 lg:gap-x-24">
-        <div class="lg:col-span-5 lg:flex lg:flex-col">
-          <h2 class="font-display text-headline-20 whitespace-pre-line text-accent">
-            {headlineParts ? (
-              <>
-                {headlineParts.before}
-                <span class="relative whitespace-nowrap">
-                  {underline}
-                  <Icon name="underline-scribble" class="absolute inset-x-0 -bottom-[0.04em] h-auto w-full text-ink-soft" />
-                </span>
-                {headlineParts.after}
-              </>
-            ) : (
-              headline
-            )}
-          </h2>
+          {section.content.lede && <p class="mt-32 max-w-[52ch] text-body-20 text-ink-soft">{section.content.lede}</p>}
 
-          {section.content.lede && <p class="mt-32 max-w-[52ch] text-body-10 text-ink-soft">{section.content.lede}</p>}
+          {points.length > 0 && (
+            <ul class="mt-32 flex list-none flex-col">
+              {points.map((point) => (
+                <li class="flex items-start gap-16 border-t border-line py-16 last:border-b">
+                  <Icon name="check" class="mt-2 size-16 shrink-0 text-accent" />
+                  <span class="text-body-10 text-ink-soft">{point}</span>
+                </li>
+              ))}
+            </ul>
+          )}
 
           {contact?.name && (
-            <div class="mt-40 flex items-center gap-16">
-              {contact.portrait && (
-                <SanityImage
-                  media={{ type: "image", image: contact.portrait, aspectRatio: 3 / 4 }}
-                  sizes="80px"
-                  class="w-72 shrink-0 rounded-8 object-cover"
-                />
+            <div class="mt-32 flex items-center gap-16">
+              {contact.portrait?.type && (
+                <span class="flex h-96 w-72 shrink-0 overflow-hidden rounded-4">
+                  <SanityMedia
+                    media={contact.portrait}
+                    class="size-full object-cover"
+                    imageProps={{ sizes: "72px" }}
+                    videoProps={PORTRAIT_VIDEO}
+                  />
+                </span>
               )}
 
-              <div class="flex flex-col gap-2">
-                <p class="text-body-10 text-ink">{contact.name}</p>
+              <div class="flex flex-col gap-4">
+                <p class="text-cta text-ink">{contact.name}</p>
                 {contact.role && <p class="text-caption text-ink-soft/60">{contact.role}</p>}
-                {contact.note && <p class="mt-6 text-caption text-ink-soft/80">{contact.note}</p>}
 
-                <div class="mt-6 flex flex-wrap gap-x-16">
+                <div class="mt-4 flex flex-wrap gap-x-16 gap-y-4">
                   {contact.email && (
-                    <a
-                      href={`mailto:${stegaClean(contact.email)}`}
-                      class="text-caption text-ink underline underline-offset-4 hover:text-accent"
-                    >
+                    <a href={`mailto:${stegaClean(contact.email)}`} class={CONTACT_LINK}>
                       {contact.email}
                     </a>
                   )}
                   {contact.phone && (
-                    <a
-                      href={`tel:${stegaClean(contact.phone).replace(/\s/g, '')}`}
-                      class="text-caption text-ink underline underline-offset-4 hover:text-accent"
-                    >
+                    <a href={`tel:${stegaClean(contact.phone).replace(/\s/g, "")}`} class={CONTACT_LINK}>
                       {contact.phone}
                     </a>
                   )}
@@ -102,22 +93,18 @@ const calNamespace = stegaClean(section?.content?.calNamespace) ?? "default";
           )}
         </div>
 
-        <div class="mt-40 lg:col-span-7 lg:col-start-6 lg:mt-0">
-          {section.content.bookingIntro && <p class="text-body-10 text-ink-soft">{section.content.bookingIntro}</p>}
+        {/* The card is the column, so the grid row makes it exactly as tall as the copy beside it: the
+            two lines around the booker live inside it rather than pushing it off that height. */}
+        <div class="mt-(--section-block) flex lg:col-span-6 lg:col-start-7 lg:mt-0">
+          <div class="flex w-full flex-col gap-16 rounded-16 bg-paper-warm p-16 lg:p-20">
+            {section.content.bookingIntro && <p class="text-caption text-ink-soft/70">{section.content.bookingIntro}</p>}
 
-          {calLink && (
-            <CalEmbed
-              calLink={calLink}
-              namespace={calNamespace}
-              class="mt-24 overflow-hidden rounded-16 bg-paper-warm p-8 lg:p-12"
-            />
-          )}
+            {calLink && <CalEmbed calLink={calLink} namespace={calNamespace} class="min-h-0 flex-1 overflow-hidden rounded-12" />}
 
-          {section.content.reassurance && (
-            <p class="mt-16 text-caption text-ink-soft/70">{section.content.reassurance}</p>
-          )}
+            {section.content.reassurance && <p class="text-caption text-ink-soft/70">{section.content.reassurance}</p>}
+          </div>
         </div>
-      </div>
+      </SectionHeader>
     </SectionFrame>
   )
 }

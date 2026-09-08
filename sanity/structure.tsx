@@ -35,7 +35,7 @@ function singleton(
 
 export function buildStructure(S: StructureBuilder) {
   return S.list()
-    .title("The Content Architecture")
+    .title("Konverted Web Agency")
     .items([
       // Homepage
       singleton(S, {

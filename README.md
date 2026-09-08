@@ -1,8 +1,10 @@
-# The Content Architecture (Astro)
+# Konverted Web Agency
 
-A modern Astro 7 starter with Sanity CMS integration: content model, embedded Studio, and product features, running on an Astro static-first frontend.
+The website for [Konverted Web Agency](https://konverted.io) — a brand and web design agency building conversion-focused B2B websites for the agentic era.
 
-## Features
+Astro 7 in SSR mode with Sanity CMS and the Studio embedded at `/studio`. Built on [The Content Architecture (Astro)](https://www.contentarchitecture.dev/) starter; the sections below document the platform it inherits.
+
+## Platform features
 
 - Astro 7 in SSR mode: pages render on demand, with the embedded Studio and API endpoints on the same origin, deployable to any host through Astro's adapter system
 - Sanity CMS with the Studio embedded at `/studio`
@@ -24,7 +26,7 @@ A modern Astro 7 starter with Sanity CMS integration: content model, embedded St
 
 ## Getting Started
 
-**New here? Start with [`GETTING-STARTED.md`](GETTING-STARTED.md).** It is the guided, top to bottom path from a fresh clone to your first rendered section. The sections below are the reference.
+**New to the stack? Start with [`GETTING-STARTED.md`](GETTING-STARTED.md)**, the starter's guided walkthrough. Conventions specific to this repository live in [`AGENTS.md`](AGENTS.md) and `.agents/skills/`.
 
 ### Prerequisites
 
@@ -143,6 +145,6 @@ AI guidance for this repository lives in `AGENTS.md` and `.agents/skills/`.
 
 ## License
 
-Commercial, one license per buyer. Build unlimited personal, commercial, and client projects with it, and sell what you build. Do not resell or republish the boilerplate itself.
+The site's own content, brand assets, and bespoke components are © Konverted Web Agency.
 
-See [`LICENSE.md`](LICENSE.md) for the full terms, and the [Terms of Service](https://www.contentarchitecture.dev/terms-of-service) for the purchase terms.
+The underlying starter is commercial software licensed to the buyer, not open source: build unlimited projects with it, but do not resell or republish the boilerplate itself. See [`LICENSE.md`](LICENSE.md) for the full terms and the starter's [Terms of Service](https://www.contentarchitecture.dev/terms-of-service) for the purchase terms.

@@ -1,27 +1,63 @@
 ---
-import SiteNavLink from "~/features/site/SiteNavLink.astro";
+import Button from "~/components/Button.astro";
+import Icon from "~/components/Icon/Icon.astro";
 import type { SiteHeaderQResult } from "~/sanity/types";
 import { getDraftModeProps } from "../../../sanity/lib/draft-mode";
 import { loadQuery } from "../../../sanity/lib/load-query";
 import { SiteHeaderQ } from "./query";
 
-const { data: siteHeader } = await loadQuery<SiteHeaderQResult>({ query: SiteHeaderQ, ...getDraftModeProps(Astro) });
+const { data: site } = await loadQuery<SiteHeaderQResult>({ query: SiteHeaderQ, ...getDraftModeProps(Astro) });
 
-const links = siteHeader?.header?.links ?? [];
+const { availability, cta } = site?.header ?? {};
+
+// The arrow leaves top-right while its second copy arrives from bottom-left, clipped to the box.
+const ARROW = "absolute inset-0 size-full transition-transform duration-200 ease-out motion-reduce:transition-none";
 ---
 
-{
-  links.length > 0 && (
-    <header class="flex h-(--header-height) shrink-0 items-center">
-      <nav class="mx-auto w-full max-w-(--page-width) px-(--page-gutter)">
-        <ul class="flex gap-24">
-          {links.map((link, i) => (
-            <li>
-              <SiteNavLink link={link} animationDelay={i * 0.1} />
-            </li>
-          ))}
-        </ul>
-      </nav>
-    </header>
-  )
-}
+<header class="flex h-(--header-height) shrink-0 items-center">
+  <div class="mx-auto flex w-full max-w-(--page-width) items-center justify-between gap-16 px-(--page-gutter) lg:gap-40">
+    <a
+      href="/"
+      class="hover:text-accent flex h-44 shrink-0 items-center text-ink transition-colors duration-200 ease-out motion-reduce:transition-none lg:h-auto"
+    >
+      {/* The wordmark is artwork, not a glyph: it is sized by its own 133:22 box, inside a 44px target. */}
+      <span class="block h-20 w-121 lg:h-26 lg:w-157">
+        <Icon name="konverted-wordmark" class="size-full" />
+      </span>
+      <span class="sr-only">{site?.name}</span>
+    </a>
+
+    {
+      cta?.href && (
+        <div class="flex shrink-0 items-center gap-28">
+          {availability && (
+            <p class="text-eyebrow text-accent hidden items-center gap-10 uppercase lg:flex">
+              <span class="ring-accent/15 size-8 shrink-0 rounded-full bg-accent ring-4" />
+              <span>( {availability} )</span>
+            </p>
+          )}
+
+          <Button
+            href={cta.href}
+            target={cta.openInNewTab ? '_blank' : undefined}
+            rel={cta.openInNewTab ? 'noopener noreferrer' : undefined}
+            download={cta.canDownload ? '' : undefined}
+            class="group/cta hover:bg-ink/80 bg-ink text-paper"
+          >
+            {cta.text}
+            <span slot="right-icon" class="relative block size-20 overflow-hidden">
+              <Icon
+                name="arrow-up-right"
+                class={`${ARROW} group-hover/cta:translate-x-full group-hover/cta:-translate-y-full`}
+              />
+              <Icon
+                name="arrow-up-right"
+                class={`${ARROW} -translate-x-full translate-y-full group-hover/cta:translate-x-0 group-hover/cta:translate-y-0`}
+              />
+            </span>
+          </Button>
+        </div>
+      )
+    }
+  </div>
+</header>

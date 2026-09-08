@@ -18,7 +18,7 @@ import { createDocumentTemplates } from "./sanity/templates";
 const isDev = import.meta.env.DEV;
 
 export default defineConfig({
-  title: "The Content Architecture",
+  title: "Konverted Web Agency",
   projectId: sanityConfig.projectId,
   dataset: sanityConfig.dataset,
   basePath: sanityConfig.studioBasePath,

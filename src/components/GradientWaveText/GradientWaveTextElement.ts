@@ -9,7 +9,7 @@ gsap.registerPlugin(SplitText);
 
 /**
  * GSAP's color parser predates `oklab()`, which is exactly what Tailwind emits for opacity
- * modifiers like `text-ink-soft/35` — fed in raw it tweens through garbage hues, which is what
+ * modifiers like `text-ink-soft/35`. Fed in raw it tweens through garbage hues, which is what
  * turned the accent flash yellow. Handing the color to a canvas is not enough on its own:
  * `fillStyle` gives `oklab()` straight back. Relative color syntax is what forces the re-resolve
  * into sRGB channels, which are then rewritten as the `rgba()` GSAP understands.

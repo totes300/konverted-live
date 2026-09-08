@@ -41,7 +41,7 @@ const families = [
   {
     cls: "font-sans-alt",
     name: "Instrument Sans (wdth)",
-    role: "UI-tartalék, width-tengellyel — token: font-sans-alt",
+    role: "UI-tartalék, width-tengellyel, token: font-sans-alt",
     sample: "Strategic websites built for an agentic world.",
   },
   {
@@ -68,15 +68,15 @@ const families = [
       <p class="mt-16 max-w-[52ch] text-body-20">
         Every value on this page is read from the live tokens in <code>src/styles/</code>. Resize the window: the
         fluid scale grows from its 375&nbsp;px floors, hits the authored sizes at the 1440&nbsp;px artboard and keeps
-        scaling proportionally beyond it — the badges follow.
+        scaling proportionally beyond it, and the badges follow.
       </p>
       <p class="mt-24 font-pixel-square text-cta text-ink uppercase">
-        Viewport: <span data-viewport-w>—</span>px
+        Viewport: <span data-viewport-w>…</span>px
       </p>
     </header>
 
     <section class="mx-auto w-full max-w-(--page-width) px-(--page-gutter) pb-64">
-      <h2 class="border-b border-ink/10 pb-8 text-eyebrow text-ink/50 uppercase">( 01 ) — Colors</h2>
+      <h2 class="border-b border-ink/10 pb-8 text-eyebrow text-ink/50 uppercase">( 01 ) Colors</h2>
       <ul class="mt-24 grid grid-cols-2 gap-16 md:grid-cols-3 lg:grid-cols-6">
         {
           palette.map((c) => (
@@ -91,13 +91,13 @@ const families = [
         }
       </ul>
       <p class="mt-16 text-caption text-ink-soft/70">
-        Studio brand ramp (content-facing): brand-black · brand-white · brand-off-white · brand-grey · brand-accent —
+        Studio brand ramp (content-facing): brand-black · brand-white · brand-off-white · brand-grey · brand-accent,
         same values, picked by editors in rich text.
       </p>
     </section>
 
     <section class="mx-auto w-full max-w-(--page-width) px-(--page-gutter) pb-64">
-      <h2 class="border-b border-ink/10 pb-8 text-eyebrow text-ink/50 uppercase">( 02 ) — Families</h2>
+      <h2 class="border-b border-ink/10 pb-8 text-eyebrow text-ink/50 uppercase">( 02 ) Families</h2>
       <ul class="mt-24 flex flex-col gap-32">
         {
           families.map((f) => (
@@ -114,7 +114,7 @@ const families = [
     </section>
 
     <section class="mx-auto w-full max-w-(--page-width) px-(--page-gutter) pb-64">
-      <h2 class="border-b border-ink/10 pb-8 text-eyebrow text-ink/50 uppercase">( 03 ) — Type scale</h2>
+      <h2 class="border-b border-ink/10 pb-8 text-eyebrow text-ink/50 uppercase">( 03 ) Type scale</h2>
       <ul class="mt-24 flex flex-col gap-32">
         {
           typeScale.map((t) => (
@@ -122,7 +122,7 @@ const families = [
               <div>
                 <p class="text-caption font-medium text-ink">{t.token}</p>
                 <p class="text-caption text-ink-soft/70">
-                  {t.range}px · <span class="font-pixel-square text-accent" data-px-of={t.token}>—</span>
+                  {t.range}px · <span class="font-pixel-square text-accent" data-px-of={t.token}>…</span>
                 </p>
                 <p class="text-caption text-ink-soft/70">{t.figma}</p>
                 <p class="text-caption text-ink-soft/70">{t.note}</p>
@@ -156,9 +156,9 @@ const families = [
     </section>
 
     <section class="mx-auto w-full max-w-(--page-width) px-(--page-gutter) pb-64">
-      <h2 class="border-b border-ink/10 pb-8 text-eyebrow text-ink/50 uppercase">( 04 ) — Buttons</h2>
+      <h2 class="border-b border-ink/10 pb-8 text-eyebrow text-ink/50 uppercase">( 04 ) Buttons</h2>
       <p class="mt-16 text-caption text-ink-soft/70">
-        Template defaults, still styled for a dark surface — rebranding them is a later, deliberate step.
+        Template defaults, still styled for a dark surface. Rebranding them is a later, deliberate step.
       </p>
       <div class="mt-24 flex flex-wrap items-center gap-24 rounded-8 bg-ink p-32">
         <Button>Primary button</Button>
@@ -174,27 +174,27 @@ const families = [
 
     <section class="pb-96">
       <div data-gutter-probe class="mx-auto w-full max-w-(--page-width) px-(--page-gutter)">
-        <h2 class="border-b border-ink/10 pb-8 text-eyebrow text-ink/50 uppercase">( 05 ) — Fluid & containers</h2>
+        <h2 class="border-b border-ink/10 pb-8 text-eyebrow text-ink/50 uppercase">( 05 ) Fluid & containers</h2>
         <p class="mt-16 max-w-[52ch] text-body-10">
-          The gutter is <span class="font-pixel-square text-accent" data-gutter-px>—</span> (16px, 48px from
+          The gutter is <span class="font-pixel-square text-accent" data-gutter-px>…</span> (16px, 48px from
           <code>lg</code>), the content column is 1344px at the 1440 artboard and stays that proportion of wider
           viewports. The stripes below are the page builder's three section widths.
         </p>
       </div>
 
       <div class="mt-24 bg-accent py-24 text-center">
-        <p class="text-cta font-medium text-white uppercase">Edge to edge — 100% viewport width</p>
+        <p class="text-cta font-medium text-white uppercase">Edge to edge: 100% viewport width</p>
       </div>
 
       <div class="mt-16 w-full px-(--page-gutter)">
         <div class="rounded-8 bg-paper-deep py-24 text-center">
-          <p class="text-cta font-medium text-ink uppercase">Full bleed — no cap, px-gutter kept</p>
+          <p class="text-cta font-medium text-ink uppercase">Full bleed: no cap, px-gutter kept</p>
         </div>
       </div>
 
       <div class="mx-auto mt-16 w-full max-w-(--page-width) px-(--page-gutter)">
         <div class="rounded-8 bg-ink py-24 text-center">
-          <p class="text-cta font-medium text-white uppercase">Contained — max-w-page + px-gutter</p>
+          <p class="text-cta font-medium text-white uppercase">Contained: max-w-page + px-gutter</p>
         </div>
       </div>
 
@@ -202,7 +202,7 @@ const families = [
         <div class="mx-auto w-full max-w-(--page-width) px-(--page-gutter)">
           <p class="text-title font-display text-ink">Band pattern</p>
           <p class="mt-8 max-w-[52ch] text-body-10">
-            Full-bleed background, contained content — the section recipe the page builder uses. The background
+            Full-bleed background, contained content. This is the section recipe the page builder uses. The background
             touches the viewport edge, the text keeps the gutter.
           </p>
         </div>

@@ -48,11 +48,11 @@ Groups:
 
 Defined in `sanity/schemas/documents/blog.tsx`. The index of the `/blog` prefix route: the page that lists every `article`, served by its own route rather than by the `[[...uri]]` catch-all, which only handles `page` and `legalPage` documents:
 
-- `title` (required) — navigation and breadcrumb label
+- `title` (required): navigation and breadcrumb label
 - `uri` from `createUriField`, **read only** and prefilled with `SANITY_BLOG_INDEX_URI` (`/blog`) via `initialPath`. It exists so every routed document is treated the same way by the sitemap, llms.txt, and agent Markdown, all of which select on `defined(uri.current)` without naming types
-- `passwordProtected`, `showHeader`, `showFooter` — same meaning as on `page`
-- `heading` (required) + `intro` rich text (Content group) — the H1 and the copy above the listing
-- `seoMetadata`, `agentMarkdown` — identical to `page`
+- `passwordProtected`, `showHeader`, `showFooter`: same meaning as on `page`
+- `heading` (required) + `intro` rich text (Content group): the H1 and the copy above the listing
+- `seoMetadata`, `agentMarkdown`: identical to `page`
 
 **No page builder.** The index is always the heading, the intro, and every article, so there are no sections to assemble. The listing is not authored either: the article list component renders every `article` newest-first, and no page-builder section can produce it. Articles slug under the same constant (`/blog/{slug}`), and `createUriField` rejects `/blog` on any other document so nothing can shadow the index route.
 

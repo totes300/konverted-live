@@ -83,7 +83,7 @@ function SeoImageInput(props: ObjectInputProps<ImageValue>) {
 
           {isGenerating ? (
             <Card border padding={3} radius={2} tone="primary">
-              <Text size={1}>Capturing screenshot — this can take ~10s.</Text>
+              <Text size={1}>Capturing screenshot. This can take ~10s.</Text>
             </Card>
           ) : null}
 

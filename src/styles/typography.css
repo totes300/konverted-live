@@ -1,6 +1,6 @@
 @theme {
   /*
-   * Faces are declared in fonts.css. Display runs on Instrument Serif — that is what the
+   * Faces are declared in fonts.css. Display runs on Instrument Serif, which is what the
    * CreativeBuild Figma actually sets its headlines in (hero 148, section titles, statement).
    * Body/UI is PP Neue Montreal; Instrument Sans (wdth build) stays available for UI accents.
    */
@@ -22,7 +22,7 @@
 
   /*
     The site is fully fluid: every size has a mobile floor (the `max()`) and then scales linearly
-    with the viewport, with no upper clamp — the page is a proportional render of the design at
+    with the viewport, with no upper clamp, so the page is a proportional render of the design at
     every width, so type, the content column (`--page-width`) and the gutters all grow together.
   */
   --fluid-min-w: var(--layout-min-w, 375);
@@ -32,11 +32,19 @@
   /*
    * The scale below is extracted from the CreativeBuild Figma (values at the 1440 artboard;
    * Figma stores letter-spacing in percent, carried here as em). The second number is the size
-   * at the 1440 artboard — the scale keeps growing proportionally past it; the first is the
+   * at the 1440 artboard, and the scale keeps growing proportionally past it; the first is the
    * mobile floor.
    */
 
-  /* 12px - 14px. Figma: caption-size-small — spaced uppercase eyebrow, `( ... )`, accent. */
+  /* A flat 11px, deliberately outside the fluid ramp: it labels fixed-size chrome (the case study
+     cursor's ring), which does not grow with the viewport, so neither should its type. Tracking is
+     left at normal because a circular setting spaces its glyphs by angle, not by letter-spacing. */
+  --text-micro: --spacing(11);
+  --text-micro--font-weight: 400;
+  --text-micro--line-height: 1;
+  --text-micro--letter-spacing: normal;
+
+  /* 12px - 14px. Figma: caption-size-small, spaced uppercase eyebrow, `( ... )`, accent. */
   --text-eyebrow: max(--spacing(12), --spacing(12) + (14 - 12) * var(--fluid-slope));
   --text-eyebrow--font-weight: 400;
   --text-eyebrow--line-height: 1.2;
@@ -93,6 +101,14 @@
   --text-headline-10--font-weight: 400;
   --text-headline-10--line-height: 1.5;
   --text-headline-10--letter-spacing: normal;
+
+  /* 36px - 60px. A section title that shares its row with something else (the lead form's headline
+     sits beside the booker), so it has half the column `headline-20` assumes and would break into
+     four lines at that size. Numbered 15 because it sits between `headline-10` and `headline-20`. */
+  --text-headline-15: max(--spacing(36), --spacing(36) + (60 - 36) * var(--fluid-slope));
+  --text-headline-15--font-weight: 400;
+  --text-headline-15--line-height: 1.1;
+  --text-headline-15--letter-spacing: -0.01em;
 
   /* 44px - 96px. Figma: large section title ("We make your brand ready..."), 96/1.1, -2%. */
   --text-headline-20: max(--spacing(44), --spacing(44) + (96 - 44) * var(--fluid-slope));

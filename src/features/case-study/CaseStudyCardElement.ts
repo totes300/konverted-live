@@ -79,16 +79,23 @@ export class CaseStudyCardElement extends HTMLElement {
 
   /** A frame that cannot decode (a 404, a source swapped mid-decode) must not hold the cut. */
   #decode(index: number) {
-    return this.#frames[index]
-      ?.querySelector<HTMLImageElement>("img")
-      ?.decode()
-      .catch(() => {});
+    const image = this.#frames[index]?.querySelector<HTMLImageElement>("img");
+
+    if (!image) {
+      return;
+    }
+
+    // Every frame past the first is lazy, and `decode()` on one the loader has not reached yet never
+    // settles, so the cut it gates never lands and the preview looks dead under the cursor.
+    image.loading = "eager";
+
+    return image.decode().catch(() => {});
   }
 
   /**
    * A cut hides the outgoing frame and reveals the incoming one on the same tick, so an incoming
-   * bitmap the browser has not decoded yet leaves the stage background showing through the gap —
-   * the flicker. Decoding on arrival gets the set ready before the cursor can reach it; Chrome
+   * bitmap the browser has not decoded yet leaves the stage background showing through the gap,
+   * which is the flicker. Decoding on arrival gets the set ready before the cursor can reach it; Chrome
    * evicts bitmaps it is not painting, so the per-cut gate below still has to cover the rest.
    */
   #warm() {
@@ -115,8 +122,10 @@ export class CaseStudyCardElement extends HTMLElement {
     this.#running = true;
     this.#warm();
 
+    // No dwell on the resting frame: the cut the cursor arriving asks for is the first one, so
+    // waiting a full interval for it reads as the preview taking a moment to wake up.
     if (this.#frames.length > 1) {
-      this.#queue();
+      this.#queue(0);
     }
 
     // Autoplay can still be refused (a data-saver setting, a player that has not upgraded yet).
@@ -132,7 +141,7 @@ export class CaseStudyCardElement extends HTMLElement {
    * resolves in a fraction of a millisecond, so the beat stays on the editor's interval; an evicted
    * one delays that one cut rather than flashing the stage through it.
    */
-  #queue() {
+  #queue(delayMs: number) {
     const generation = this.#generation;
     const next = (this.#index + 1) % this.#frames.length;
     const decoded = this.#decode(next);
@@ -145,8 +154,8 @@ export class CaseStudyCardElement extends HTMLElement {
       }
 
       this.#show(next);
-      this.#queue();
-    }, this.#cycleMs());
+      this.#queue(this.#cycleMs());
+    }, delayMs);
   }
 
   // Leaving puts the card back on its resting frame, so the grid never sits on whichever frame the

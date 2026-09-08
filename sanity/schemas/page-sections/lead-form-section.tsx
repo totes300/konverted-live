@@ -1,4 +1,5 @@
-import { defineField } from "sanity";
+import { defineArrayMember, defineField } from "sanity";
+import { buildMediaPreview, createMediaField, mediaPreviewSelect } from "../fields/create-media";
 
 export const leadFormSection = defineField({
   type: "object",
@@ -24,20 +25,27 @@ export const leadFormSection = defineField({
       validation: (R) => R.required(),
     }),
     defineField({
-      name: "underline",
-      type: "string",
-      title: "Underlined phrase",
-      description: "An exact phrase from the headline to mark with the hand-drawn underline, e.g. “a proposal”.",
-      initialValue: "a proposal",
-    }),
-    defineField({
       name: "lede",
       type: "text",
       title: "Lede",
       rows: 4,
       description: "Supporting copy under the headline.",
       initialValue:
-        "Thirty minutes with the people who would actually build it. We look at your site, your brand and the way your team works, then tell you straight whether WebOS is the right move — and what it would cost.",
+        "Thirty minutes with the people who would actually build it. We look at your site, your brand and the way your team works, then tell you straight whether WebOS is the right move, and what it would cost.",
+    }),
+    defineField({
+      name: "points",
+      type: "array",
+      title: "Checklist",
+      description:
+        "What the visitor walks away with. They render as ruled rows, so they only read as a set while they stay parallel: one line each, same shape, three or four of them.",
+      of: [defineArrayMember({ type: "string" })],
+      initialValue: [
+        "A read on your current site, in front of you",
+        "Where WebOS would and would not pay off",
+        "A budget and a timeline you can take to your team",
+      ],
+      validation: (R) => R.max(5),
     }),
     defineField({
       name: "bookingIntro",
@@ -75,15 +83,15 @@ export const leadFormSection = defineField({
       name: "contact",
       type: "object",
       title: "Who answers",
-      description: "The face beside the calendar: the person on the other side of the call.",
+      description: "The signature under the checklist: who the visitor actually reaches.",
       options: { collapsed: false, collapsible: false },
       fields: [
-        defineField({
-          name: "portrait",
-          type: "image",
+        createMediaField({
+          name: "portraitMedia",
           title: "Portrait",
-          options: { hotspot: true },
-          description: "A real photograph of the person who takes the call.",
+          description: "The person who takes the call, as a photograph or a short looping video.",
+          blacklist: ["rive", "lottie"],
+          options: { collapsed: false, collapsible: false },
           validation: (R) => R.required(),
         }),
         defineField({
@@ -97,14 +105,8 @@ export const leadFormSection = defineField({
           name: "role",
           type: "string",
           title: "Role",
-          initialValue: "Founder, Konverted",
-        }),
-        defineField({
-          name: "note",
-          type: "string",
-          title: "Note",
-          description: "One line of reassurance under the name, e.g. who the visitor actually gets on the call.",
-          initialValue: "You will be talking to him, not to a sales rep.",
+          description: "The line under the name, e.g. “Founder / CEO”.",
+          initialValue: "Founder / CEO",
         }),
         defineField({
           name: "email",
@@ -126,13 +128,13 @@ export const leadFormSection = defineField({
     select: {
       title: "headline",
       subtitle: "eyebrow",
-      media: "contact.portrait",
+      ...mediaPreviewSelect("contact.portraitMedia"),
     },
-    prepare({ title, subtitle, media }) {
+    prepare({ title, subtitle, ...media }) {
       return {
+        ...buildMediaPreview(media),
         title: title ?? "Lead Form",
-        subtitle: subtitle ? `Lead Form — ${subtitle}` : "Lead Form",
-        media,
+        subtitle: subtitle ? `Lead Form: ${subtitle}` : "Lead Form",
       };
     },
   },

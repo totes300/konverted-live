@@ -44,7 +44,7 @@ test("an explicit aspectRatio wins over the image's own", () => {
 });
 
 test("the source ladder is cut where the image runs out and topped with its own width", () => {
-  // A 1376-wide export used to stop at the 1024 rung, because 1440 would have been an upscale — so
+  // A 1376-wide export used to stop at the 1024 rung, because 1440 would have been an upscale, so
   // a third of the pixels it actually had were never offered.
   assert.deepEqual(getSourceWidths(1376), [600, 1024, 1376]);
   assert.deepEqual(getSourceWidths(2800), [600, 1024, 1440, 2048, 2560, 2800]);

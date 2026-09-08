@@ -31,7 +31,7 @@ export const statementSection = defineField({
       rows: 4,
       description: "The continuation, set in muted ink. Flows inline after the statement.",
       initialValue:
-        "Konverted is an AI-native digital agency built for the next era. We create distinctive brands and AI-native websites — then give your website a second brain with our proprietary WebOS, so your marketing team can ship at the speed of their ideas.",
+        "Konverted is an AI-native digital agency built for the next era. We create distinctive brands and AI-native websites, then give your website a second brain with our proprietary WebOS, so your marketing team can ship at the speed of their ideas.",
     }),
   ],
   preview: {
@@ -42,7 +42,7 @@ export const statementSection = defineField({
     prepare({ title, subtitle }) {
       return {
         title: title ?? "Statement",
-        subtitle: subtitle ? `Statement — ${subtitle}` : "Statement",
+        subtitle: subtitle ? `Statement: ${subtitle}` : "Statement",
       };
     },
   },
