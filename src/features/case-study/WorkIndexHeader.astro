@@ -20,9 +20,13 @@ const lines = title.split(/\s+/).filter(Boolean);
 const disciplines = (services ?? []).filter((service): service is string => Boolean(service));
 ---
 
+{/* The rail is the artboard's three columns from `lg`. A phone has room for two ends, not three:
+    the disciplines run past the column and wrap into a ragged block that leaves the studio's run
+    stranded on a line of its own, and every one of them is already printed under its own card. So
+    the phone keeps the pair that reads as a rail, one at each end of the rule. */}
 <header class="flex flex-col gap-48 lg:gap-64">
   <div
-    class="flex flex-col gap-16 border-line border-b pb-16 text-eyebrow text-ink-soft uppercase lg:grid lg:grid-cols-3 lg:items-start lg:gap-24"
+    class="flex items-baseline justify-between gap-16 border-line border-b pb-16 text-eyebrow text-ink-soft uppercase lg:grid lg:grid-cols-3 lg:items-start lg:gap-24"
   >
     {
       label && (
@@ -33,7 +37,7 @@ const disciplines = (services ?? []).filter((service): service is string => Bool
       )
     }
 
-    {disciplines.length > 0 && <p class="lg:col-start-2 lg:text-center">{disciplines.join(" / ")}</p>}
+    {disciplines.length > 0 && <p class="hidden lg:block lg:col-start-2 lg:text-center">{disciplines.join(" / ")}</p>}
 
     {since && <p class="lg:justify-self-end">{since}</p>}
   </div>
