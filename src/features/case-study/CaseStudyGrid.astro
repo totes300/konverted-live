@@ -4,6 +4,8 @@ import { type CaseStudyCardFragmentResult, isFullWidthCard } from "~/features/ca
 
 // The work grid. One column on a phone; from `lg` it is two, and a case study set to Full row spans
 // both, which is what lets half cards pair up beside each other the way the design lays them out.
+// A phone stacks the cards, so each one is a block of the section rather than a peer in a row, and
+// it takes the wider rung: the previews there run one at a time, which needs the rows kept apart.
 type Props = {
   caseStudies: (CaseStudyCardFragmentResult | null)[];
   headingLevel?: "h2" | "h3";
@@ -16,7 +18,7 @@ const items = caseStudies.filter((caseStudy): caseStudy is CaseStudyCardFragment
 
 {
   items.length > 0 && (
-    <div class="grid gap-x-32 gap-y-(--section-group) lg:grid-cols-2">
+    <div class="grid gap-x-32 gap-y-(--section-block) lg:grid-cols-2 lg:gap-y-(--section-group)">
       {items.map((caseStudy) => (
         <CaseStudyCard
           caseStudy={caseStudy}

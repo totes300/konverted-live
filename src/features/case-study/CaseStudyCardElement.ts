@@ -1,4 +1,5 @@
 import { canHoverQuery, isRealHover, prefersReducedMotion } from "~/lib/utils";
+import { observeCenterFocus, unobserveCenterFocus } from "./center-focus";
 
 /** Fallback when the CMS field is absent; the editor sets the real value (`data-cycle-ms`). */
 const DEFAULT_CYCLE_MS = 400;
@@ -8,14 +9,14 @@ type PlayableMedia = HTMLElement & { play?: () => Promise<void> | void; pause?: 
 
 // The card's preview: a gallery hard-cutting between frames, or a video that starts playing. Both
 // idle until the card is pointed at, and both stop again on leave, so a grid of a dozen projects
-// costs nothing at rest. A touch device never fires hover, so there the viewport drives it instead.
+// costs nothing at rest. A touch device never fires hover, so there the middle of the screen points
+// instead (`center-focus`), which keeps the running card to one.
 export class CaseStudyCardElement extends HTMLElement {
   #frames: HTMLElement[] = [];
   #media: PlayableMedia | null = null;
   #index = 0;
   #timer: ReturnType<typeof setTimeout> | null = null;
   #observer: IntersectionObserver | null = null;
-  #hoverDriven = false;
   #running = false;
   /** Bumped on every stop so a cut still waiting on its decode cannot resume into a newer run. */
   #generation = 0;
@@ -32,34 +33,29 @@ export class CaseStudyCardElement extends HTMLElement {
       return;
     }
 
-    this.#hoverDriven = canHoverQuery().matches;
+    if (!canHoverQuery().matches) {
+      observeCenterFocus(this, this.#onCenterFocus);
 
-    if (this.#hoverDriven) {
-      this.addEventListener("pointerenter", this.#onEnter);
-      this.addEventListener("pointerleave", this.#stop);
-      this.addEventListener("focusin", this.#onEnter);
-      this.addEventListener("focusout", this.#stop);
+      return;
     }
 
+    this.addEventListener("pointerenter", this.#onEnter);
+    this.addEventListener("pointerleave", this.#stop);
+    this.addEventListener("focusin", this.#onEnter);
+    this.addEventListener("focusout", this.#stop);
+
+    // A cursor arrives with no warning, so a card in view decodes its set before it is asked for.
+    // The pointed path warms on start, which is early enough without a cursor to beat.
     this.#observer = new IntersectionObserver(([entry]) => {
       if (entry?.isIntersecting) {
         this.#warm();
-
-        if (!this.#hoverDriven) {
-          this.#start();
-        }
-
-        return;
-      }
-
-      if (!this.#hoverDriven) {
-        this.#stop();
       }
     });
     this.#observer.observe(this);
   }
 
   disconnectedCallback() {
+    unobserveCenterFocus(this);
     this.removeEventListener("pointerenter", this.#onEnter);
     this.removeEventListener("pointerleave", this.#stop);
     this.removeEventListener("focusin", this.#onEnter);
@@ -103,6 +99,18 @@ export class CaseStudyCardElement extends HTMLElement {
       this.#decode(index);
     }
   }
+
+  // Focus is exclusive across the grid, so the card it leaves is put back on its resting frame by
+  // the same pass that starts the new one.
+  #onCenterFocus = (focused: boolean) => {
+    if (focused) {
+      this.#start();
+
+      return;
+    }
+
+    this.#stop();
+  };
 
   // A tap fires pointerenter and focusin too, and on a hybrid device that would start the preview
   // on the same gesture that follows the link.
