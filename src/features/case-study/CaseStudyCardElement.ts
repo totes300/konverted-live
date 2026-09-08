@@ -1,0 +1,176 @@
+import { canHoverQuery, isRealHover, prefersReducedMotion } from "~/lib/utils";
+
+/** Fallback when the CMS field is absent; the editor sets the real value (`data-cycle-ms`). */
+const DEFAULT_CYCLE_MS = 400;
+
+/** `<video>` and `<mux-player>` both expose these, but the Mux one only once its module has loaded. */
+type PlayableMedia = HTMLElement & { play?: () => Promise<void> | void; pause?: () => void };
+
+// The card's preview: a gallery hard-cutting between frames, or a video that starts playing. Both
+// idle until the card is pointed at, and both stop again on leave, so a grid of a dozen projects
+// costs nothing at rest. A touch device never fires hover, so there the viewport drives it instead.
+export class CaseStudyCardElement extends HTMLElement {
+  #frames: HTMLElement[] = [];
+  #media: PlayableMedia | null = null;
+  #index = 0;
+  #timer: ReturnType<typeof setTimeout> | null = null;
+  #observer: IntersectionObserver | null = null;
+  #hoverDriven = false;
+  #running = false;
+  /** Bumped on every stop so a cut still waiting on its decode cannot resume into a newer run. */
+  #generation = 0;
+
+  connectedCallback() {
+    if (prefersReducedMotion()) {
+      return;
+    }
+
+    this.#frames = [...this.querySelectorAll<HTMLElement>("[data-card-frame]")];
+    this.#media = this.querySelector<PlayableMedia>("video, mux-player");
+
+    if (this.#frames.length < 2 && !this.#media) {
+      return;
+    }
+
+    this.#hoverDriven = canHoverQuery().matches;
+
+    if (this.#hoverDriven) {
+      this.addEventListener("pointerenter", this.#onEnter);
+      this.addEventListener("pointerleave", this.#stop);
+      this.addEventListener("focusin", this.#onEnter);
+      this.addEventListener("focusout", this.#stop);
+    }
+
+    this.#observer = new IntersectionObserver(([entry]) => {
+      if (entry?.isIntersecting) {
+        this.#warm();
+
+        if (!this.#hoverDriven) {
+          this.#start();
+        }
+
+        return;
+      }
+
+      if (!this.#hoverDriven) {
+        this.#stop();
+      }
+    });
+    this.#observer.observe(this);
+  }
+
+  disconnectedCallback() {
+    this.removeEventListener("pointerenter", this.#onEnter);
+    this.removeEventListener("pointerleave", this.#stop);
+    this.removeEventListener("focusin", this.#onEnter);
+    this.removeEventListener("focusout", this.#stop);
+    this.#observer?.disconnect();
+    this.#observer = null;
+    this.#stop();
+    this.#frames = [];
+    this.#media = null;
+  }
+
+  #cycleMs() {
+    const value = Number.parseFloat(this.dataset.cycleMs ?? "");
+
+    return Number.isFinite(value) && value > 0 ? value : DEFAULT_CYCLE_MS;
+  }
+
+  /** A frame that cannot decode (a 404, a source swapped mid-decode) must not hold the cut. */
+  #decode(index: number) {
+    return this.#frames[index]
+      ?.querySelector<HTMLImageElement>("img")
+      ?.decode()
+      .catch(() => {});
+  }
+
+  /**
+   * A cut hides the outgoing frame and reveals the incoming one on the same tick, so an incoming
+   * bitmap the browser has not decoded yet leaves the stage background showing through the gap —
+   * the flicker. Decoding on arrival gets the set ready before the cursor can reach it; Chrome
+   * evicts bitmaps it is not painting, so the per-cut gate below still has to cover the rest.
+   */
+  #warm() {
+    for (let index = 0; index < this.#frames.length; index += 1) {
+      this.#decode(index);
+    }
+  }
+
+  // A tap fires pointerenter and focusin too, and on a hybrid device that would start the preview
+  // on the same gesture that follows the link.
+  #onEnter = (event: Event) => {
+    if (!isRealHover(event)) {
+      return;
+    }
+
+    this.#start();
+  };
+
+  #start() {
+    if (this.#running) {
+      return;
+    }
+
+    this.#running = true;
+    this.#warm();
+
+    if (this.#frames.length > 1) {
+      this.#queue();
+    }
+
+    // Autoplay can still be refused (a data-saver setting, a player that has not upgraded yet).
+    const played = this.#media?.play?.();
+
+    if (played instanceof Promise) {
+      played.catch(() => {});
+    }
+  }
+
+  /**
+   * The next frame decodes during the current one's dwell and the cut waits on it. A warm bitmap
+   * resolves in a fraction of a millisecond, so the beat stays on the editor's interval; an evicted
+   * one delays that one cut rather than flashing the stage through it.
+   */
+  #queue() {
+    const generation = this.#generation;
+    const next = (this.#index + 1) % this.#frames.length;
+    const decoded = this.#decode(next);
+
+    this.#timer = setTimeout(async () => {
+      await decoded;
+
+      if (generation !== this.#generation) {
+        return;
+      }
+
+      this.#show(next);
+      this.#queue();
+    }, this.#cycleMs());
+  }
+
+  // Leaving puts the card back on its resting frame, so the grid never sits on whichever frame the
+  // cursor happened to leave it on.
+  #stop = () => {
+    this.#running = false;
+    this.#generation += 1;
+
+    if (this.#timer !== null) {
+      clearTimeout(this.#timer);
+      this.#timer = null;
+    }
+
+    this.#show(0);
+    this.#media?.pause?.();
+  };
+
+  #show(index: number) {
+    this.#frames[this.#index]?.removeAttribute("data-active");
+    this.#index = index;
+    this.#frames[this.#index]?.setAttribute("data-active", "");
+  }
+}
+
+if (!customElements.get("case-study-card")) {
+  customElements.define("case-study-card", CaseStudyCardElement);
+}

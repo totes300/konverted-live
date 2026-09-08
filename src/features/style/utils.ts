@@ -4,7 +4,7 @@ import { extendTailwindMerge } from "tailwind-merge";
 function isValidTextSize(cn: string) {
   // Any class that starts with one of the custom fluid type-scale prefixes is a font-size
   // utility, e.g. `text-body-10`, `text-headline-20` (see src/styles/typography.css).
-  return ["title", "subtitle", "body", "caption", "cta", "eyebrow", "headline"].some((val) => cn.startsWith(val));
+  return ["title", "subtitle", "body", "caption", "cta", "eyebrow", "headline", "display"].some((val) => cn.startsWith(val));
 }
 
 // @see https://github.com/dcastil/tailwind-merge/blob/main/docs/configuration.md#theme

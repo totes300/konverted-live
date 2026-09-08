@@ -1,0 +1,89 @@
+---
+import Icon from "~/components/Icon/Icon.astro";
+import type { TeamSectionQResult } from "~/sanity/types";
+import SanityMedia from "../../../../sanity/media/SanityMedia.astro";
+import { rowDrift } from "./placement";
+
+// The earlier layout, kept as the editor's fallback: the moments start as a pile and deal out on
+// scroll, ending on the hero grown to the full screen.
+type Props = { content: NonNullable<NonNullable<TeamSectionQResult>["content"]> };
+
+const { content } = Astro.props;
+
+const moments = (content.moments ?? []).map((moment, index) => ({ ...moment, drift: rowDrift(index) }));
+
+// The finale is the editor's pick. Left unpicked, the first video takes it, or the last moment when
+// there is none, so a set nobody flagged still ends on something.
+const heroIndex = (() => {
+  const flagged = moments.findIndex((moment) => moment.isHero);
+
+  if (flagged >= 0) {
+    return flagged;
+  }
+
+  const video = moments.findIndex((moment) => moment.media?.type?.startsWith("video"));
+
+  return video >= 0 ? video : moments.length - 1;
+})();
+
+// A postcard plays as decoration, never as a player: the CMS video options would let an editor put a
+// control bar on a card the size of a stamp.
+const POSTCARD_VIDEO = { autoPlay: true, loop: true, muted: true, noControls: true };
+---
+
+<div class="mx-auto w-full max-w-(--page-width) px-(--page-gutter)">
+  <p class="text-eyebrow text-accent uppercase">( {content.eyebrow} )</p>
+  <div class="mt-16 border-t border-line lg:mt-20" />
+
+  <div class="mt-48 lg:mt-72 lg:grid lg:grid-cols-12 lg:gap-x-24">
+    <h2 class="font-display text-headline-20 whitespace-pre-line text-accent lg:col-span-7">{content.headline}</h2>
+
+    {content.lede && (
+      <div class="mt-32 flex gap-16 lg:col-span-4 lg:col-start-9 lg:mt-0 lg:self-end">
+        <Icon name="arrow-up-right" class="mt-[0.35em] size-20 shrink-0 text-ink" />
+        <p class="max-w-[62ch] text-body-20 text-ink-soft">{content.lede}</p>
+      </div>
+    )}
+  </div>
+</div>
+
+{/* Server-rendered in the resolved row: that is the layout, and it is what no-JS and reduced
+    motion keep. `TeamMomentsElement` measures it and lifts the cards onto the stage. */}
+<team-moments class="mt-64 block lg:mt-96">
+  <div data-moments-stage class="relative isolate flex items-center lg:h-svh lg:overflow-hidden">
+    <ul class="grid w-full list-none grid-cols-2 gap-8 px-(--page-gutter) lg:flex lg:items-center lg:gap-16 lg:px-0">
+      {moments.map((moment, index) => (
+        <li style={{ marginTop: `${moment.drift}%` }} class="lg:flex-1">
+          {/* The caption runs up the left edge. Vertical is not decoration: a label beside the
+              photo keeps text out of the band where two rows tuck into each other. Reading
+              upward sets it from the bottom of the card, which is the edge nothing overlaps. */}
+          <figure data-moment-card data-moment-hero={index === heroIndex ? "" : undefined} class="relative m-0 flex gap-10">
+            {moment.caption && (
+              <figcaption
+                data-moment-caption
+                class="[writing-mode:vertical-rl] shrink-0 rotate-180 font-mono text-[0.5625rem] tracking-[0.14em] whitespace-nowrap text-ink-soft/45 uppercase"
+              >
+                {moment.caption}
+              </figcaption>
+            )}
+            {/* Eager, not lazy: a lazy photo lands mid-scrub, and a refresh while the motion
+                is under way snaps the scrub's lag away — the cards jump. Loaded with the
+                page, the pile is whole before anyone reaches it. */}
+            <div data-moment-media class="min-w-0 flex-1">
+              <SanityMedia
+                media={moment.media}
+                class="w-full"
+                imageProps={{ sizes: "50vw lg:22vw", eager: true }}
+                videoProps={POSTCARD_VIDEO}
+              />
+            </div>
+          </figure>
+        </li>
+      ))}
+    </ul>
+  </div>
+</team-moments>
+
+<script>
+  import "./TeamMomentsElement";
+</script>

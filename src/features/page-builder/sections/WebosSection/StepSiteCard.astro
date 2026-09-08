@@ -1,0 +1,59 @@
+---
+import PixelDissolve from "./PixelDissolve.astro";
+
+// The generated-website mockup. Lengths are in cqw off the Figma card's 281px artboard (see
+// StepAgentCard); the photos live in public/images/webos, the pixel-dissolve is generated.
+---
+
+<div class="@container aspect-[281/403] w-full">
+  <div class="flex size-full flex-col rounded-[2.85cqw] bg-paper-warm p-[5.69cqw]">
+  <div data-diagram-piece>
+    <div class="flex items-center gap-[2.14cqw]">
+      <span class="size-[2.14cqw] rounded-full bg-accent"></span>
+      <span class="size-[2.14cqw] rounded-full bg-black/25"></span>
+      <span class="size-[2.14cqw] rounded-full bg-white"></span>
+    </div>
+    <div class="mt-[4.27cqw] flex items-start justify-between">
+      <div class="flex w-[50.89cqw] flex-col gap-[3.56cqw]">
+        <span class="h-[0.71cqw] w-full rounded-full bg-black/15"></span>
+        <span class="h-[0.71cqw] w-full rounded-full bg-black/15"></span>
+        <span class="h-[0.71cqw] w-[65.7%] rounded-full bg-black/15"></span>
+      </div>
+      <span class="h-[0.71cqw] w-[7.12cqw] rounded-full bg-black/15"></span>
+    </div>
+  </div>
+
+  <div data-diagram-piece class="relative mt-[4.27cqw] aspect-[248/123] w-full overflow-hidden rounded-[1.42cqw]">
+    <img src="/images/webos/step3-photo-2.jpg" alt="" class="absolute inset-0 size-full object-cover object-[31%_44%]" loading="lazy" />
+    <PixelDissolve cols={5} rows={6} direction="right" seed={7} class="absolute inset-y-0 right-0 w-[43%]" />
+  </div>
+
+  <div data-diagram-piece class="mt-[11.74cqw] flex items-start justify-between">
+    <span class="h-[0.71cqw] w-[7.12cqw] rounded-full bg-black/15"></span>
+    <div class="flex w-[50.89cqw] flex-col gap-[3.56cqw]">
+      <span class="h-[0.71cqw] w-full rounded-full bg-black/15"></span>
+      <span class="h-[0.71cqw] w-full rounded-full bg-black/15"></span>
+      <span class="h-[0.71cqw] w-[65.7%] rounded-full bg-black/15"></span>
+    </div>
+  </div>
+
+  <div data-diagram-piece class="mt-[11.39cqw] grid grid-cols-3 gap-[3.45cqw]">
+    <div class="flex flex-col gap-[3.56cqw]">
+      <div class="aspect-[76.3/73] overflow-hidden rounded-[1.42cqw]">
+        <img src="/images/webos/step3-photo-3.jpg" alt="" class="size-full object-cover" loading="lazy" />
+      </div>
+      <span class="h-[0.71cqw] w-full rounded-full bg-black/15"></span>
+      <span class="h-[0.71cqw] w-full rounded-full bg-black/15"></span>
+      <span class="h-[0.71cqw] w-[45.9%] rounded-full bg-black/15"></span>
+    </div>
+    <div class="relative aspect-[76.3/109] overflow-hidden rounded-[1.42cqw]">
+      <img src="/images/webos/step3-photo-4.jpg" alt="" class="absolute inset-0 size-full object-cover" loading="lazy" />
+      <PixelDissolve cols={3} rows={8} direction="right" seed={21} class="absolute inset-y-0 right-0 w-[55%]" />
+    </div>
+    <div class="relative aspect-[76.3/109] overflow-hidden rounded-[1.42cqw]">
+      <img src="/images/webos/step3-photo-5.jpg" alt="" class="absolute inset-0 size-full object-cover" loading="lazy" />
+      <PixelDissolve cols={4} rows={7} direction="up" seed={35} class="absolute inset-0" />
+    </div>
+  </div>
+</div>
+</div>

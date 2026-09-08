@@ -1,0 +1,54 @@
+---
+import { cx } from "~/features/style/utils";
+// TEMPORARY preview route, not part of the site: it mirrors the Logo wall section's markup with
+// sample wordmarks so the design can be checked before the CMS content exists. Delete when done.
+import Web from "~/layouts/Web.astro";
+import { sampleLogos as logos } from "./_logo-sample";
+
+const MOBILE_SLOTS = 6;
+const SLOTS = 8;
+
+const slotClass = (index: number) => {
+  if (index >= SLOTS) {
+    return "hidden";
+  }
+
+  if (index >= MOBILE_SLOTS) {
+    return "hidden lg:flex";
+  }
+
+  return "";
+};
+---
+
+<Web title="Logo wall preview" noindex>
+  <div class="mx-auto flex w-full max-w-(--page-width) flex-col items-center gap-32 px-(--page-gutter) py-96 lg:gap-48">
+    <p class="max-w-[46ch] text-center text-body-20 text-ink-soft">
+      <span class="text-accent">{"300+ "}</span>
+      websites shipped worldwide, for teams whose site has to move as fast as their ideas.
+    </p>
+    <ul class="sr-only">{logos.map((logo) => <li>{logo.name}</li>)}</ul>
+    <logo-wall class="block w-full" data-swap-ms={1500} aria-hidden="true">
+      <div data-logo-wall-list class="grid grid-cols-3 gap-x-16 gap-y-16 lg:grid-cols-4 lg:gap-y-32">
+        {
+          logos.map((logo, index) => (
+            <div
+              data-logo-wall-item
+              class={cx("relative flex h-48 items-center justify-center overflow-hidden lg:h-80", slotClass(index))}
+            >
+              <span
+                data-logo-wall-target
+                class="mask-alpha mask-contain mask-center mask-no-repeat absolute inset-0 m-auto h-[76%] w-[86%] bg-ink-soft lg:h-[60%] lg:w-[64%]"
+                style={`mask-image: url("${logo.url}")`}
+              />
+            </div>
+          ))
+        }
+      </div>
+    </logo-wall>
+  </div>
+</Web>
+
+<script>
+  import "../features/page-builder/sections/LogoWallSection/LogoWallElement";
+</script>

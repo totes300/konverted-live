@@ -1,0 +1,143 @@
+---
+import { stegaClean } from "@sanity/client/stega";
+import Icon from "~/components/Icon/Icon.astro";
+import { IntersectionSectionQ } from "~/features/page-builder/queries";
+import SectionFrame from "~/features/page-builder/SectionFrame.astro";
+import type { SectionProps } from "~/features/page-builder/types";
+import type { IntersectionSectionQResult } from "~/sanity/types";
+import { getDraftModeProps } from "../../../../sanity/lib/draft-mode";
+import { loadQuery } from "../../../../sanity/lib/load-query";
+
+type Props = SectionProps;
+
+const { docId, sectionKey } = Astro.props;
+
+const { data: section } = await loadQuery<IntersectionSectionQResult>({
+  query: IntersectionSectionQ,
+  params: { docId, sectionKey },
+  ...getDraftModeProps(Astro),
+});
+
+/*
+ * The figure's geometry, every length in percent of its stage's width so the whole thing scales
+ * with the column. The two circles sit on a diagonal, which is the composition: one low and left,
+ * one high and right, meeting in the lens the mark stands in.
+ */
+const STAGE = 612 / 540;
+const CIRCLE = 66;
+const LEFT = { x: 0, y: 21.2 };
+const RIGHT = { x: 34, y: 0 };
+
+/* A `top` percentage resolves against the stage's height, so the vertical places convert first. */
+const circleBox = ({ x, y }: { x: number; y: number }) => `left: ${x}%; top: ${y * STAGE}%; width: ${CIRCLE}%;`;
+
+/* The lens is the left circle seen through the right one, so it is drawn inside the right circle's
+   own box — in its coordinates, where the diameter is the whole width. */
+const lensBox = `left: ${((LEFT.x - RIGHT.x) / CIRCLE) * 100}%; top: ${((LEFT.y - RIGHT.y) / CIRCLE) * 100}%;`;
+
+/* The mark stands where the circles meet, which is the midpoint of the two centres. */
+const markBox = `left: ${(LEFT.x + RIGHT.x) / 2 + CIRCLE / 2}%; top: ${(((LEFT.y + RIGHT.y) / 2 + CIRCLE / 2) * STAGE).toFixed(2)}%;`;
+
+/* The diagonal itself, as a unit vector: the labels are placed on it rather than by eye, so the two
+   sit at mirrored points of their own circles and the annotation reads as one gesture. */
+const axisLength = Math.hypot(RIGHT.x - LEFT.x, RIGHT.y - LEFT.y);
+const AXIS = { x: (RIGHT.x - LEFT.x) / axisLength, y: (RIGHT.y - LEFT.y) / axisLength };
+
+/** How far out along the axis a label sits, as a fraction of its circle's radius. */
+const LABEL_REACH = 0.48;
+
+/* Both percentages resolve against the circle's own box, which is square, so one number does. */
+const labelBox = (outward: number) =>
+  `left: ${(50 + outward * LABEL_REACH * 50 * AXIS.x).toFixed(2)}%; top: ${(50 + outward * LABEL_REACH * 50 * AXIS.y).toFixed(2)}%;`;
+
+/* The labels belong to the drawing's scale, not the page's, so they are sized off the stage
+   (`cqw`) with a floor for the phone — the page's eyebrow token would leave them as fine print
+   beside a mark that grows with the figure. */
+const LABEL_CLASS =
+  "absolute -translate-1/2 text-[max(0.8125rem,2.9cqw)] leading-none tracking-[0.14em] whitespace-nowrap uppercase";
+---
+
+{
+  section?.content && (
+    <SectionFrame
+      settings={section.settings}
+      id={stegaClean(section.settings?.hash) ?? undefined}
+      data-page-builder-section="intersectionSection"
+      class="bg-graphite py-64 text-paper lg:py-96"
+    >
+      <div class="flex items-center gap-12">
+        <span class="size-10 shrink-0 rounded-full bg-paper" />
+        <p class="text-eyebrow uppercase">{section.content.eyebrow}</p>
+      </div>
+      <div class="mt-16 border-t border-paper/35 lg:mt-20" />
+
+      {/* No gutter between the columns: the copy's own measure and the figure's right inset are
+          what hold them apart, the way the design spaces them. */}
+      <div class="mt-48 lg:mt-72 lg:grid lg:grid-cols-[12fr_11fr]">
+        {/* The copy column holds the two ends of the section apart: the title at the top, the lede
+            at the foot, with the band's own height between them. */}
+        <div class="flex flex-col justify-between">
+          <h2 class="font-display text-headline-20 lg:max-w-[92%]">{section.content.headline}</h2>
+          {/* The lede steps in from the headline's line rather than sitting under it: the indent is
+              what gives the foot of the band its editorial read. */}
+          {section.content.lede && (
+            <div class="mt-40 flex gap-16 lg:mt-96 lg:ml-[13%] lg:max-w-[62%]">
+              <Icon name="arrow-up-right" class="mt-4 size-24 shrink-0 lg:size-32" />
+              <p class="text-body-20">{section.content.lede}</p>
+            </div>
+          )}
+        </div>
+
+        {/* The figure is design-owned artwork rather than an illustration an editor uploads: only
+            the three words on it are content. Decorative to a reader — the headline already says
+            what it says — so the labels stay out of the accessibility tree with it. */}
+        <venn-diagram class="mt-64 block lg:mt-0 lg:self-center">
+          <div aria-hidden="true" class="@container relative w-full lg:w-[95%]" style={`aspect-ratio: ${STAGE}`}>
+            <div
+              data-venn-side="left"
+              class="absolute aspect-square rounded-full border-2 border-paper/50"
+              style={circleBox(LEFT)}
+            >
+              <span data-venn-label class={LABEL_CLASS} style={labelBox(-1)}>
+                {section.content.leftLabel}
+              </span>
+            </div>
+
+            <div
+              data-venn-side="right"
+              class="absolute aspect-square rounded-full border-2 border-paper/50"
+              style={circleBox(RIGHT)}
+            >
+              <span data-venn-label class={LABEL_CLASS} style={labelBox(1)}>
+                {section.content.rightLabel}
+              </span>
+            </div>
+
+            {/* The right circle again as a round window, with the left circle filled in behind it:
+                what survives the clip is exactly the overlap, so the lens opens and closes on its
+                own as the two circles move. */}
+            <div
+              data-venn-side="right"
+              class="absolute aspect-square overflow-hidden rounded-full"
+              style={circleBox(RIGHT)}
+            >
+              <div data-venn-lens class="absolute aspect-square w-full rounded-full bg-paper" style={lensBox} />
+            </div>
+
+            <span class="absolute flex -translate-1/2 justify-center" style={markBox}>
+              {/* The transform stays on the inner span: the placement's own translate would be the
+                  first thing the arrival tween overwrote. */}
+              <span data-venn-mark class="flex text-graphite">
+                <Icon name="konverted-mark" class="h-[15cqw] w-auto" />
+              </span>
+            </span>
+          </div>
+        </venn-diagram>
+      </div>
+    </SectionFrame>
+  )
+}
+
+<script>
+  import "./VennDiagramElement";
+</script>

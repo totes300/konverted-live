@@ -1,19 +1,8 @@
-import { createImageUrlBuilder, type ImageUrlBuilderOptions } from "@sanity/image-url";
+import { createImageUrlBuilder } from "@sanity/image-url";
 import { DEFAULT_MAX_HEIGHT, DEFAULT_MAX_WIDTH, DEFAULT_SOURCE_WIDTHS } from "~/features/sanity/media/constants";
 import type { ImageFragmentResult } from "~/features/sanity/media/fragment";
 import { run } from "~/features/utils/common";
-import type { SanityImageCrop } from "~/sanity/types";
-
-// Prefer `width` and `height` over their short versions.
-export type BuilderOptions = Omit<ImageUrlBuilderOptions, "w" | "h"> & {
-  aspectRatio?: number;
-  sourceWidths?: number[];
-};
-
-type Dimensions = {
-  width?: number;
-  height?: number;
-};
+import { type BuilderOptions, getImageDimensions, getSourceWidths } from "./dimensions";
 
 // @see https://github.com/sanity-io/image-url
 // Inlined `import.meta.env` reads instead of `~/lib/env`: this module is client-reachable, and
@@ -39,100 +28,6 @@ function buildImageUrl(image: ImageFragmentResult, options: BuilderOptions = {})
     .url();
 }
 
-function calculateDimensions({ width, height }: Dimensions, aspectRatio?: number, fallbackSize?: Dimensions) {
-  if (width && height) {
-    return { width, height };
-  }
-
-  if (width && !height) {
-    return aspectRatio ? { width, height: Math.round(width / aspectRatio) } : { width, height: width };
-  }
-
-  if (height && !width) {
-    return aspectRatio ? { width: Math.round(height * aspectRatio), height } : { width: height, height };
-  }
-
-  if (!fallbackSize) {
-    throw new Error("Unable to calculate dimensions. Provide a fallbackSize.");
-  }
-
-  return calculateDimensions(fallbackSize, aspectRatio);
-}
-
-function applyMaxConstraints(
-  dimensions: { width: number; height: number },
-  opts: { maxWidth?: number; maxHeight?: number } = {}
-) {
-  const { maxWidth = DEFAULT_MAX_WIDTH, maxHeight = DEFAULT_MAX_HEIGHT } = opts;
-
-  let width = dimensions.width;
-  let height = dimensions.height;
-
-  if (maxWidth && width > maxWidth) {
-    const ratio = maxWidth / width;
-    width = maxWidth;
-    height = Math.round(height * ratio);
-  }
-
-  if (maxHeight && height > maxHeight) {
-    const ratio = maxHeight / height;
-    height = maxHeight;
-    width = Math.round(width * ratio);
-  }
-
-  return { width, height };
-}
-
-function getEffectiveDimensions(dimensions: Dimensions, opts: { crop?: SanityImageCrop | null } = {}) {
-  const { crop } = opts;
-  const { width: intrinsicWidth, height: intrinsicHeight } = dimensions;
-
-  if (!intrinsicWidth || !intrinsicHeight) {
-    return { width: undefined, height: undefined };
-  }
-
-  if (!crop) {
-    return { width: intrinsicWidth, height: intrinsicHeight };
-  }
-
-  const { left = 0, top = 0, right = 0, bottom = 0 } = crop;
-  const cropWidth = intrinsicWidth - left * intrinsicWidth - right * intrinsicWidth;
-  const cropHeight = intrinsicHeight - top * intrinsicHeight - bottom * intrinsicHeight;
-
-  return {
-    width: cropWidth > 0 ? cropWidth : intrinsicWidth,
-    height: cropHeight > 0 ? cropHeight : intrinsicHeight,
-  };
-}
-
-function getImageAspectRatio(image: ImageFragmentResult, opts: { crop?: SanityImageCrop | null } = {}) {
-  if (!image.dimensions) {
-    throw new Error("Dimensions are missing");
-  }
-
-  const { width, height } = getEffectiveDimensions(image.dimensions, opts);
-  return width && height ? width / height : undefined;
-}
-
-function calculateImageDimensions(
-  image: ImageFragmentResult,
-  opts: { width?: number; height?: number; aspectRatio?: number; crop?: SanityImageCrop | null } = {}
-) {
-  const { crop, aspectRatio, height, width } = opts;
-
-  const imageAR = getImageAspectRatio(image, { crop });
-  const effectiveAR = aspectRatio ?? imageAR;
-
-  // Ensure that we are not up scaling a small image.
-  const upperBound = image.dimensions?.width ?? Number.POSITIVE_INFINITY;
-  const widestSource = DEFAULT_SOURCE_WIDTHS[DEFAULT_SOURCE_WIDTHS.length - 1] as number;
-  const maxWidth = Math.min(widestSource, upperBound);
-
-  return calculateDimensions({ width, height }, effectiveAR, {
-    width: maxWidth,
-  });
-}
-
 export function getLqipBackgroundStyle({ lqip }: ImageFragmentResult) {
   if (!lqip) {
     return null;
@@ -144,23 +39,8 @@ export function getLqipBackgroundStyle({ lqip }: ImageFragmentResult) {
   } as const satisfies React.CSSProperties;
 }
 
-export function getImageDimensions(image: ImageFragmentResult, options: BuilderOptions = {}) {
-  const { width, height, aspectRatio, maxWidth, maxHeight } = options;
-
-  const rawDimensions = calculateImageDimensions(image, {
-    width,
-    height,
-    aspectRatio,
-    crop: image.crop,
-  });
-
-  return applyMaxConstraints(rawDimensions, {
-    maxWidth,
-    maxHeight,
-  });
-}
-
-export function getImageSrc(image: ImageFragmentResult, options: BuilderOptions = {}) {
+/** The URL and the size it actually returns, together, so a `srcset` descriptor can never drift from its source. */
+function buildSource(image: ImageFragmentResult, options: BuilderOptions = {}) {
   const { width, height, aspectRatio, ...builderOptions } = options;
 
   const fit = run(() => {
@@ -179,46 +59,54 @@ export function getImageSrc(image: ImageFragmentResult, options: BuilderOptions 
     return undefined;
   });
 
-  const imageDimensions = getImageDimensions(image, {
+  const dimensions = getImageDimensions(image, {
     width,
     height,
     aspectRatio,
   });
 
-  return buildImageUrl(image, {
-    ...builderOptions,
-    fit,
-    width: imageDimensions.width,
-    height: imageDimensions.height,
-  });
+  return {
+    url: buildImageUrl(image, {
+      ...builderOptions,
+      fit,
+      width: dimensions.width,
+      height: dimensions.height,
+    }),
+    ...dimensions,
+  };
+}
+
+export function getImageSrc(image: ImageFragmentResult, options: BuilderOptions = {}) {
+  return buildSource(image, options).url;
 }
 
 export function getImageSrcSet(image: ImageFragmentResult, options: BuilderOptions = {}) {
   const { sourceWidths = DEFAULT_SOURCE_WIDTHS, ...builderOptions } = options;
   const nativeWidth = image.dimensions?.width;
 
-  const entries = run(() => {
-    // If the user chose a specific size or the original image width is smaller than our smallest source,
-    // then there is no need to create multiple srcSets. A retina version is enough.
-    if (builderOptions.width || builderOptions.height || (nativeWidth && nativeWidth < (sourceWidths[0] as number))) {
-      return [2, 3].map((dpr) => {
-        const imgUrl = getImageSrc(image, { ...builderOptions, dpr });
-        return `${imgUrl} ${dpr}x`;
-      });
+  // If the user chose a specific size or the original image width is smaller than our smallest source,
+  // then there is no need to create multiple srcSets. A retina version is enough.
+  if (builderOptions.width || builderOptions.height || (nativeWidth && nativeWidth < (sourceWidths[0] as number))) {
+    return [2, 3].map((dpr) => `${getImageSrc(image, { ...builderOptions, dpr })} ${dpr}x`).join(", ");
+  }
+
+  const entries: string[] = [];
+  const claimed = new Set<number>();
+
+  for (const sourceWidth of getSourceWidths(nativeWidth, sourceWidths)) {
+    // Explicitly override any custom heights as we are only
+    // interested in the width when generating a srcSet entry.
+    const source = buildSource(image, { ...builderOptions, height: undefined, width: sourceWidth });
+
+    // The descriptor is the width the CDN returns, not the one we asked for: `maxHeight` shrinks a
+    // tall frame, and a candidate claiming more than it delivers outranks the sharper ones below it.
+    if (claimed.has(source.width)) {
+      continue;
     }
 
-    return sourceWidths.map((sourceW) => {
-      // Never upscale an image.
-      if (nativeWidth && nativeWidth < sourceW) {
-        return null;
-      }
+    claimed.add(source.width);
+    entries.push(`${source.url} ${source.width}w`);
+  }
 
-      // Explicitly override any custom heights as we are only
-      // interested in the width when generating a srcSet entry.
-      const imgUrl = getImageSrc(image, { ...builderOptions, height: undefined, width: sourceW });
-      return `${imgUrl} ${sourceW}w`;
-    });
-  });
-
-  return entries.filter(Boolean).join(", ");
+  return entries.join(", ");
 }

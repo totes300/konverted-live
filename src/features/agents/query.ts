@@ -2,12 +2,14 @@ import { defineQuery } from "groq";
 import { LinkFn, link } from "~/features/sanity/link/fragment";
 import {
   SANITY_ARTICLE_DOCUMENT_TYPE,
+  SANITY_CASE_STUDY_DOCUMENT_TYPE,
   SANITY_LEGAL_PAGE_DOCUMENT_TYPE,
   SANITY_PAGE_DOCUMENT_TYPE,
   SANITY_PERSON_DOCUMENT_TYPE,
   SANITY_SINGLETON_BLOG_ID,
   SANITY_SINGLETON_SITE_ID,
   SANITY_SINGLETON_SITE_SETTINGS_ID,
+  SANITY_SINGLETON_WORK_ID,
 } from "~/sanity/constants";
 
 /**
@@ -85,7 +87,34 @@ const FactorySectionContentFragment = `
 const AgentMarkdownSectionContentFragment = `
   ${FactorySectionContentFragment},
   "headline": sectionContent.headline,
-  "caption": sectionContent.caption
+  "caption": sectionContent.caption,
+  "metric": sectionContent.metric,
+  "statement": sectionContent.statement,
+  "statementSupport": sectionContent.support,
+  "lede": sectionContent.lede,
+  "outro": sectionContent.outro,
+  "items": sectionContent.items[]{title, text},
+  "logos": sectionContent.logos[]{name},
+  "images": sectionContent.images[]{
+    "alt": asset->altText,
+    "imageUrl": asset->url
+  },
+  "moments": sectionContent.moments[]{
+    caption,
+    "alt": appMedia.image.asset->altText,
+    "imageUrl": appMedia.image.asset->url
+  },
+  "caseStudies": sectionContent.caseStudies[]->{
+    title,
+    "uri": uri.current,
+    "services": services[]->name
+  },
+  "processLanes": [
+    { "title": sectionContent.oldTitle, "caption": sectionContent.oldCaption, "steps": sectionContent.oldSteps[]{label, days} },
+    { "title": sectionContent.newTitle, "caption": sectionContent.newCaption, "steps": sectionContent.newSteps[]{label} }
+  ],
+  "closingTitle": sectionContent.closingTitle,
+  "closingText": sectionContent.closingText
 `;
 
 // The blog index has no page builder: its listing is part of the route, so it is projected from the
@@ -102,6 +131,23 @@ const AgentMarkdownArticleListFragment = `
     "uri": uri.current,
     title,
     "description": seoMetadata.description,
+    publishedAt
+  }`;
+
+// The work index's counterpart, one level over: its grid is part of the route too, so the listing is
+// projected from the `work` document and rendered by `renderCaseStudyList`.
+const AgentMarkdownCaseStudyListFragment = `
+  "heading": heading,
+  "intro": ${agentRichText("intro")},
+  "caseStudies": *[
+    _type == "${SANITY_CASE_STUDY_DOCUMENT_TYPE}"
+    && defined(uri.current)
+    && seoMetadata.noIndex != true
+    && passwordProtected != true
+  ] | order(publishedAt desc){
+    "uri": uri.current,
+    title,
+    "services": services[]->name,
     publishedAt
   }`;
 
@@ -130,6 +176,12 @@ export const AgentMarkdownContentQuery = defineQuery(`${AgentMarkdownFunctions}
     "content": ${agentRichText("bio")},
   },
   _type == "${SANITY_SINGLETON_BLOG_ID}" => {${AgentMarkdownArticleListFragment}
+  },
+  _type == "${SANITY_SINGLETON_WORK_ID}" => {${AgentMarkdownCaseStudyListFragment}
+  },
+  // A case study's services: the meta line sets them beside the date, the way categories read on an article.
+  _type == "${SANITY_CASE_STUDY_DOCUMENT_TYPE}" => {
+    "services": services[]->name,
   }
 }`);
 

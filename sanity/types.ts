@@ -19,7 +19,7 @@ export type AppMedia = {
   type?: "image" | "videoMux" | "videoFile" | "videoUrl" | "rive" | "lottie";
   videoFile?: AppMediaVideoFile;
   videoUrl?: string;
-  image?: Image1;
+  image?: SectionContentAppMediaImage;
   video?: MuxVideo;
   videoCover?: AppMediaVideoCover;
   animatedThumbnail?: AppMediaAnimatedThumbnail;
@@ -36,7 +36,7 @@ export type SectionSettings = {
   disabled?: boolean;
   sectionTitle?: string;
   sectionHash?: Slug;
-  fullBleed?: boolean;
+  width?: "column" | "bleed" | "edge";
 };
 
 export type SanityFileAssetReference = {
@@ -96,6 +96,28 @@ export type AppLink = {
   internal?: AppLinkInternal;
   customText?: string;
   openInNewTab?: boolean;
+};
+
+export type SectionContentAppLink = {
+  type?: "internal" | "external" | "email" | "phone" | "file" | "params";
+  external?: string;
+  email?: string;
+  phone?: string;
+  file?: SectionContentAppLinkFile;
+  canDownload?: boolean;
+  paramsHref?: string;
+  internal?: SectionContentAppLinkInternal;
+  customText?: string;
+  openInNewTab?: boolean;
+};
+
+export type Contact = {
+  portrait?: Portrait;
+  name?: string;
+  role?: string;
+  note?: string;
+  email?: string;
+  phone?: string;
 };
 
 export type MediaBlockAppMedia = {
@@ -243,7 +265,7 @@ export type AppMediaVideoFile = {
   _type: "file";
 };
 
-export type Image1 = {
+export type SectionContentAppMediaImage = {
   asset?: SanityImageAssetReference;
   media?: unknown; // Unable to locate the referenced type "appMedia.image.media" in schema
   hotspot?: SanityImageHotspot;
@@ -296,6 +318,304 @@ export type AppLinkFile = {
 export type AppLinkInternal = {
   link?: PageReference | LegalPageReference | ArticleReference | BlogReference;
   sectionTarget?: string;
+};
+
+export type SolutionItemImage = {
+  asset?: SanityImageAssetReference;
+  media?: unknown; // Unable to locate the referenced type "solutionItem.image.media" in schema
+  hotspot?: SanityImageHotspot;
+  crop?: SanityImageCrop;
+  _type: "image";
+};
+
+export type SectionContentAppLinkFile = {
+  asset?: SanityFileAssetReference;
+  media?: unknown; // Unable to locate the referenced type "appLink.file.media" in schema
+  _type: "file";
+};
+
+export type SectionContentAppLinkInternal = {
+  link?: PageReference | LegalPageReference | ArticleReference | BlogReference;
+  sectionTarget?: string;
+};
+
+export type LogoImage = {
+  asset?: SanityImageAssetReference;
+  media?: unknown; // Unable to locate the referenced type "logo.image.media" in schema
+  hotspot?: SanityImageHotspot;
+  crop?: SanityImageCrop;
+  _type: "image";
+};
+
+export type LogosLogoImage = {
+  asset?: SanityImageAssetReference;
+  media?: unknown; // Unable to locate the referenced type "logos.logo.image.media" in schema
+  hotspot?: SanityImageHotspot;
+  crop?: SanityImageCrop;
+  _type: "image";
+};
+
+export type TeamMomentAppMedia = {
+  type?: "image" | "videoMux" | "videoFile" | "videoUrl";
+  videoFile?: TeamMomentAppMediaVideoFile;
+  videoUrl?: string;
+  image?: TeamMomentAppMediaImage;
+  video?: MuxVideo;
+  videoCover?: TeamMomentAppMediaVideoCover;
+  animatedThumbnail?: TeamMomentAppMediaAnimatedThumbnail;
+  riveFile?: TeamMomentAppMediaRiveFile;
+  riveDimensions?: TeamMomentAppMediaRiveDimensions;
+  lottieFile?: TeamMomentAppMediaLottieFile;
+  lottieDimensions?: TeamMomentAppMediaLottieDimensions;
+};
+
+export type TeamMomentAppMediaVideoFile = {
+  asset?: SanityFileAssetReference;
+  media?: unknown; // Unable to locate the referenced type "teamMoment.appMedia.videoFile.media" in schema
+  _type: "file";
+};
+
+export type TeamMomentAppMediaImage = {
+  asset?: SanityImageAssetReference;
+  media?: unknown; // Unable to locate the referenced type "teamMoment.appMedia.image.media" in schema
+  hotspot?: SanityImageHotspot;
+  crop?: SanityImageCrop;
+  _type: "image";
+};
+
+export type TeamMomentAppMediaVideoCover = {
+  asset?: SanityImageAssetReference;
+  media?: unknown; // Unable to locate the referenced type "teamMoment.appMedia.videoCover.media" in schema
+  hotspot?: SanityImageHotspot;
+  crop?: SanityImageCrop;
+  _type: "image";
+};
+
+export type TeamMomentAppMediaAnimatedThumbnail = {
+  enabled?: boolean;
+  start?: number;
+  end?: number;
+};
+
+export type TeamMomentAppMediaRiveFile = {
+  asset?: SanityFileAssetReference;
+  media?: unknown; // Unable to locate the referenced type "teamMoment.appMedia.riveFile.media" in schema
+  _type: "file";
+};
+
+export type TeamMomentAppMediaRiveDimensions = {
+  width?: number;
+  height?: number;
+};
+
+export type TeamMomentAppMediaLottieFile = {
+  asset?: SanityFileAssetReference;
+  media?: unknown; // Unable to locate the referenced type "teamMoment.appMedia.lottieFile.media" in schema
+  _type: "file";
+};
+
+export type TeamMomentAppMediaLottieDimensions = {
+  width?: number;
+  height?: number;
+};
+
+export type Portrait = {
+  asset?: SanityImageAssetReference;
+  media?: unknown; // Unable to locate the referenced type "portrait.media" in schema
+  hotspot?: SanityImageHotspot;
+  crop?: SanityImageCrop;
+  _type: "image";
+};
+
+export type LeadFormSection = {
+  _type: "leadFormSection";
+  eyebrow?: string;
+  headline?: string;
+  underline?: string;
+  lede?: string;
+  bookingIntro?: string;
+  calLink?: string;
+  calNamespace?: string;
+  reassurance?: string;
+  contact?: Contact;
+};
+
+export type TeamSection = {
+  _type: "teamSection";
+  eyebrow?: string;
+  headline?: string;
+  lede?: string;
+  layout?: "stage" | "postcards";
+  outro?: string;
+  moments?: Array<{
+    appMedia?: TeamMomentAppMedia;
+    caption?: string;
+    isHero?: boolean;
+    _type: "teamMoment";
+    _key: string;
+  }>;
+};
+
+export type IntersectionSection = {
+  _type: "intersectionSection";
+  eyebrow?: string;
+  headline?: string;
+  lede?: string;
+  leftLabel?: string;
+  rightLabel?: string;
+};
+
+export type ProcessSection = {
+  _type: "processSection";
+  eyebrow?: string;
+  headline?: string;
+  underline?: string;
+  lede?: string;
+  timelineLabel?: string;
+  oldTitle?: string;
+  oldCaption?: string;
+  oldSteps?: Array<{
+    label?: string;
+    days?: number;
+    _type: "processStep";
+    _key: string;
+  }>;
+  newTitle?: string;
+  newCaption?: string;
+  newLabel?: string;
+  newSteps?: Array<{
+    label?: string;
+    icon?: "sparkle" | "webos-pixel" | "webos-brand" | "arrow-up-right";
+    isFinal?: boolean;
+    showOnMobile?: boolean;
+    _type: "processFlowStep";
+    _key: string;
+  }>;
+  closingTitle?: string;
+  closingText?: string;
+};
+
+export type CaseStudyReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "caseStudy";
+};
+
+export type LogoStripSection = {
+  _type: "logoStripSection";
+  statement?: string;
+  logos?: Array<{
+    image?: LogosLogoImage;
+    name?: string;
+    caseStudy?: CaseStudyReference;
+    _type: "logo";
+    _key: string;
+  }>;
+};
+
+export type LogoWallSection = {
+  _type: "logoWallSection";
+  metric?: string;
+  statement?: string;
+  logos?: Array<{
+    image?: LogoImage;
+    name?: string;
+    _type: "logo";
+    _key: string;
+  }>;
+  swapMs?: number;
+};
+
+export type CaseStudySection = {
+  _type: "caseStudySection";
+  label?: string;
+  title?: string;
+  code?: string;
+  services?: Array<string>;
+  appLink?: SectionContentAppLink;
+  caseStudies?: Array<
+    {
+      _key: string;
+    } & CaseStudyReference
+  >;
+};
+
+export type MarqueeSection = {
+  _type: "marqueeSection";
+  headline?: string;
+  statement?: string;
+  lede?: string;
+};
+
+export type WebosSection = {
+  _type: "webosSection";
+  eyebrow?: string;
+  headline?: string;
+  underline?: string;
+  body?: string;
+  items?: Array<{
+    title?: string;
+    text?: string;
+    _type: "webosItem";
+    _key: string;
+  }>;
+};
+
+export type SolutionSection = {
+  _type: "solutionSection";
+  eyebrow?: string;
+  headline?: string;
+  underline?: string;
+  lede?: string;
+  items?: Array<{
+    title?: string;
+    text?: string;
+    image?: SolutionItemImage;
+    _type: "solutionItem";
+    _key: string;
+  }>;
+};
+
+export type StatementSection = {
+  _type: "statementSection";
+  headline?: string;
+  statement?: string;
+  support?: string;
+};
+
+export type ImageGridSection = {
+  _type: "imageGridSection";
+  images?: Array<{
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    width?: "full" | "half";
+    showInCard?: boolean;
+    _type: "image";
+    _key: string;
+  }>;
+};
+
+export type GallerySection = {
+  _type: "gallerySection";
+  images?: Array<{
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+    _key: string;
+  }>;
+  cycleMs?: number;
+};
+
+export type HeroSection = {
+  _type: "heroSection";
+  headline?: string;
+  highlight?: string;
+  lede?: string;
 };
 
 export type ContactFormSection = {
@@ -496,6 +816,114 @@ export type VideoOptions = {
 export type AspectRatio =
   0 | 1 | 1.7777777777777777 | 1.3333333333333333 | 1.4 | 0.7142857142857143;
 
+export type Service = {
+  _id: string;
+  _type: "service";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name?: string;
+};
+
+export type Work = {
+  _id: string;
+  _type: "work";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  uri?: Slug;
+  passwordProtected?: boolean;
+  showHeader?: boolean;
+  showFooter?: boolean;
+  eyebrow?: string;
+  heading?: string;
+  intro?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "normal" | "caption";
+    listItem?: never;
+    markDefs?: Array<
+      | {
+          type?:
+            "internal" | "external" | "email" | "phone" | "file" | "params";
+          external?: string;
+          email?: string;
+          phone?: string;
+          file?: LinkFieldFile;
+          canDownload?: boolean;
+          paramsHref?: string;
+          internal?: Internal;
+          openInNewTab?: boolean;
+          _type: "linkField";
+          _key: string;
+        }
+      | {
+          color?: AppColor;
+          _type: "textColorField";
+          _key: string;
+        }
+      | {
+          color?: AppColor;
+          _type: "highlightColorField";
+          _key: string;
+        }
+      | {
+          widthPercent?: number;
+          _type: "indentField";
+          _key: string;
+        }
+    >;
+    level?: number;
+    _type: "block";
+    _key: string;
+  }>;
+  seoMetadata?: {
+    noIndex?: boolean;
+    title?: string;
+    description?: string;
+    sourceUrl?: string;
+    screenshotWaitSeconds?: number;
+    image?: {
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    };
+  };
+  agentMarkdown?: {
+    enabled?: boolean;
+    content?: string;
+  };
+};
+
+export type SanityImageCrop = {
+  _type: "sanity.imageCrop";
+  top?: number;
+  bottom?: number;
+  left?: number;
+  right?: number;
+};
+
+export type SanityImageHotspot = {
+  _type: "sanity.imageHotspot";
+  x?: number;
+  y?: number;
+  height?: number;
+  width?: number;
+};
+
+export type Slug = {
+  _type: "slug";
+  current?: string;
+  source?: string;
+};
+
 export type ArticleCategory = {
   _id: string;
   _type: "articleCategory";
@@ -506,12 +934,6 @@ export type ArticleCategory = {
   slug?: Slug;
 };
 
-export type Slug = {
-  _type: "slug";
-  current?: string;
-  source?: string;
-};
-
 export type ImageAltText = {
   _id: string;
   _type: "imageAltText";
@@ -519,6 +941,20 @@ export type ImageAltText = {
   _updatedAt: string;
   _rev: string;
   altText?: string;
+};
+
+export type LeadFormSubmission = {
+  _id: string;
+  _type: "leadFormSubmission";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name?: string;
+  email?: string;
+  companyUrl?: string;
+  need?: string;
+  message?: string;
+  consent?: boolean;
 };
 
 export type ContactFormSubmission = {
@@ -592,22 +1028,6 @@ export type SiteSettings = {
     guidance?: string;
   };
   contactFormNotificationEmails?: Array<string>;
-};
-
-export type SanityImageCrop = {
-  _type: "sanity.imageCrop";
-  top?: number;
-  bottom?: number;
-  left?: number;
-  right?: number;
-};
-
-export type SanityImageHotspot = {
-  _type: "sanity.imageHotspot";
-  x?: number;
-  y?: number;
-  height?: number;
-  width?: number;
 };
 
 export type Site = {
@@ -857,6 +1277,90 @@ export type Page = {
           _type: "contactFormSectionField";
           _key: string;
         }
+      | {
+          sectionSettings?: SectionSettings;
+          sectionContent?: HeroSection;
+          _type: "heroSectionField";
+          _key: string;
+        }
+      | {
+          sectionSettings?: SectionSettings;
+          sectionContent?: GallerySection;
+          _type: "gallerySectionField";
+          _key: string;
+        }
+      | {
+          sectionSettings?: SectionSettings;
+          sectionContent?: ImageGridSection;
+          _type: "imageGridSectionField";
+          _key: string;
+        }
+      | {
+          sectionSettings?: SectionSettings;
+          sectionContent?: StatementSection;
+          _type: "statementSectionField";
+          _key: string;
+        }
+      | {
+          sectionSettings?: SectionSettings;
+          sectionContent?: SolutionSection;
+          _type: "solutionSectionField";
+          _key: string;
+        }
+      | {
+          sectionSettings?: SectionSettings;
+          sectionContent?: WebosSection;
+          _type: "webosSectionField";
+          _key: string;
+        }
+      | {
+          sectionSettings?: SectionSettings;
+          sectionContent?: MarqueeSection;
+          _type: "marqueeSectionField";
+          _key: string;
+        }
+      | {
+          sectionSettings?: SectionSettings;
+          sectionContent?: CaseStudySection;
+          _type: "caseStudySectionField";
+          _key: string;
+        }
+      | {
+          sectionSettings?: SectionSettings;
+          sectionContent?: LogoWallSection;
+          _type: "logoWallSectionField";
+          _key: string;
+        }
+      | {
+          sectionSettings?: SectionSettings;
+          sectionContent?: LogoStripSection;
+          _type: "logoStripSectionField";
+          _key: string;
+        }
+      | {
+          sectionSettings?: SectionSettings;
+          sectionContent?: ProcessSection;
+          _type: "processSectionField";
+          _key: string;
+        }
+      | {
+          sectionSettings?: SectionSettings;
+          sectionContent?: IntersectionSection;
+          _type: "intersectionSectionField";
+          _key: string;
+        }
+      | {
+          sectionSettings?: SectionSettings;
+          sectionContent?: TeamSection;
+          _type: "teamSectionField";
+          _key: string;
+        }
+      | {
+          sectionSettings?: SectionSettings;
+          sectionContent?: LeadFormSection;
+          _type: "leadFormSectionField";
+          _key: string;
+        }
     >;
   };
   seoMetadata?: {
@@ -877,6 +1381,311 @@ export type Page = {
     enabled?: boolean;
     content?: string;
   };
+};
+
+export type ServiceReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "service";
+};
+
+export type CaseStudy = {
+  _id: string;
+  _type: "caseStudy";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  uri?: Slug;
+  publishedAt?: string;
+  passwordProtected?: boolean;
+  showHeader?: boolean;
+  showFooter?: boolean;
+  cover?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  services?: Array<
+    {
+      _key: string;
+    } & ServiceReference
+  >;
+  card?: {
+    width?: "half" | "full";
+    mode?: "gallery" | "video";
+    image?: {
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    };
+    cycleMs?: number;
+    appMedia?: {
+      type?: "videoMux" | "videoFile" | "videoUrl";
+      videoFile?: {
+        asset?: SanityFileAssetReference;
+        media?: unknown;
+        _type: "file";
+      };
+      videoUrl?: string;
+      image?: {
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+      };
+      video?: MuxVideo;
+      videoCover?: {
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+      };
+      animatedThumbnail?: {
+        enabled?: boolean;
+        start?: number;
+        end?: number;
+      };
+      riveFile?: {
+        asset?: SanityFileAssetReference;
+        media?: unknown;
+        _type: "file";
+      };
+      riveDimensions?: {
+        width?: number;
+        height?: number;
+      };
+      lottieFile?: {
+        asset?: SanityFileAssetReference;
+        media?: unknown;
+        _type: "file";
+      };
+      lottieDimensions?: {
+        width?: number;
+        height?: number;
+      };
+    };
+  };
+  lede?: string;
+  content?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "normal" | "caption";
+    listItem?: never;
+    markDefs?: Array<
+      | {
+          type?:
+            "internal" | "external" | "email" | "phone" | "file" | "params";
+          external?: string;
+          email?: string;
+          phone?: string;
+          file?: LinkFieldFile;
+          canDownload?: boolean;
+          paramsHref?: string;
+          internal?: Internal;
+          openInNewTab?: boolean;
+          _type: "linkField";
+          _key: string;
+        }
+      | {
+          color?: AppColor;
+          _type: "textColorField";
+          _key: string;
+        }
+      | {
+          color?: AppColor;
+          _type: "highlightColorField";
+          _key: string;
+        }
+      | {
+          widthPercent?: number;
+          _type: "indentField";
+          _key: string;
+        }
+    >;
+    level?: number;
+    _type: "block";
+    _key: string;
+  }>;
+  facts?: Array<{
+    label?: string;
+    value?: string;
+    _type: "fact";
+    _key: string;
+  }>;
+  appLink?: {
+    type?: "internal" | "external" | "email" | "phone" | "file" | "params";
+    external?: string;
+    email?: string;
+    phone?: string;
+    file?: {
+      asset?: SanityFileAssetReference;
+      media?: unknown;
+      _type: "file";
+    };
+    canDownload?: boolean;
+    paramsHref?: string;
+    internal?: {
+      link?:
+        PageReference | LegalPageReference | ArticleReference | BlogReference;
+      sectionTarget?: string;
+    };
+    customText?: string;
+    openInNewTab?: boolean;
+  };
+  pageBuilder?: {
+    sectionsArray?: Array<
+      | {
+          sectionSettings?: SectionSettings;
+          sectionContent?: MediaSection;
+          _type: "mediaSectionField";
+          _key: string;
+        }
+      | {
+          sectionSettings?: SectionSettings;
+          sectionContent?: CtaSection;
+          _type: "ctaSectionField";
+          _key: string;
+        }
+      | {
+          sectionSettings?: SectionSettings;
+          sectionContent?: TextSection;
+          _type: "textSectionField";
+          _key: string;
+        }
+      | {
+          sectionSettings?: SectionSettings;
+          sectionContent?: ContactFormSection;
+          _type: "contactFormSectionField";
+          _key: string;
+        }
+      | {
+          sectionSettings?: SectionSettings;
+          sectionContent?: HeroSection;
+          _type: "heroSectionField";
+          _key: string;
+        }
+      | {
+          sectionSettings?: SectionSettings;
+          sectionContent?: GallerySection;
+          _type: "gallerySectionField";
+          _key: string;
+        }
+      | {
+          sectionSettings?: SectionSettings;
+          sectionContent?: ImageGridSection;
+          _type: "imageGridSectionField";
+          _key: string;
+        }
+      | {
+          sectionSettings?: SectionSettings;
+          sectionContent?: StatementSection;
+          _type: "statementSectionField";
+          _key: string;
+        }
+      | {
+          sectionSettings?: SectionSettings;
+          sectionContent?: SolutionSection;
+          _type: "solutionSectionField";
+          _key: string;
+        }
+      | {
+          sectionSettings?: SectionSettings;
+          sectionContent?: WebosSection;
+          _type: "webosSectionField";
+          _key: string;
+        }
+      | {
+          sectionSettings?: SectionSettings;
+          sectionContent?: MarqueeSection;
+          _type: "marqueeSectionField";
+          _key: string;
+        }
+      | {
+          sectionSettings?: SectionSettings;
+          sectionContent?: CaseStudySection;
+          _type: "caseStudySectionField";
+          _key: string;
+        }
+      | {
+          sectionSettings?: SectionSettings;
+          sectionContent?: LogoWallSection;
+          _type: "logoWallSectionField";
+          _key: string;
+        }
+      | {
+          sectionSettings?: SectionSettings;
+          sectionContent?: LogoStripSection;
+          _type: "logoStripSectionField";
+          _key: string;
+        }
+      | {
+          sectionSettings?: SectionSettings;
+          sectionContent?: ProcessSection;
+          _type: "processSectionField";
+          _key: string;
+        }
+      | {
+          sectionSettings?: SectionSettings;
+          sectionContent?: IntersectionSection;
+          _type: "intersectionSectionField";
+          _key: string;
+        }
+      | {
+          sectionSettings?: SectionSettings;
+          sectionContent?: TeamSection;
+          _type: "teamSectionField";
+          _key: string;
+        }
+      | {
+          sectionSettings?: SectionSettings;
+          sectionContent?: LeadFormSection;
+          _type: "leadFormSectionField";
+          _key: string;
+        }
+    >;
+  };
+  seoMetadata?: {
+    noIndex?: boolean;
+    title?: string;
+    description?: string;
+    sourceUrl?: string;
+    screenshotWaitSeconds?: number;
+    image?: {
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    };
+  };
+  agentMarkdown?: {
+    enabled?: boolean;
+    content?: string;
+  };
+};
+
+export type MuxVideoAssetReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "mux.videoAsset";
+};
+
+export type MuxVideo = {
+  _type: "mux.video";
+  asset?: MuxVideoAssetReference;
 };
 
 export type LegalPage = {
@@ -1269,18 +2078,6 @@ export type Blog = {
   };
 };
 
-export type MuxVideoAssetReference = {
-  _ref: string;
-  _type: "reference";
-  _weak?: boolean;
-  [internalGroqTypeReferenceTo]?: "mux.videoAsset";
-};
-
-export type MuxVideo = {
-  _type: "mux.video";
-  asset?: MuxVideoAssetReference;
-};
-
 export type MuxVideoAsset = {
   _id: string;
   _type: "mux.videoAsset";
@@ -1513,6 +2310,8 @@ export type AllSanitySchemaTypes =
   | BlogReference
   | Internal
   | AppLink
+  | SectionContentAppLink
+  | Contact
   | MediaBlockAppMedia
   | VideoFile
   | SanityImageAssetReference
@@ -1533,7 +2332,7 @@ export type AllSanitySchemaTypes =
   | MediaLottieFile
   | MediaLottieDimensions
   | AppMediaVideoFile
-  | Image1
+  | SectionContentAppMediaImage
   | AppMediaVideoCover
   | AppMediaAnimatedThumbnail
   | AppMediaRiveFile
@@ -1542,6 +2341,36 @@ export type AllSanitySchemaTypes =
   | AppMediaLottieDimensions
   | AppLinkFile
   | AppLinkInternal
+  | SolutionItemImage
+  | SectionContentAppLinkFile
+  | SectionContentAppLinkInternal
+  | LogoImage
+  | LogosLogoImage
+  | TeamMomentAppMedia
+  | TeamMomentAppMediaVideoFile
+  | TeamMomentAppMediaImage
+  | TeamMomentAppMediaVideoCover
+  | TeamMomentAppMediaAnimatedThumbnail
+  | TeamMomentAppMediaRiveFile
+  | TeamMomentAppMediaRiveDimensions
+  | TeamMomentAppMediaLottieFile
+  | TeamMomentAppMediaLottieDimensions
+  | Portrait
+  | LeadFormSection
+  | TeamSection
+  | IntersectionSection
+  | ProcessSection
+  | CaseStudyReference
+  | LogoStripSection
+  | LogoWallSection
+  | CaseStudySection
+  | MarqueeSection
+  | WebosSection
+  | SolutionSection
+  | StatementSection
+  | ImageGridSection
+  | GallerySection
+  | HeroSection
   | ContactFormSection
   | TextSection
   | CtaSection
@@ -1551,24 +2380,29 @@ export type AllSanitySchemaTypes =
   | RiveOptions
   | VideoOptions
   | AspectRatio
-  | ArticleCategory
+  | Service
+  | Work
+  | SanityImageCrop
+  | SanityImageHotspot
   | Slug
+  | ArticleCategory
   | ImageAltText
+  | LeadFormSubmission
   | ContactFormSubmission
   | Redirect
   | SiteSettings
-  | SanityImageCrop
-  | SanityImageHotspot
   | Site
   | Page
+  | ServiceReference
+  | CaseStudy
+  | MuxVideoAssetReference
+  | MuxVideo
   | LegalPage
   | ArticleCategoryReference
   | PersonReference
   | Article
   | Person
   | Blog
-  | MuxVideoAssetReference
-  | MuxVideo
   | MuxVideoAsset
   | MuxAssetData
   | MuxMasterFile
@@ -1651,7 +2485,7 @@ export type LlmsTxtInventoryQueryResult = {
 
 // Source: src/features/agents/query.ts
 // Variable: AgentMarkdownContentQuery
-// Query: fn frag::link($value) = $value{  type,  "openInNewTab": coalesce(openInNewTab, false),  "canDownload": select(    type == "file" => coalesce(canDownload, false),    true => false  ),  "href": select(    type == "internal" => coalesce(      select(        defined(internal.sectionTarget) && defined(internal.link->pageBuilder.sectionsArray) => internal.link->uri.current + '#' + coalesce(          internal.link->pageBuilder.sectionsArray[_key == ^.internal.sectionTarget][0].sectionSettings.sectionHash.current,          internal.link->pageBuilder.sectionsArray[_key == ^.internal.sectionTarget][0]._key,        ),        true => internal.link->uri.current,      ),      ""    ),    type == "external" => coalesce(external, ""),    type == "email" => "mailto:" + coalesce(email, ""),    type == "phone" => "tel:" + coalesce(phone, ""),    type == "file" => coalesce(file.asset->url, ""),    type == "params" => coalesce(paramsHref, ""),    true => ""  ),  "text": coalesce(    customText,    select(      type == "internal" => coalesce(        select(          defined(internal.sectionTarget) && defined(internal.link->pageBuilder.sectionsArray) => coalesce(            internal.link->pageBuilder.sectionsArray[_key == ^.internal.sectionTarget][0].sectionSettings.sectionTitle,            internal.link->title,          ),          true => internal.link->title,        ),        internal.link->uri.current,        ""      ),      type == "external" => coalesce(external, ""),      type == "email" => coalesce(email, ""),      type == "phone" => coalesce(phone, ""),      type == "file" => coalesce(file.asset->originalFilename, ""),      type == "params" => coalesce(paramsHref, ""),      true => ""    ),    "",  )};fn frag::agentRichText($value) = $value[]{  _type,  _type == "block" => {    style,    listItem,    level,    "children": children[]{ _type, text, marks },    "markDefs": markDefs[]{      _key,      _type,      _type == "linkField" => frag::link(@)    }  },  _type == "mediaBlock" => {    "alt": appMedia.image.asset->altText,    "imageUrl": appMedia.image.asset->url  }};*[  defined(uri.current)  && uri.current == $uri][0]{  _type,  "uri": coalesce(uri.current, "/"),  "title": coalesce(seoMetadata.title, title, name),  "description": seoMetadata.description,  publishedAt,  "author": author->name,  "categories": categories[]->name,  "sections": pageBuilder.sectionsArray[sectionSettings.disabled != true]{    _type,        "text": frag::agentRichText(sectionContent.appRichText),  "media": sectionContent.appMedia{    "alt": image.asset->altText,    "imageUrl": image.asset->url  },  "cta": frag::link(sectionContent.appLink),  "headline": sectionContent.headline,  "caption": sectionContent.caption  },  // Articles have no page builder: the body is one rich text field on the document.  "content": frag::agentRichText(content),  // A person's body is their bio, under a different field name.  _type == "person" => {    "content": frag::agentRichText(bio),  },  _type == "blog" => {  "heading": heading,  "intro": frag::agentRichText(intro),  "articles": *[    _type == "article"    && defined(uri.current)    && seoMetadata.noIndex != true    && passwordProtected != true  ] | order(publishedAt desc){    "uri": uri.current,    title,    "description": seoMetadata.description,    publishedAt  }  }}
+// Query: fn frag::link($value) = $value{  type,  "openInNewTab": coalesce(openInNewTab, false),  "canDownload": select(    type == "file" => coalesce(canDownload, false),    true => false  ),  "href": select(    type == "internal" => coalesce(      select(        defined(internal.sectionTarget) && defined(internal.link->pageBuilder.sectionsArray) => internal.link->uri.current + '#' + coalesce(          internal.link->pageBuilder.sectionsArray[_key == ^.internal.sectionTarget][0].sectionSettings.sectionHash.current,          internal.link->pageBuilder.sectionsArray[_key == ^.internal.sectionTarget][0]._key,        ),        true => internal.link->uri.current,      ),      ""    ),    type == "external" => coalesce(external, ""),    type == "email" => "mailto:" + coalesce(email, ""),    type == "phone" => "tel:" + coalesce(phone, ""),    type == "file" => coalesce(file.asset->url, ""),    type == "params" => coalesce(paramsHref, ""),    true => ""  ),  "text": coalesce(    customText,    select(      type == "internal" => coalesce(        select(          defined(internal.sectionTarget) && defined(internal.link->pageBuilder.sectionsArray) => coalesce(            internal.link->pageBuilder.sectionsArray[_key == ^.internal.sectionTarget][0].sectionSettings.sectionTitle,            internal.link->title,          ),          true => internal.link->title,        ),        internal.link->uri.current,        ""      ),      type == "external" => coalesce(external, ""),      type == "email" => coalesce(email, ""),      type == "phone" => coalesce(phone, ""),      type == "file" => coalesce(file.asset->originalFilename, ""),      type == "params" => coalesce(paramsHref, ""),      true => ""    ),    "",  )};fn frag::agentRichText($value) = $value[]{  _type,  _type == "block" => {    style,    listItem,    level,    "children": children[]{ _type, text, marks },    "markDefs": markDefs[]{      _key,      _type,      _type == "linkField" => frag::link(@)    }  },  _type == "mediaBlock" => {    "alt": appMedia.image.asset->altText,    "imageUrl": appMedia.image.asset->url  }};*[  defined(uri.current)  && uri.current == $uri][0]{  _type,  "uri": coalesce(uri.current, "/"),  "title": coalesce(seoMetadata.title, title, name),  "description": seoMetadata.description,  publishedAt,  "author": author->name,  "categories": categories[]->name,  "sections": pageBuilder.sectionsArray[sectionSettings.disabled != true]{    _type,        "text": frag::agentRichText(sectionContent.appRichText),  "media": sectionContent.appMedia{    "alt": image.asset->altText,    "imageUrl": image.asset->url  },  "cta": frag::link(sectionContent.appLink),  "headline": sectionContent.headline,  "caption": sectionContent.caption,  "metric": sectionContent.metric,  "statement": sectionContent.statement,  "statementSupport": sectionContent.support,  "lede": sectionContent.lede,  "outro": sectionContent.outro,  "items": sectionContent.items[]{title, text},  "logos": sectionContent.logos[]{name},  "images": sectionContent.images[]{    "alt": asset->altText,    "imageUrl": asset->url  },  "moments": sectionContent.moments[]{    caption,    "alt": appMedia.image.asset->altText,    "imageUrl": appMedia.image.asset->url  },  "caseStudies": sectionContent.caseStudies[]->{    title,    "uri": uri.current,    "services": services[]->name  },  "processLanes": [    { "title": sectionContent.oldTitle, "caption": sectionContent.oldCaption, "steps": sectionContent.oldSteps[]{label, days} },    { "title": sectionContent.newTitle, "caption": sectionContent.newCaption, "steps": sectionContent.newSteps[]{label} }  ],  "closingTitle": sectionContent.closingTitle,  "closingText": sectionContent.closingText  },  // Articles have no page builder: the body is one rich text field on the document.  "content": frag::agentRichText(content),  // A person's body is their bio, under a different field name.  _type == "person" => {    "content": frag::agentRichText(bio),  },  _type == "blog" => {  "heading": heading,  "intro": frag::agentRichText(intro),  "articles": *[    _type == "article"    && defined(uri.current)    && seoMetadata.noIndex != true    && passwordProtected != true  ] | order(publishedAt desc){    "uri": uri.current,    title,    "description": seoMetadata.description,    publishedAt  }  },  _type == "work" => {  "heading": heading,  "intro": frag::agentRichText(intro),  "caseStudies": *[    _type == "caseStudy"    && defined(uri.current)    && seoMetadata.noIndex != true    && passwordProtected != true  ] | order(publishedAt desc){    "uri": uri.current,    title,    "services": services[]->name,    publishedAt  }  },  // A case study's services: the meta line sets them beside the date, the way categories read on an article.  _type == "caseStudy" => {    "services": services[]->name,  }}
 export type AgentMarkdownContentQueryResult =
   | {
       _type: "article";
@@ -1778,6 +2612,708 @@ export type AgentMarkdownContentQueryResult =
       }>;
     }
   | {
+      _type: "caseStudy";
+      uri: string | "/";
+      title: string | undefined;
+      description: string | undefined;
+      publishedAt: string | undefined;
+      author: null;
+      categories: null;
+      sections: Array<
+        | {
+            _type: "caseStudySectionField";
+            text: null;
+            media: null;
+            cta: {
+              type:
+                | "email"
+                | "external"
+                | "file"
+                | "internal"
+                | "params"
+                | "phone"
+                | undefined;
+              openInNewTab: boolean | false;
+              canDownload: boolean | false;
+              href: string | "" | "mailto:" | "tel:";
+              text: string | "";
+            } | undefined;
+            headline: null;
+            caption: null;
+            metric: null;
+            statement: null;
+            statementSupport: null;
+            lede: null;
+            outro: null;
+            items: null;
+            logos: null;
+            images: null;
+            moments: null;
+            caseStudies: Array<{
+              title: string | undefined;
+              uri: string | undefined;
+              services: Array<string | undefined> | undefined;
+            }> | undefined;
+            processLanes: Array<{
+              title: null;
+              caption: null;
+              steps: null;
+            }>;
+            closingTitle: null;
+            closingText: null;
+          }
+        | {
+            _type: "contactFormSectionField";
+            text: Array<{
+              _type: "block";
+              style: "caption" | "normal" | undefined;
+              listItem: null;
+              level: number | undefined;
+              children: Array<{
+                _type: "span";
+                text: string | undefined;
+                marks: Array<string> | undefined;
+              }> | undefined;
+              markDefs: Array<
+                | {
+                    _key: string;
+                    _type: "highlightColorField";
+                  }
+                | {
+                    _key: string;
+                    _type: "indentField";
+                  }
+                | {
+                    _key: string;
+                    _type: "linkField";
+                    type:
+                      | "email"
+                      | "external"
+                      | "file"
+                      | "internal"
+                      | "params"
+                      | "phone"
+                      | undefined;
+                    openInNewTab: boolean | false;
+                    canDownload: boolean | false;
+                    href: string | "" | "mailto:" | "tel:";
+                    text: string | "";
+                  }
+                | {
+                    _key: string;
+                    _type: "textColorField";
+                  }
+              > | undefined;
+            }> | undefined;
+            media: null;
+            cta: null;
+            headline: string | undefined;
+            caption: null;
+            metric: null;
+            statement: null;
+            statementSupport: null;
+            lede: null;
+            outro: null;
+            items: null;
+            logos: null;
+            images: null;
+            moments: null;
+            caseStudies: null;
+            processLanes: Array<{
+              title: null;
+              caption: null;
+              steps: null;
+            }>;
+            closingTitle: null;
+            closingText: null;
+          }
+        | {
+            _type: "ctaSectionField";
+            text: Array<{
+              _type: "block";
+              style: "caption" | "normal" | undefined;
+              listItem: null;
+              level: number | undefined;
+              children: Array<{
+                _type: "span";
+                text: string | undefined;
+                marks: Array<string> | undefined;
+              }> | undefined;
+              markDefs: Array<
+                | {
+                    _key: string;
+                    _type: "highlightColorField";
+                  }
+                | {
+                    _key: string;
+                    _type: "indentField";
+                  }
+                | {
+                    _key: string;
+                    _type: "linkField";
+                    type:
+                      | "email"
+                      | "external"
+                      | "file"
+                      | "internal"
+                      | "params"
+                      | "phone"
+                      | undefined;
+                    openInNewTab: boolean | false;
+                    canDownload: boolean | false;
+                    href: string | "" | "mailto:" | "tel:";
+                    text: string | "";
+                  }
+                | {
+                    _key: string;
+                    _type: "textColorField";
+                  }
+              > | undefined;
+            }> | undefined;
+            media: null;
+            cta: {
+              type:
+                | "email"
+                | "external"
+                | "file"
+                | "internal"
+                | "params"
+                | "phone"
+                | undefined;
+              openInNewTab: boolean | false;
+              canDownload: boolean | false;
+              href: string | "" | "mailto:" | "tel:";
+              text: string | "";
+            } | undefined;
+            headline: string | undefined;
+            caption: null;
+            metric: null;
+            statement: null;
+            statementSupport: null;
+            lede: null;
+            outro: null;
+            items: null;
+            logos: null;
+            images: null;
+            moments: null;
+            caseStudies: null;
+            processLanes: Array<{
+              title: null;
+              caption: null;
+              steps: null;
+            }>;
+            closingTitle: null;
+            closingText: null;
+          }
+        | {
+            _type: "gallerySectionField";
+            text: null;
+            media: null;
+            cta: null;
+            headline: null;
+            caption: null;
+            metric: null;
+            statement: null;
+            statementSupport: null;
+            lede: null;
+            outro: null;
+            items: null;
+            logos: null;
+            images: Array<{
+              alt: string | undefined;
+              imageUrl: string | undefined;
+            }> | undefined;
+            moments: null;
+            caseStudies: null;
+            processLanes: Array<{
+              title: null;
+              caption: null;
+              steps: null;
+            }>;
+            closingTitle: null;
+            closingText: null;
+          }
+        | {
+            _type: "heroSectionField";
+            text: null;
+            media: null;
+            cta: null;
+            headline: string | undefined;
+            caption: null;
+            metric: null;
+            statement: null;
+            statementSupport: null;
+            lede: string | undefined;
+            outro: null;
+            items: null;
+            logos: null;
+            images: null;
+            moments: null;
+            caseStudies: null;
+            processLanes: Array<{
+              title: null;
+              caption: null;
+              steps: null;
+            }>;
+            closingTitle: null;
+            closingText: null;
+          }
+        | {
+            _type: "imageGridSectionField";
+            text: null;
+            media: null;
+            cta: null;
+            headline: null;
+            caption: null;
+            metric: null;
+            statement: null;
+            statementSupport: null;
+            lede: null;
+            outro: null;
+            items: null;
+            logos: null;
+            images: Array<{
+              alt: string | undefined;
+              imageUrl: string | undefined;
+            }> | undefined;
+            moments: null;
+            caseStudies: null;
+            processLanes: Array<{
+              title: null;
+              caption: null;
+              steps: null;
+            }>;
+            closingTitle: null;
+            closingText: null;
+          }
+        | {
+            _type: "intersectionSectionField";
+            text: null;
+            media: null;
+            cta: null;
+            headline: string | undefined;
+            caption: null;
+            metric: null;
+            statement: null;
+            statementSupport: null;
+            lede: string | undefined;
+            outro: null;
+            items: null;
+            logos: null;
+            images: null;
+            moments: null;
+            caseStudies: null;
+            processLanes: Array<{
+              title: null;
+              caption: null;
+              steps: null;
+            }>;
+            closingTitle: null;
+            closingText: null;
+          }
+        | {
+            _type: "leadFormSectionField";
+            text: null;
+            media: null;
+            cta: null;
+            headline: string | undefined;
+            caption: null;
+            metric: null;
+            statement: null;
+            statementSupport: null;
+            lede: string | undefined;
+            outro: null;
+            items: null;
+            logos: null;
+            images: null;
+            moments: null;
+            caseStudies: null;
+            processLanes: Array<{
+              title: null;
+              caption: null;
+              steps: null;
+            }>;
+            closingTitle: null;
+            closingText: null;
+          }
+        | {
+            _type: "logoStripSectionField";
+            text: null;
+            media: null;
+            cta: null;
+            headline: null;
+            caption: null;
+            metric: null;
+            statement: string | undefined;
+            statementSupport: null;
+            lede: null;
+            outro: null;
+            items: null;
+            logos: Array<{
+              name: string | undefined;
+            }> | undefined;
+            images: null;
+            moments: null;
+            caseStudies: null;
+            processLanes: Array<{
+              title: null;
+              caption: null;
+              steps: null;
+            }>;
+            closingTitle: null;
+            closingText: null;
+          }
+        | {
+            _type: "logoWallSectionField";
+            text: null;
+            media: null;
+            cta: null;
+            headline: null;
+            caption: null;
+            metric: string | undefined;
+            statement: string | undefined;
+            statementSupport: null;
+            lede: null;
+            outro: null;
+            items: null;
+            logos: Array<{
+              name: string | undefined;
+            }> | undefined;
+            images: null;
+            moments: null;
+            caseStudies: null;
+            processLanes: Array<{
+              title: null;
+              caption: null;
+              steps: null;
+            }>;
+            closingTitle: null;
+            closingText: null;
+          }
+        | {
+            _type: "marqueeSectionField";
+            text: null;
+            media: null;
+            cta: null;
+            headline: string | undefined;
+            caption: null;
+            metric: null;
+            statement: string | undefined;
+            statementSupport: null;
+            lede: string | undefined;
+            outro: null;
+            items: null;
+            logos: null;
+            images: null;
+            moments: null;
+            caseStudies: null;
+            processLanes: Array<{
+              title: null;
+              caption: null;
+              steps: null;
+            }>;
+            closingTitle: null;
+            closingText: null;
+          }
+        | {
+            _type: "mediaSectionField";
+            text: null;
+            media: {
+              alt: string | undefined;
+              imageUrl: string | undefined;
+            } | undefined;
+            cta: null;
+            headline: null;
+            caption: string | undefined;
+            metric: null;
+            statement: null;
+            statementSupport: null;
+            lede: null;
+            outro: null;
+            items: null;
+            logos: null;
+            images: null;
+            moments: null;
+            caseStudies: null;
+            processLanes: Array<{
+              title: null;
+              caption: null;
+              steps: null;
+            }>;
+            closingTitle: null;
+            closingText: null;
+          }
+        | {
+            _type: "processSectionField";
+            text: null;
+            media: null;
+            cta: null;
+            headline: string | undefined;
+            caption: null;
+            metric: null;
+            statement: null;
+            statementSupport: null;
+            lede: string | undefined;
+            outro: null;
+            items: null;
+            logos: null;
+            images: null;
+            moments: null;
+            caseStudies: null;
+            processLanes: Array<
+              | {
+                  title: string | undefined;
+                  caption: string | undefined;
+                  steps: Array<{
+                    label: string | undefined;
+                    days: number | undefined;
+                  }> | undefined;
+                }
+              | {
+                  title: string | undefined;
+                  caption: string | undefined;
+                  steps: Array<{
+                    label: string | undefined;
+                  }> | undefined;
+                }
+            >;
+            closingTitle: string | undefined;
+            closingText: string | undefined;
+          }
+        | {
+            _type: "solutionSectionField";
+            text: null;
+            media: null;
+            cta: null;
+            headline: string | undefined;
+            caption: null;
+            metric: null;
+            statement: null;
+            statementSupport: null;
+            lede: string | undefined;
+            outro: null;
+            items: Array<{
+              title: string | undefined;
+              text: string | undefined;
+            }> | undefined;
+            logos: null;
+            images: null;
+            moments: null;
+            caseStudies: null;
+            processLanes: Array<{
+              title: null;
+              caption: null;
+              steps: null;
+            }>;
+            closingTitle: null;
+            closingText: null;
+          }
+        | {
+            _type: "statementSectionField";
+            text: null;
+            media: null;
+            cta: null;
+            headline: string | undefined;
+            caption: null;
+            metric: null;
+            statement: string | undefined;
+            statementSupport: string | undefined;
+            lede: null;
+            outro: null;
+            items: null;
+            logos: null;
+            images: null;
+            moments: null;
+            caseStudies: null;
+            processLanes: Array<{
+              title: null;
+              caption: null;
+              steps: null;
+            }>;
+            closingTitle: null;
+            closingText: null;
+          }
+        | {
+            _type: "teamSectionField";
+            text: null;
+            media: null;
+            cta: null;
+            headline: string | undefined;
+            caption: null;
+            metric: null;
+            statement: null;
+            statementSupport: null;
+            lede: string | undefined;
+            outro: string | undefined;
+            items: null;
+            logos: null;
+            images: null;
+            moments: Array<{
+              caption: string | undefined;
+              alt: string | undefined;
+              imageUrl: string | undefined;
+            }> | undefined;
+            caseStudies: null;
+            processLanes: Array<{
+              title: null;
+              caption: null;
+              steps: null;
+            }>;
+            closingTitle: null;
+            closingText: null;
+          }
+        | {
+            _type: "textSectionField";
+            text: Array<
+              | {
+                  _type: "block";
+                  style: "caption" | "h2" | "h3" | "h4" | "normal" | undefined;
+                  listItem: "bullet" | "number" | undefined;
+                  level: number | undefined;
+                  children: Array<
+                    | {
+                        _type: "inlineMediaField";
+                        text: null;
+                        marks: null;
+                      }
+                    | {
+                        _type: "span";
+                        text: string | undefined;
+                        marks: Array<string> | undefined;
+                      }
+                  > | undefined;
+                  markDefs: Array<
+                    | {
+                        _key: string;
+                        _type: "highlightColorField";
+                      }
+                    | {
+                        _key: string;
+                        _type: "indentField";
+                      }
+                    | {
+                        _key: string;
+                        _type: "linkField";
+                        type:
+                          | "email"
+                          | "external"
+                          | "file"
+                          | "internal"
+                          | "params"
+                          | "phone"
+                          | undefined;
+                        openInNewTab: boolean | false;
+                        canDownload: boolean | false;
+                        href: string | "" | "mailto:" | "tel:";
+                        text: string | "";
+                      }
+                    | {
+                        _key: string;
+                        _type: "textColorField";
+                      }
+                  > | undefined;
+                }
+              | {
+                  _type: "mediaBlock";
+                  alt: string | undefined;
+                  imageUrl: string | undefined;
+                }
+            > | undefined;
+            media: null;
+            cta: null;
+            headline: string | undefined;
+            caption: null;
+            metric: null;
+            statement: null;
+            statementSupport: null;
+            lede: null;
+            outro: null;
+            items: null;
+            logos: null;
+            images: null;
+            moments: null;
+            caseStudies: null;
+            processLanes: Array<{
+              title: null;
+              caption: null;
+              steps: null;
+            }>;
+            closingTitle: null;
+            closingText: null;
+          }
+        | {
+            _type: "webosSectionField";
+            text: null;
+            media: null;
+            cta: null;
+            headline: string | undefined;
+            caption: null;
+            metric: null;
+            statement: null;
+            statementSupport: null;
+            lede: null;
+            outro: null;
+            items: Array<{
+              title: string | undefined;
+              text: string | undefined;
+            }> | undefined;
+            logos: null;
+            images: null;
+            moments: null;
+            caseStudies: null;
+            processLanes: Array<{
+              title: null;
+              caption: null;
+              steps: null;
+            }>;
+            closingTitle: null;
+            closingText: null;
+          }
+      > | undefined;
+      content: Array<{
+        _type: "block";
+        style: "caption" | "normal" | undefined;
+        listItem: null;
+        level: number | undefined;
+        children: Array<{
+          _type: "span";
+          text: string | undefined;
+          marks: Array<string> | undefined;
+        }> | undefined;
+        markDefs: Array<
+          | {
+              _key: string;
+              _type: "highlightColorField";
+            }
+          | {
+              _key: string;
+              _type: "indentField";
+            }
+          | {
+              _key: string;
+              _type: "linkField";
+              type:
+                | "email"
+                | "external"
+                | "file"
+                | "internal"
+                | "params"
+                | "phone"
+                | undefined;
+              openInNewTab: boolean | false;
+              canDownload: boolean | false;
+              href: string | "" | "mailto:" | "tel:";
+              text: string | "";
+            }
+          | {
+              _key: string;
+              _type: "textColorField";
+            }
+        > | undefined;
+      }> | undefined;
+      services: Array<string | undefined> | undefined;
+    }
+  | {
       _type: "legalPage";
       uri: string | "/";
       title: string | undefined;
@@ -1852,6 +3388,48 @@ export type AgentMarkdownContentQueryResult =
       categories: null;
       sections: Array<
         | {
+            _type: "caseStudySectionField";
+            text: null;
+            media: null;
+            cta: {
+              type:
+                | "email"
+                | "external"
+                | "file"
+                | "internal"
+                | "params"
+                | "phone"
+                | undefined;
+              openInNewTab: boolean | false;
+              canDownload: boolean | false;
+              href: string | "" | "mailto:" | "tel:";
+              text: string | "";
+            } | undefined;
+            headline: null;
+            caption: null;
+            metric: null;
+            statement: null;
+            statementSupport: null;
+            lede: null;
+            outro: null;
+            items: null;
+            logos: null;
+            images: null;
+            moments: null;
+            caseStudies: Array<{
+              title: string | undefined;
+              uri: string | undefined;
+              services: Array<string | undefined> | undefined;
+            }> | undefined;
+            processLanes: Array<{
+              title: null;
+              caption: null;
+              steps: null;
+            }>;
+            closingTitle: null;
+            closingText: null;
+          }
+        | {
             _type: "contactFormSectionField";
             text: Array<{
               _type: "block";
@@ -1898,6 +3476,23 @@ export type AgentMarkdownContentQueryResult =
             cta: null;
             headline: string | undefined;
             caption: null;
+            metric: null;
+            statement: null;
+            statementSupport: null;
+            lede: null;
+            outro: null;
+            items: null;
+            logos: null;
+            images: null;
+            moments: null;
+            caseStudies: null;
+            processLanes: Array<{
+              title: null;
+              caption: null;
+              steps: null;
+            }>;
+            closingTitle: null;
+            closingText: null;
           }
         | {
             _type: "ctaSectionField";
@@ -1959,6 +3554,233 @@ export type AgentMarkdownContentQueryResult =
             } | undefined;
             headline: string | undefined;
             caption: null;
+            metric: null;
+            statement: null;
+            statementSupport: null;
+            lede: null;
+            outro: null;
+            items: null;
+            logos: null;
+            images: null;
+            moments: null;
+            caseStudies: null;
+            processLanes: Array<{
+              title: null;
+              caption: null;
+              steps: null;
+            }>;
+            closingTitle: null;
+            closingText: null;
+          }
+        | {
+            _type: "gallerySectionField";
+            text: null;
+            media: null;
+            cta: null;
+            headline: null;
+            caption: null;
+            metric: null;
+            statement: null;
+            statementSupport: null;
+            lede: null;
+            outro: null;
+            items: null;
+            logos: null;
+            images: Array<{
+              alt: string | undefined;
+              imageUrl: string | undefined;
+            }> | undefined;
+            moments: null;
+            caseStudies: null;
+            processLanes: Array<{
+              title: null;
+              caption: null;
+              steps: null;
+            }>;
+            closingTitle: null;
+            closingText: null;
+          }
+        | {
+            _type: "heroSectionField";
+            text: null;
+            media: null;
+            cta: null;
+            headline: string | undefined;
+            caption: null;
+            metric: null;
+            statement: null;
+            statementSupport: null;
+            lede: string | undefined;
+            outro: null;
+            items: null;
+            logos: null;
+            images: null;
+            moments: null;
+            caseStudies: null;
+            processLanes: Array<{
+              title: null;
+              caption: null;
+              steps: null;
+            }>;
+            closingTitle: null;
+            closingText: null;
+          }
+        | {
+            _type: "imageGridSectionField";
+            text: null;
+            media: null;
+            cta: null;
+            headline: null;
+            caption: null;
+            metric: null;
+            statement: null;
+            statementSupport: null;
+            lede: null;
+            outro: null;
+            items: null;
+            logos: null;
+            images: Array<{
+              alt: string | undefined;
+              imageUrl: string | undefined;
+            }> | undefined;
+            moments: null;
+            caseStudies: null;
+            processLanes: Array<{
+              title: null;
+              caption: null;
+              steps: null;
+            }>;
+            closingTitle: null;
+            closingText: null;
+          }
+        | {
+            _type: "intersectionSectionField";
+            text: null;
+            media: null;
+            cta: null;
+            headline: string | undefined;
+            caption: null;
+            metric: null;
+            statement: null;
+            statementSupport: null;
+            lede: string | undefined;
+            outro: null;
+            items: null;
+            logos: null;
+            images: null;
+            moments: null;
+            caseStudies: null;
+            processLanes: Array<{
+              title: null;
+              caption: null;
+              steps: null;
+            }>;
+            closingTitle: null;
+            closingText: null;
+          }
+        | {
+            _type: "leadFormSectionField";
+            text: null;
+            media: null;
+            cta: null;
+            headline: string | undefined;
+            caption: null;
+            metric: null;
+            statement: null;
+            statementSupport: null;
+            lede: string | undefined;
+            outro: null;
+            items: null;
+            logos: null;
+            images: null;
+            moments: null;
+            caseStudies: null;
+            processLanes: Array<{
+              title: null;
+              caption: null;
+              steps: null;
+            }>;
+            closingTitle: null;
+            closingText: null;
+          }
+        | {
+            _type: "logoStripSectionField";
+            text: null;
+            media: null;
+            cta: null;
+            headline: null;
+            caption: null;
+            metric: null;
+            statement: string | undefined;
+            statementSupport: null;
+            lede: null;
+            outro: null;
+            items: null;
+            logos: Array<{
+              name: string | undefined;
+            }> | undefined;
+            images: null;
+            moments: null;
+            caseStudies: null;
+            processLanes: Array<{
+              title: null;
+              caption: null;
+              steps: null;
+            }>;
+            closingTitle: null;
+            closingText: null;
+          }
+        | {
+            _type: "logoWallSectionField";
+            text: null;
+            media: null;
+            cta: null;
+            headline: null;
+            caption: null;
+            metric: string | undefined;
+            statement: string | undefined;
+            statementSupport: null;
+            lede: null;
+            outro: null;
+            items: null;
+            logos: Array<{
+              name: string | undefined;
+            }> | undefined;
+            images: null;
+            moments: null;
+            caseStudies: null;
+            processLanes: Array<{
+              title: null;
+              caption: null;
+              steps: null;
+            }>;
+            closingTitle: null;
+            closingText: null;
+          }
+        | {
+            _type: "marqueeSectionField";
+            text: null;
+            media: null;
+            cta: null;
+            headline: string | undefined;
+            caption: null;
+            metric: null;
+            statement: string | undefined;
+            statementSupport: null;
+            lede: string | undefined;
+            outro: null;
+            items: null;
+            logos: null;
+            images: null;
+            moments: null;
+            caseStudies: null;
+            processLanes: Array<{
+              title: null;
+              caption: null;
+              steps: null;
+            }>;
+            closingTitle: null;
+            closingText: null;
           }
         | {
             _type: "mediaSectionField";
@@ -1970,6 +3792,142 @@ export type AgentMarkdownContentQueryResult =
             cta: null;
             headline: null;
             caption: string | undefined;
+            metric: null;
+            statement: null;
+            statementSupport: null;
+            lede: null;
+            outro: null;
+            items: null;
+            logos: null;
+            images: null;
+            moments: null;
+            caseStudies: null;
+            processLanes: Array<{
+              title: null;
+              caption: null;
+              steps: null;
+            }>;
+            closingTitle: null;
+            closingText: null;
+          }
+        | {
+            _type: "processSectionField";
+            text: null;
+            media: null;
+            cta: null;
+            headline: string | undefined;
+            caption: null;
+            metric: null;
+            statement: null;
+            statementSupport: null;
+            lede: string | undefined;
+            outro: null;
+            items: null;
+            logos: null;
+            images: null;
+            moments: null;
+            caseStudies: null;
+            processLanes: Array<
+              | {
+                  title: string | undefined;
+                  caption: string | undefined;
+                  steps: Array<{
+                    label: string | undefined;
+                    days: number | undefined;
+                  }> | undefined;
+                }
+              | {
+                  title: string | undefined;
+                  caption: string | undefined;
+                  steps: Array<{
+                    label: string | undefined;
+                  }> | undefined;
+                }
+            >;
+            closingTitle: string | undefined;
+            closingText: string | undefined;
+          }
+        | {
+            _type: "solutionSectionField";
+            text: null;
+            media: null;
+            cta: null;
+            headline: string | undefined;
+            caption: null;
+            metric: null;
+            statement: null;
+            statementSupport: null;
+            lede: string | undefined;
+            outro: null;
+            items: Array<{
+              title: string | undefined;
+              text: string | undefined;
+            }> | undefined;
+            logos: null;
+            images: null;
+            moments: null;
+            caseStudies: null;
+            processLanes: Array<{
+              title: null;
+              caption: null;
+              steps: null;
+            }>;
+            closingTitle: null;
+            closingText: null;
+          }
+        | {
+            _type: "statementSectionField";
+            text: null;
+            media: null;
+            cta: null;
+            headline: string | undefined;
+            caption: null;
+            metric: null;
+            statement: string | undefined;
+            statementSupport: string | undefined;
+            lede: null;
+            outro: null;
+            items: null;
+            logos: null;
+            images: null;
+            moments: null;
+            caseStudies: null;
+            processLanes: Array<{
+              title: null;
+              caption: null;
+              steps: null;
+            }>;
+            closingTitle: null;
+            closingText: null;
+          }
+        | {
+            _type: "teamSectionField";
+            text: null;
+            media: null;
+            cta: null;
+            headline: string | undefined;
+            caption: null;
+            metric: null;
+            statement: null;
+            statementSupport: null;
+            lede: string | undefined;
+            outro: string | undefined;
+            items: null;
+            logos: null;
+            images: null;
+            moments: Array<{
+              caption: string | undefined;
+              alt: string | undefined;
+              imageUrl: string | undefined;
+            }> | undefined;
+            caseStudies: null;
+            processLanes: Array<{
+              title: null;
+              caption: null;
+              steps: null;
+            }>;
+            closingTitle: null;
+            closingText: null;
           }
         | {
             _type: "textSectionField";
@@ -2032,6 +3990,51 @@ export type AgentMarkdownContentQueryResult =
             cta: null;
             headline: string | undefined;
             caption: null;
+            metric: null;
+            statement: null;
+            statementSupport: null;
+            lede: null;
+            outro: null;
+            items: null;
+            logos: null;
+            images: null;
+            moments: null;
+            caseStudies: null;
+            processLanes: Array<{
+              title: null;
+              caption: null;
+              steps: null;
+            }>;
+            closingTitle: null;
+            closingText: null;
+          }
+        | {
+            _type: "webosSectionField";
+            text: null;
+            media: null;
+            cta: null;
+            headline: string | undefined;
+            caption: null;
+            metric: null;
+            statement: null;
+            statementSupport: null;
+            lede: null;
+            outro: null;
+            items: Array<{
+              title: string | undefined;
+              text: string | undefined;
+            }> | undefined;
+            logos: null;
+            images: null;
+            moments: null;
+            caseStudies: null;
+            processLanes: Array<{
+              title: null;
+              caption: null;
+              steps: null;
+            }>;
+            closingTitle: null;
+            closingText: null;
           }
       > | undefined;
       content: null;
@@ -2086,6 +4089,65 @@ export type AgentMarkdownContentQueryResult =
             }
         > | undefined;
       }> | undefined;
+    }
+  | {
+      _type: "work";
+      uri: string | "/";
+      title: string | undefined;
+      description: string | undefined;
+      publishedAt: null;
+      author: null;
+      categories: null;
+      sections: null;
+      content: null;
+      heading: string | undefined;
+      intro: Array<{
+        _type: "block";
+        style: "caption" | "normal" | undefined;
+        listItem: null;
+        level: number | undefined;
+        children: Array<{
+          _type: "span";
+          text: string | undefined;
+          marks: Array<string> | undefined;
+        }> | undefined;
+        markDefs: Array<
+          | {
+              _key: string;
+              _type: "highlightColorField";
+            }
+          | {
+              _key: string;
+              _type: "indentField";
+            }
+          | {
+              _key: string;
+              _type: "linkField";
+              type:
+                | "email"
+                | "external"
+                | "file"
+                | "internal"
+                | "params"
+                | "phone"
+                | undefined;
+              openInNewTab: boolean | false;
+              canDownload: boolean | false;
+              href: string | "" | "mailto:" | "tel:";
+              text: string | "";
+            }
+          | {
+              _key: string;
+              _type: "textColorField";
+            }
+        > | undefined;
+      }> | undefined;
+      caseStudies: Array<{
+        uri: string | undefined;
+        title: string | undefined;
+        services: Array<string | undefined> | undefined;
+        publishedAt: string | undefined;
+      }>;
     }
   | undefined;
 
@@ -2226,10 +4288,21 @@ export type BlogArticleListQResult =
     }
   | undefined;
 
+// Source: src/features/forms/notification.ts
+// Variable: SiteNotificationEmailsQ
+// Query: *[_type == "siteSettings"][0]{  contactFormNotificationEmails}
+export type SiteNotificationEmailsQResult = {
+  contactFormNotificationEmails: Array<string> | undefined;
+} | undefined;
+
 // Source: src/features/page-builder/queries.ts
 // Variable: PageSectionsQ
 // Query: *[defined(uri.current) && uri.current == $uri][0]  .pageBuilder.sectionsArray[sectionSettings.disabled != true]{    _key,    _type  }
 export type PageSectionsQResult = Array<
+  | {
+      _key: string;
+      _type: "caseStudySectionField";
+    }
   | {
       _key: string;
       _type: "contactFormSectionField";
@@ -2240,17 +4313,69 @@ export type PageSectionsQResult = Array<
     }
   | {
       _key: string;
+      _type: "gallerySectionField";
+    }
+  | {
+      _key: string;
+      _type: "heroSectionField";
+    }
+  | {
+      _key: string;
+      _type: "imageGridSectionField";
+    }
+  | {
+      _key: string;
+      _type: "intersectionSectionField";
+    }
+  | {
+      _key: string;
+      _type: "leadFormSectionField";
+    }
+  | {
+      _key: string;
+      _type: "logoStripSectionField";
+    }
+  | {
+      _key: string;
+      _type: "logoWallSectionField";
+    }
+  | {
+      _key: string;
+      _type: "marqueeSectionField";
+    }
+  | {
+      _key: string;
       _type: "mediaSectionField";
+    }
+  | {
+      _key: string;
+      _type: "processSectionField";
+    }
+  | {
+      _key: string;
+      _type: "solutionSectionField";
+    }
+  | {
+      _key: string;
+      _type: "statementSectionField";
+    }
+  | {
+      _key: string;
+      _type: "teamSectionField";
     }
   | {
       _key: string;
       _type: "textSectionField";
     }
+  | {
+      _key: string;
+      _type: "webosSectionField";
+    }
 > | undefined;
 
 // Source: src/features/page-builder/queries.ts
 // Variable: TextSectionQ
-// Query: fn frag::link($value) = $value{  type,  "openInNewTab": coalesce(openInNewTab, false),  "canDownload": select(    type == "file" => coalesce(canDownload, false),    true => false  ),  "href": select(    type == "internal" => coalesce(      select(        defined(internal.sectionTarget) && defined(internal.link->pageBuilder.sectionsArray) => internal.link->uri.current + '#' + coalesce(          internal.link->pageBuilder.sectionsArray[_key == ^.internal.sectionTarget][0].sectionSettings.sectionHash.current,          internal.link->pageBuilder.sectionsArray[_key == ^.internal.sectionTarget][0]._key,        ),        true => internal.link->uri.current,      ),      ""    ),    type == "external" => coalesce(external, ""),    type == "email" => "mailto:" + coalesce(email, ""),    type == "phone" => "tel:" + coalesce(phone, ""),    type == "file" => coalesce(file.asset->url, ""),    type == "params" => coalesce(paramsHref, ""),    true => ""  ),  "text": coalesce(    customText,    select(      type == "internal" => coalesce(        select(          defined(internal.sectionTarget) && defined(internal.link->pageBuilder.sectionsArray) => coalesce(            internal.link->pageBuilder.sectionsArray[_key == ^.internal.sectionTarget][0].sectionSettings.sectionTitle,            internal.link->title,          ),          true => internal.link->title,        ),        internal.link->uri.current,        ""      ),      type == "external" => coalesce(external, ""),      type == "email" => coalesce(email, ""),      type == "phone" => coalesce(phone, ""),      type == "file" => coalesce(file.asset->originalFilename, ""),      type == "params" => coalesce(paramsHref, ""),      true => ""    ),    "",  )};fn frag::image($value) = $value{  "_id": asset->._id,  "_rev": asset->._rev,  "altText": asset->.altText,  "description": asset->.description,  "title": asset->.title,  "lqip": asset->.metadata.lqip,  "dimensions": asset->.metadata.dimensions,  crop,  hotspot,};fn frag::media($value) = $value{videoOptions{  loop,  muted,  autoPlay,  "noControls": !controls,},lottieOptions{  loop,  autoPlay,},riveOptions{  loop,  autoPlay,  stateMachine,  autoBind,},...select(  type == "image" && defined(image) => {    type,    "image": frag::image(image),    "video": null,    "rive": null,    "lottie": null,    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => image.asset->metadata.dimensions.aspectRatio,    ),  },  type == "videoMux" && defined(video) => {    type,    "image": null,    "rive": null,    "lottie": null,    video{  "_id": asset->_id,  "_rev": asset->_rev,  "playbackId": asset->playbackId,  "thumbTime": coalesce(asset->thumbTime, 1),  "duration": asset->data.duration,  "dimensions": {    "width": asset->data.tracks[0].max_width,    "height": asset->data.tracks[0].max_height,    "aspectRatio": asset->data.tracks[0].max_width / asset->data.tracks[0].max_height,  }},    "videoCover": frag::image(videoCover),    animatedThumbnail{enabled, start, end},    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => video.asset->data.tracks[0].max_width / video.asset->data.tracks[0].max_height,    ),  },  type == "lottie" && defined(lottieFile.asset) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": {      "_id": lottieFile.asset->_id,      "url": lottieFile.asset->url,      "dimensions": select(        defined(lottieDimensions.width) && defined(lottieDimensions.height) && lottieDimensions.width > 0 => {          "width": lottieDimensions.width,          "height": lottieDimensions.height,          "aspectRatio": lottieDimensions.width / lottieDimensions.height,        },        true => null      )    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      defined(lottieDimensions.width) && defined(lottieDimensions.height) && lottieDimensions.width > 0 => lottieDimensions.width / lottieDimensions.height,      true => null    ),  },  type == "rive" && defined(riveFile.asset) => {    type,    "image": null,    "video": null,    "lottie": null,    "rive": {      "_id": riveFile.asset->_id,      "url": riveFile.asset->url,      "dimensions": select(        defined(riveDimensions.width) && defined(riveDimensions.height) && riveDimensions.width > 0 => {          "width": riveDimensions.width,          "height": riveDimensions.height,          "aspectRatio": riveDimensions.width / riveDimensions.height,        },        true => null      )    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      defined(riveDimensions.width) && defined(riveDimensions.height) && riveDimensions.width > 0 => riveDimensions.width / riveDimensions.height,      true => null    ),  },  type == "videoFile" && defined(videoFile.asset) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoCover": frag::image(videoCover),    "videoFile": {      "_id": videoFile.asset->_id,      "url": videoFile.asset->url,      "mimeType": videoFile.asset->mimeType,      "dimensions": videoCover.asset->metadata.dimensions    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => videoCover.asset->metadata.dimensions.aspectRatio    ),  },  type == "videoUrl" && defined(videoUrl) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoFile": null,    "videoCover": frag::image(videoCover),    "videoUrl": {      "url": videoUrl,      "dimensions": videoCover.asset->metadata.dimensions    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => videoCover.asset->metadata.dimensions.aspectRatio    ),  },  true => {    "type": null,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoFile": null,    "videoUrl": null,    "aspectRatio": null,  })};fn frag::richText($value) = $value[]{  ...,  _type == "mediaBlock" => {  caption,  useParallax,  "media": frag::media(appMedia),},  // PLOP: Add Export  markDefs[] {    ...,    _type == "linkField" => frag::link(@),  },  children[] {    ...,    _type == "inlineMediaField" => {      "media": frag::media(media),    },  }};*[_id == $docId][0].pageBuilder.sectionsArray[_type == "textSectionField" && _key == $sectionKey][0]{    "content": sectionContent{      headline,      "text": frag::richText(appRichText)    },    "settings": sectionSettings{      "hash": coalesce(sectionHash.current, _key),      fullBleed,    },}
+// Query: fn frag::link($value) = $value{  type,  "openInNewTab": coalesce(openInNewTab, false),  "canDownload": select(    type == "file" => coalesce(canDownload, false),    true => false  ),  "href": select(    type == "internal" => coalesce(      select(        defined(internal.sectionTarget) && defined(internal.link->pageBuilder.sectionsArray) => internal.link->uri.current + '#' + coalesce(          internal.link->pageBuilder.sectionsArray[_key == ^.internal.sectionTarget][0].sectionSettings.sectionHash.current,          internal.link->pageBuilder.sectionsArray[_key == ^.internal.sectionTarget][0]._key,        ),        true => internal.link->uri.current,      ),      ""    ),    type == "external" => coalesce(external, ""),    type == "email" => "mailto:" + coalesce(email, ""),    type == "phone" => "tel:" + coalesce(phone, ""),    type == "file" => coalesce(file.asset->url, ""),    type == "params" => coalesce(paramsHref, ""),    true => ""  ),  "text": coalesce(    customText,    select(      type == "internal" => coalesce(        select(          defined(internal.sectionTarget) && defined(internal.link->pageBuilder.sectionsArray) => coalesce(            internal.link->pageBuilder.sectionsArray[_key == ^.internal.sectionTarget][0].sectionSettings.sectionTitle,            internal.link->title,          ),          true => internal.link->title,        ),        internal.link->uri.current,        ""      ),      type == "external" => coalesce(external, ""),      type == "email" => coalesce(email, ""),      type == "phone" => coalesce(phone, ""),      type == "file" => coalesce(file.asset->originalFilename, ""),      type == "params" => coalesce(paramsHref, ""),      true => ""    ),    "",  )};fn frag::image($value) = $value{  "_id": asset->._id,  "_rev": asset->._rev,  "altText": asset->.altText,  "description": asset->.description,  "title": asset->.title,  "lqip": asset->.metadata.lqip,  "dimensions": asset->.metadata.dimensions,  crop,  hotspot,};fn frag::media($value) = $value{videoOptions{  loop,  muted,  autoPlay,  "noControls": !controls,},lottieOptions{  loop,  autoPlay,},riveOptions{  loop,  autoPlay,  stateMachine,  autoBind,},...select(  type == "image" && defined(image) => {    type,    "image": frag::image(image),    "video": null,    "rive": null,    "lottie": null,    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => image.asset->metadata.dimensions.aspectRatio,    ),  },  type == "videoMux" && defined(video) => {    type,    "image": null,    "rive": null,    "lottie": null,    video{  "_id": asset->_id,  "_rev": asset->_rev,  "playbackId": asset->playbackId,  "thumbTime": coalesce(asset->thumbTime, 1),  "duration": asset->data.duration,  "dimensions": {    "width": asset->data.tracks[0].max_width,    "height": asset->data.tracks[0].max_height,    "aspectRatio": asset->data.tracks[0].max_width / asset->data.tracks[0].max_height,  }},    "videoCover": frag::image(videoCover),    animatedThumbnail{enabled, start, end},    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => video.asset->data.tracks[0].max_width / video.asset->data.tracks[0].max_height,    ),  },  type == "lottie" && defined(lottieFile.asset) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": {      "_id": lottieFile.asset->_id,      "url": lottieFile.asset->url,      "dimensions": select(        defined(lottieDimensions.width) && defined(lottieDimensions.height) && lottieDimensions.width > 0 => {          "width": lottieDimensions.width,          "height": lottieDimensions.height,          "aspectRatio": lottieDimensions.width / lottieDimensions.height,        },        true => null      )    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      defined(lottieDimensions.width) && defined(lottieDimensions.height) && lottieDimensions.width > 0 => lottieDimensions.width / lottieDimensions.height,      true => null    ),  },  type == "rive" && defined(riveFile.asset) => {    type,    "image": null,    "video": null,    "lottie": null,    "rive": {      "_id": riveFile.asset->_id,      "url": riveFile.asset->url,      "dimensions": select(        defined(riveDimensions.width) && defined(riveDimensions.height) && riveDimensions.width > 0 => {          "width": riveDimensions.width,          "height": riveDimensions.height,          "aspectRatio": riveDimensions.width / riveDimensions.height,        },        true => null      )    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      defined(riveDimensions.width) && defined(riveDimensions.height) && riveDimensions.width > 0 => riveDimensions.width / riveDimensions.height,      true => null    ),  },  type == "videoFile" && defined(videoFile.asset) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoCover": frag::image(videoCover),    "videoFile": {      "_id": videoFile.asset->_id,      "url": videoFile.asset->url,      "mimeType": videoFile.asset->mimeType,      "dimensions": videoCover.asset->metadata.dimensions    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => videoCover.asset->metadata.dimensions.aspectRatio    ),  },  type == "videoUrl" && defined(videoUrl) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoFile": null,    "videoCover": frag::image(videoCover),    "videoUrl": {      "url": videoUrl,      "dimensions": videoCover.asset->metadata.dimensions    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => videoCover.asset->metadata.dimensions.aspectRatio    ),  },  true => {    "type": null,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoFile": null,    "videoUrl": null,    "aspectRatio": null,  })};fn frag::richText($value) = $value[]{  ...,  _type == "mediaBlock" => {  caption,  useParallax,  "media": frag::media(appMedia),},  // PLOP: Add Export  markDefs[] {    ...,    _type == "linkField" => frag::link(@),  },  children[] {    ...,    _type == "inlineMediaField" => {      "media": frag::media(media),    },  }};*[_id == $docId][0].pageBuilder.sectionsArray[_type == "textSectionField" && _key == $sectionKey][0]{    "content": sectionContent{      headline,      "text": frag::richText(appRichText)    },    "settings": sectionSettings{      "hash": coalesce(sectionHash.current, _key),      "width": coalesce(width, "column"),    },}
 export type TextSectionQResult = {
   content: {
     headline: string | undefined;
@@ -2807,13 +4932,13 @@ export type TextSectionQResult = {
   } | undefined;
   settings: {
     hash: string | undefined;
-    fullBleed: boolean | undefined;
+    width: "bleed" | "column" | "edge";
   } | undefined;
 } | undefined;
 
 // Source: src/features/page-builder/queries.ts
 // Variable: CtaSectionQ
-// Query: fn frag::link($value) = $value{  type,  "openInNewTab": coalesce(openInNewTab, false),  "canDownload": select(    type == "file" => coalesce(canDownload, false),    true => false  ),  "href": select(    type == "internal" => coalesce(      select(        defined(internal.sectionTarget) && defined(internal.link->pageBuilder.sectionsArray) => internal.link->uri.current + '#' + coalesce(          internal.link->pageBuilder.sectionsArray[_key == ^.internal.sectionTarget][0].sectionSettings.sectionHash.current,          internal.link->pageBuilder.sectionsArray[_key == ^.internal.sectionTarget][0]._key,        ),        true => internal.link->uri.current,      ),      ""    ),    type == "external" => coalesce(external, ""),    type == "email" => "mailto:" + coalesce(email, ""),    type == "phone" => "tel:" + coalesce(phone, ""),    type == "file" => coalesce(file.asset->url, ""),    type == "params" => coalesce(paramsHref, ""),    true => ""  ),  "text": coalesce(    customText,    select(      type == "internal" => coalesce(        select(          defined(internal.sectionTarget) && defined(internal.link->pageBuilder.sectionsArray) => coalesce(            internal.link->pageBuilder.sectionsArray[_key == ^.internal.sectionTarget][0].sectionSettings.sectionTitle,            internal.link->title,          ),          true => internal.link->title,        ),        internal.link->uri.current,        ""      ),      type == "external" => coalesce(external, ""),      type == "email" => coalesce(email, ""),      type == "phone" => coalesce(phone, ""),      type == "file" => coalesce(file.asset->originalFilename, ""),      type == "params" => coalesce(paramsHref, ""),      true => ""    ),    "",  )};fn frag::image($value) = $value{  "_id": asset->._id,  "_rev": asset->._rev,  "altText": asset->.altText,  "description": asset->.description,  "title": asset->.title,  "lqip": asset->.metadata.lqip,  "dimensions": asset->.metadata.dimensions,  crop,  hotspot,};fn frag::media($value) = $value{videoOptions{  loop,  muted,  autoPlay,  "noControls": !controls,},lottieOptions{  loop,  autoPlay,},riveOptions{  loop,  autoPlay,  stateMachine,  autoBind,},...select(  type == "image" && defined(image) => {    type,    "image": frag::image(image),    "video": null,    "rive": null,    "lottie": null,    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => image.asset->metadata.dimensions.aspectRatio,    ),  },  type == "videoMux" && defined(video) => {    type,    "image": null,    "rive": null,    "lottie": null,    video{  "_id": asset->_id,  "_rev": asset->_rev,  "playbackId": asset->playbackId,  "thumbTime": coalesce(asset->thumbTime, 1),  "duration": asset->data.duration,  "dimensions": {    "width": asset->data.tracks[0].max_width,    "height": asset->data.tracks[0].max_height,    "aspectRatio": asset->data.tracks[0].max_width / asset->data.tracks[0].max_height,  }},    "videoCover": frag::image(videoCover),    animatedThumbnail{enabled, start, end},    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => video.asset->data.tracks[0].max_width / video.asset->data.tracks[0].max_height,    ),  },  type == "lottie" && defined(lottieFile.asset) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": {      "_id": lottieFile.asset->_id,      "url": lottieFile.asset->url,      "dimensions": select(        defined(lottieDimensions.width) && defined(lottieDimensions.height) && lottieDimensions.width > 0 => {          "width": lottieDimensions.width,          "height": lottieDimensions.height,          "aspectRatio": lottieDimensions.width / lottieDimensions.height,        },        true => null      )    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      defined(lottieDimensions.width) && defined(lottieDimensions.height) && lottieDimensions.width > 0 => lottieDimensions.width / lottieDimensions.height,      true => null    ),  },  type == "rive" && defined(riveFile.asset) => {    type,    "image": null,    "video": null,    "lottie": null,    "rive": {      "_id": riveFile.asset->_id,      "url": riveFile.asset->url,      "dimensions": select(        defined(riveDimensions.width) && defined(riveDimensions.height) && riveDimensions.width > 0 => {          "width": riveDimensions.width,          "height": riveDimensions.height,          "aspectRatio": riveDimensions.width / riveDimensions.height,        },        true => null      )    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      defined(riveDimensions.width) && defined(riveDimensions.height) && riveDimensions.width > 0 => riveDimensions.width / riveDimensions.height,      true => null    ),  },  type == "videoFile" && defined(videoFile.asset) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoCover": frag::image(videoCover),    "videoFile": {      "_id": videoFile.asset->_id,      "url": videoFile.asset->url,      "mimeType": videoFile.asset->mimeType,      "dimensions": videoCover.asset->metadata.dimensions    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => videoCover.asset->metadata.dimensions.aspectRatio    ),  },  type == "videoUrl" && defined(videoUrl) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoFile": null,    "videoCover": frag::image(videoCover),    "videoUrl": {      "url": videoUrl,      "dimensions": videoCover.asset->metadata.dimensions    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => videoCover.asset->metadata.dimensions.aspectRatio    ),  },  true => {    "type": null,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoFile": null,    "videoUrl": null,    "aspectRatio": null,  })};fn frag::richText($value) = $value[]{  ...,  _type == "mediaBlock" => {  caption,  useParallax,  "media": frag::media(appMedia),},  // PLOP: Add Export  markDefs[] {    ...,    _type == "linkField" => frag::link(@),  },  children[] {    ...,    _type == "inlineMediaField" => {      "media": frag::media(media),    },  }};*[_id == $docId][0].pageBuilder.sectionsArray[_type == "ctaSectionField" && _key == $sectionKey][0]{    "content": sectionContent{      headline,      "cta": frag::link(appLink),      "text": frag::richText(appRichText)    },    "settings": sectionSettings{      "hash": coalesce(sectionHash.current, _key),      fullBleed,    }}
+// Query: fn frag::link($value) = $value{  type,  "openInNewTab": coalesce(openInNewTab, false),  "canDownload": select(    type == "file" => coalesce(canDownload, false),    true => false  ),  "href": select(    type == "internal" => coalesce(      select(        defined(internal.sectionTarget) && defined(internal.link->pageBuilder.sectionsArray) => internal.link->uri.current + '#' + coalesce(          internal.link->pageBuilder.sectionsArray[_key == ^.internal.sectionTarget][0].sectionSettings.sectionHash.current,          internal.link->pageBuilder.sectionsArray[_key == ^.internal.sectionTarget][0]._key,        ),        true => internal.link->uri.current,      ),      ""    ),    type == "external" => coalesce(external, ""),    type == "email" => "mailto:" + coalesce(email, ""),    type == "phone" => "tel:" + coalesce(phone, ""),    type == "file" => coalesce(file.asset->url, ""),    type == "params" => coalesce(paramsHref, ""),    true => ""  ),  "text": coalesce(    customText,    select(      type == "internal" => coalesce(        select(          defined(internal.sectionTarget) && defined(internal.link->pageBuilder.sectionsArray) => coalesce(            internal.link->pageBuilder.sectionsArray[_key == ^.internal.sectionTarget][0].sectionSettings.sectionTitle,            internal.link->title,          ),          true => internal.link->title,        ),        internal.link->uri.current,        ""      ),      type == "external" => coalesce(external, ""),      type == "email" => coalesce(email, ""),      type == "phone" => coalesce(phone, ""),      type == "file" => coalesce(file.asset->originalFilename, ""),      type == "params" => coalesce(paramsHref, ""),      true => ""    ),    "",  )};fn frag::image($value) = $value{  "_id": asset->._id,  "_rev": asset->._rev,  "altText": asset->.altText,  "description": asset->.description,  "title": asset->.title,  "lqip": asset->.metadata.lqip,  "dimensions": asset->.metadata.dimensions,  crop,  hotspot,};fn frag::media($value) = $value{videoOptions{  loop,  muted,  autoPlay,  "noControls": !controls,},lottieOptions{  loop,  autoPlay,},riveOptions{  loop,  autoPlay,  stateMachine,  autoBind,},...select(  type == "image" && defined(image) => {    type,    "image": frag::image(image),    "video": null,    "rive": null,    "lottie": null,    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => image.asset->metadata.dimensions.aspectRatio,    ),  },  type == "videoMux" && defined(video) => {    type,    "image": null,    "rive": null,    "lottie": null,    video{  "_id": asset->_id,  "_rev": asset->_rev,  "playbackId": asset->playbackId,  "thumbTime": coalesce(asset->thumbTime, 1),  "duration": asset->data.duration,  "dimensions": {    "width": asset->data.tracks[0].max_width,    "height": asset->data.tracks[0].max_height,    "aspectRatio": asset->data.tracks[0].max_width / asset->data.tracks[0].max_height,  }},    "videoCover": frag::image(videoCover),    animatedThumbnail{enabled, start, end},    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => video.asset->data.tracks[0].max_width / video.asset->data.tracks[0].max_height,    ),  },  type == "lottie" && defined(lottieFile.asset) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": {      "_id": lottieFile.asset->_id,      "url": lottieFile.asset->url,      "dimensions": select(        defined(lottieDimensions.width) && defined(lottieDimensions.height) && lottieDimensions.width > 0 => {          "width": lottieDimensions.width,          "height": lottieDimensions.height,          "aspectRatio": lottieDimensions.width / lottieDimensions.height,        },        true => null      )    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      defined(lottieDimensions.width) && defined(lottieDimensions.height) && lottieDimensions.width > 0 => lottieDimensions.width / lottieDimensions.height,      true => null    ),  },  type == "rive" && defined(riveFile.asset) => {    type,    "image": null,    "video": null,    "lottie": null,    "rive": {      "_id": riveFile.asset->_id,      "url": riveFile.asset->url,      "dimensions": select(        defined(riveDimensions.width) && defined(riveDimensions.height) && riveDimensions.width > 0 => {          "width": riveDimensions.width,          "height": riveDimensions.height,          "aspectRatio": riveDimensions.width / riveDimensions.height,        },        true => null      )    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      defined(riveDimensions.width) && defined(riveDimensions.height) && riveDimensions.width > 0 => riveDimensions.width / riveDimensions.height,      true => null    ),  },  type == "videoFile" && defined(videoFile.asset) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoCover": frag::image(videoCover),    "videoFile": {      "_id": videoFile.asset->_id,      "url": videoFile.asset->url,      "mimeType": videoFile.asset->mimeType,      "dimensions": videoCover.asset->metadata.dimensions    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => videoCover.asset->metadata.dimensions.aspectRatio    ),  },  type == "videoUrl" && defined(videoUrl) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoFile": null,    "videoCover": frag::image(videoCover),    "videoUrl": {      "url": videoUrl,      "dimensions": videoCover.asset->metadata.dimensions    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => videoCover.asset->metadata.dimensions.aspectRatio    ),  },  true => {    "type": null,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoFile": null,    "videoUrl": null,    "aspectRatio": null,  })};fn frag::richText($value) = $value[]{  ...,  _type == "mediaBlock" => {  caption,  useParallax,  "media": frag::media(appMedia),},  // PLOP: Add Export  markDefs[] {    ...,    _type == "linkField" => frag::link(@),  },  children[] {    ...,    _type == "inlineMediaField" => {      "media": frag::media(media),    },  }};*[_id == $docId][0].pageBuilder.sectionsArray[_type == "ctaSectionField" && _key == $sectionKey][0]{    "content": sectionContent{      headline,      "cta": frag::link(appLink),      "text": frag::richText(appRichText)    },    "settings": sectionSettings{      "hash": coalesce(sectionHash.current, _key),      "width": coalesce(width, "column"),    }}
 export type CtaSectionQResult = {
   content: {
     headline: string | undefined;
@@ -2880,13 +5005,13 @@ export type CtaSectionQResult = {
   } | undefined;
   settings: {
     hash: string | undefined;
-    fullBleed: boolean | undefined;
+    width: "bleed" | "column" | "edge";
   } | undefined;
 } | undefined;
 
 // Source: src/features/page-builder/queries.ts
 // Variable: MediaSectionQ
-// Query: fn frag::image($value) = $value{  "_id": asset->._id,  "_rev": asset->._rev,  "altText": asset->.altText,  "description": asset->.description,  "title": asset->.title,  "lqip": asset->.metadata.lqip,  "dimensions": asset->.metadata.dimensions,  crop,  hotspot,};fn frag::media($value) = $value{videoOptions{  loop,  muted,  autoPlay,  "noControls": !controls,},lottieOptions{  loop,  autoPlay,},riveOptions{  loop,  autoPlay,  stateMachine,  autoBind,},...select(  type == "image" && defined(image) => {    type,    "image": frag::image(image),    "video": null,    "rive": null,    "lottie": null,    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => image.asset->metadata.dimensions.aspectRatio,    ),  },  type == "videoMux" && defined(video) => {    type,    "image": null,    "rive": null,    "lottie": null,    video{  "_id": asset->_id,  "_rev": asset->_rev,  "playbackId": asset->playbackId,  "thumbTime": coalesce(asset->thumbTime, 1),  "duration": asset->data.duration,  "dimensions": {    "width": asset->data.tracks[0].max_width,    "height": asset->data.tracks[0].max_height,    "aspectRatio": asset->data.tracks[0].max_width / asset->data.tracks[0].max_height,  }},    "videoCover": frag::image(videoCover),    animatedThumbnail{enabled, start, end},    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => video.asset->data.tracks[0].max_width / video.asset->data.tracks[0].max_height,    ),  },  type == "lottie" && defined(lottieFile.asset) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": {      "_id": lottieFile.asset->_id,      "url": lottieFile.asset->url,      "dimensions": select(        defined(lottieDimensions.width) && defined(lottieDimensions.height) && lottieDimensions.width > 0 => {          "width": lottieDimensions.width,          "height": lottieDimensions.height,          "aspectRatio": lottieDimensions.width / lottieDimensions.height,        },        true => null      )    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      defined(lottieDimensions.width) && defined(lottieDimensions.height) && lottieDimensions.width > 0 => lottieDimensions.width / lottieDimensions.height,      true => null    ),  },  type == "rive" && defined(riveFile.asset) => {    type,    "image": null,    "video": null,    "lottie": null,    "rive": {      "_id": riveFile.asset->_id,      "url": riveFile.asset->url,      "dimensions": select(        defined(riveDimensions.width) && defined(riveDimensions.height) && riveDimensions.width > 0 => {          "width": riveDimensions.width,          "height": riveDimensions.height,          "aspectRatio": riveDimensions.width / riveDimensions.height,        },        true => null      )    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      defined(riveDimensions.width) && defined(riveDimensions.height) && riveDimensions.width > 0 => riveDimensions.width / riveDimensions.height,      true => null    ),  },  type == "videoFile" && defined(videoFile.asset) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoCover": frag::image(videoCover),    "videoFile": {      "_id": videoFile.asset->_id,      "url": videoFile.asset->url,      "mimeType": videoFile.asset->mimeType,      "dimensions": videoCover.asset->metadata.dimensions    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => videoCover.asset->metadata.dimensions.aspectRatio    ),  },  type == "videoUrl" && defined(videoUrl) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoFile": null,    "videoCover": frag::image(videoCover),    "videoUrl": {      "url": videoUrl,      "dimensions": videoCover.asset->metadata.dimensions    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => videoCover.asset->metadata.dimensions.aspectRatio    ),  },  true => {    "type": null,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoFile": null,    "videoUrl": null,    "aspectRatio": null,  })};*[_id == $docId][0].pageBuilder.sectionsArray[_type == "mediaSectionField" && _key == $sectionKey][0]{    "content": sectionContent{      caption,      useParallax,      fullBleed,      "media": frag::media(appMedia)    },    "settings": sectionSettings{      "hash": coalesce(sectionHash.current, _key),      fullBleed,    }}
+// Query: fn frag::image($value) = $value{  "_id": asset->._id,  "_rev": asset->._rev,  "altText": asset->.altText,  "description": asset->.description,  "title": asset->.title,  "lqip": asset->.metadata.lqip,  "dimensions": asset->.metadata.dimensions,  crop,  hotspot,};fn frag::media($value) = $value{videoOptions{  loop,  muted,  autoPlay,  "noControls": !controls,},lottieOptions{  loop,  autoPlay,},riveOptions{  loop,  autoPlay,  stateMachine,  autoBind,},...select(  type == "image" && defined(image) => {    type,    "image": frag::image(image),    "video": null,    "rive": null,    "lottie": null,    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => image.asset->metadata.dimensions.aspectRatio,    ),  },  type == "videoMux" && defined(video) => {    type,    "image": null,    "rive": null,    "lottie": null,    video{  "_id": asset->_id,  "_rev": asset->_rev,  "playbackId": asset->playbackId,  "thumbTime": coalesce(asset->thumbTime, 1),  "duration": asset->data.duration,  "dimensions": {    "width": asset->data.tracks[0].max_width,    "height": asset->data.tracks[0].max_height,    "aspectRatio": asset->data.tracks[0].max_width / asset->data.tracks[0].max_height,  }},    "videoCover": frag::image(videoCover),    animatedThumbnail{enabled, start, end},    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => video.asset->data.tracks[0].max_width / video.asset->data.tracks[0].max_height,    ),  },  type == "lottie" && defined(lottieFile.asset) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": {      "_id": lottieFile.asset->_id,      "url": lottieFile.asset->url,      "dimensions": select(        defined(lottieDimensions.width) && defined(lottieDimensions.height) && lottieDimensions.width > 0 => {          "width": lottieDimensions.width,          "height": lottieDimensions.height,          "aspectRatio": lottieDimensions.width / lottieDimensions.height,        },        true => null      )    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      defined(lottieDimensions.width) && defined(lottieDimensions.height) && lottieDimensions.width > 0 => lottieDimensions.width / lottieDimensions.height,      true => null    ),  },  type == "rive" && defined(riveFile.asset) => {    type,    "image": null,    "video": null,    "lottie": null,    "rive": {      "_id": riveFile.asset->_id,      "url": riveFile.asset->url,      "dimensions": select(        defined(riveDimensions.width) && defined(riveDimensions.height) && riveDimensions.width > 0 => {          "width": riveDimensions.width,          "height": riveDimensions.height,          "aspectRatio": riveDimensions.width / riveDimensions.height,        },        true => null      )    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      defined(riveDimensions.width) && defined(riveDimensions.height) && riveDimensions.width > 0 => riveDimensions.width / riveDimensions.height,      true => null    ),  },  type == "videoFile" && defined(videoFile.asset) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoCover": frag::image(videoCover),    "videoFile": {      "_id": videoFile.asset->_id,      "url": videoFile.asset->url,      "mimeType": videoFile.asset->mimeType,      "dimensions": videoCover.asset->metadata.dimensions    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => videoCover.asset->metadata.dimensions.aspectRatio    ),  },  type == "videoUrl" && defined(videoUrl) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoFile": null,    "videoCover": frag::image(videoCover),    "videoUrl": {      "url": videoUrl,      "dimensions": videoCover.asset->metadata.dimensions    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => videoCover.asset->metadata.dimensions.aspectRatio    ),  },  true => {    "type": null,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoFile": null,    "videoUrl": null,    "aspectRatio": null,  })};*[_id == $docId][0].pageBuilder.sectionsArray[_type == "mediaSectionField" && _key == $sectionKey][0]{    "content": sectionContent{      caption,      useParallax,      fullBleed,      "media": frag::media(appMedia)    },    "settings": sectionSettings{      "hash": coalesce(sectionHash.current, _key),      "width": coalesce(width, "column"),    }}
 export type MediaSectionQResult = {
   content: {
     caption: string | undefined;
@@ -3153,13 +5278,13 @@ export type MediaSectionQResult = {
   } | undefined;
   settings: {
     hash: string | undefined;
-    fullBleed: boolean | undefined;
+    width: "bleed" | "column" | "edge";
   } | undefined;
 } | undefined;
 
 // Source: src/features/page-builder/queries.ts
 // Variable: ContactFormSectionQ
-// Query: fn frag::link($value) = $value{  type,  "openInNewTab": coalesce(openInNewTab, false),  "canDownload": select(    type == "file" => coalesce(canDownload, false),    true => false  ),  "href": select(    type == "internal" => coalesce(      select(        defined(internal.sectionTarget) && defined(internal.link->pageBuilder.sectionsArray) => internal.link->uri.current + '#' + coalesce(          internal.link->pageBuilder.sectionsArray[_key == ^.internal.sectionTarget][0].sectionSettings.sectionHash.current,          internal.link->pageBuilder.sectionsArray[_key == ^.internal.sectionTarget][0]._key,        ),        true => internal.link->uri.current,      ),      ""    ),    type == "external" => coalesce(external, ""),    type == "email" => "mailto:" + coalesce(email, ""),    type == "phone" => "tel:" + coalesce(phone, ""),    type == "file" => coalesce(file.asset->url, ""),    type == "params" => coalesce(paramsHref, ""),    true => ""  ),  "text": coalesce(    customText,    select(      type == "internal" => coalesce(        select(          defined(internal.sectionTarget) && defined(internal.link->pageBuilder.sectionsArray) => coalesce(            internal.link->pageBuilder.sectionsArray[_key == ^.internal.sectionTarget][0].sectionSettings.sectionTitle,            internal.link->title,          ),          true => internal.link->title,        ),        internal.link->uri.current,        ""      ),      type == "external" => coalesce(external, ""),      type == "email" => coalesce(email, ""),      type == "phone" => coalesce(phone, ""),      type == "file" => coalesce(file.asset->originalFilename, ""),      type == "params" => coalesce(paramsHref, ""),      true => ""    ),    "",  )};fn frag::image($value) = $value{  "_id": asset->._id,  "_rev": asset->._rev,  "altText": asset->.altText,  "description": asset->.description,  "title": asset->.title,  "lqip": asset->.metadata.lqip,  "dimensions": asset->.metadata.dimensions,  crop,  hotspot,};fn frag::media($value) = $value{videoOptions{  loop,  muted,  autoPlay,  "noControls": !controls,},lottieOptions{  loop,  autoPlay,},riveOptions{  loop,  autoPlay,  stateMachine,  autoBind,},...select(  type == "image" && defined(image) => {    type,    "image": frag::image(image),    "video": null,    "rive": null,    "lottie": null,    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => image.asset->metadata.dimensions.aspectRatio,    ),  },  type == "videoMux" && defined(video) => {    type,    "image": null,    "rive": null,    "lottie": null,    video{  "_id": asset->_id,  "_rev": asset->_rev,  "playbackId": asset->playbackId,  "thumbTime": coalesce(asset->thumbTime, 1),  "duration": asset->data.duration,  "dimensions": {    "width": asset->data.tracks[0].max_width,    "height": asset->data.tracks[0].max_height,    "aspectRatio": asset->data.tracks[0].max_width / asset->data.tracks[0].max_height,  }},    "videoCover": frag::image(videoCover),    animatedThumbnail{enabled, start, end},    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => video.asset->data.tracks[0].max_width / video.asset->data.tracks[0].max_height,    ),  },  type == "lottie" && defined(lottieFile.asset) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": {      "_id": lottieFile.asset->_id,      "url": lottieFile.asset->url,      "dimensions": select(        defined(lottieDimensions.width) && defined(lottieDimensions.height) && lottieDimensions.width > 0 => {          "width": lottieDimensions.width,          "height": lottieDimensions.height,          "aspectRatio": lottieDimensions.width / lottieDimensions.height,        },        true => null      )    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      defined(lottieDimensions.width) && defined(lottieDimensions.height) && lottieDimensions.width > 0 => lottieDimensions.width / lottieDimensions.height,      true => null    ),  },  type == "rive" && defined(riveFile.asset) => {    type,    "image": null,    "video": null,    "lottie": null,    "rive": {      "_id": riveFile.asset->_id,      "url": riveFile.asset->url,      "dimensions": select(        defined(riveDimensions.width) && defined(riveDimensions.height) && riveDimensions.width > 0 => {          "width": riveDimensions.width,          "height": riveDimensions.height,          "aspectRatio": riveDimensions.width / riveDimensions.height,        },        true => null      )    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      defined(riveDimensions.width) && defined(riveDimensions.height) && riveDimensions.width > 0 => riveDimensions.width / riveDimensions.height,      true => null    ),  },  type == "videoFile" && defined(videoFile.asset) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoCover": frag::image(videoCover),    "videoFile": {      "_id": videoFile.asset->_id,      "url": videoFile.asset->url,      "mimeType": videoFile.asset->mimeType,      "dimensions": videoCover.asset->metadata.dimensions    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => videoCover.asset->metadata.dimensions.aspectRatio    ),  },  type == "videoUrl" && defined(videoUrl) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoFile": null,    "videoCover": frag::image(videoCover),    "videoUrl": {      "url": videoUrl,      "dimensions": videoCover.asset->metadata.dimensions    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => videoCover.asset->metadata.dimensions.aspectRatio    ),  },  true => {    "type": null,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoFile": null,    "videoUrl": null,    "aspectRatio": null,  })};fn frag::richText($value) = $value[]{  ...,  _type == "mediaBlock" => {  caption,  useParallax,  "media": frag::media(appMedia),},  // PLOP: Add Export  markDefs[] {    ...,    _type == "linkField" => frag::link(@),  },  children[] {    ...,    _type == "inlineMediaField" => {      "media": frag::media(media),    },  }};*[_id == $docId][0].pageBuilder.sectionsArray[_type == "contactFormSectionField" && _key == $sectionKey][0]{    "content": sectionContent{      headline,      "text": frag::richText(appRichText),    },    "settings": sectionSettings{      "hash": coalesce(sectionHash.current, _key),      fullBleed,    },}
+// Query: fn frag::link($value) = $value{  type,  "openInNewTab": coalesce(openInNewTab, false),  "canDownload": select(    type == "file" => coalesce(canDownload, false),    true => false  ),  "href": select(    type == "internal" => coalesce(      select(        defined(internal.sectionTarget) && defined(internal.link->pageBuilder.sectionsArray) => internal.link->uri.current + '#' + coalesce(          internal.link->pageBuilder.sectionsArray[_key == ^.internal.sectionTarget][0].sectionSettings.sectionHash.current,          internal.link->pageBuilder.sectionsArray[_key == ^.internal.sectionTarget][0]._key,        ),        true => internal.link->uri.current,      ),      ""    ),    type == "external" => coalesce(external, ""),    type == "email" => "mailto:" + coalesce(email, ""),    type == "phone" => "tel:" + coalesce(phone, ""),    type == "file" => coalesce(file.asset->url, ""),    type == "params" => coalesce(paramsHref, ""),    true => ""  ),  "text": coalesce(    customText,    select(      type == "internal" => coalesce(        select(          defined(internal.sectionTarget) && defined(internal.link->pageBuilder.sectionsArray) => coalesce(            internal.link->pageBuilder.sectionsArray[_key == ^.internal.sectionTarget][0].sectionSettings.sectionTitle,            internal.link->title,          ),          true => internal.link->title,        ),        internal.link->uri.current,        ""      ),      type == "external" => coalesce(external, ""),      type == "email" => coalesce(email, ""),      type == "phone" => coalesce(phone, ""),      type == "file" => coalesce(file.asset->originalFilename, ""),      type == "params" => coalesce(paramsHref, ""),      true => ""    ),    "",  )};fn frag::image($value) = $value{  "_id": asset->._id,  "_rev": asset->._rev,  "altText": asset->.altText,  "description": asset->.description,  "title": asset->.title,  "lqip": asset->.metadata.lqip,  "dimensions": asset->.metadata.dimensions,  crop,  hotspot,};fn frag::media($value) = $value{videoOptions{  loop,  muted,  autoPlay,  "noControls": !controls,},lottieOptions{  loop,  autoPlay,},riveOptions{  loop,  autoPlay,  stateMachine,  autoBind,},...select(  type == "image" && defined(image) => {    type,    "image": frag::image(image),    "video": null,    "rive": null,    "lottie": null,    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => image.asset->metadata.dimensions.aspectRatio,    ),  },  type == "videoMux" && defined(video) => {    type,    "image": null,    "rive": null,    "lottie": null,    video{  "_id": asset->_id,  "_rev": asset->_rev,  "playbackId": asset->playbackId,  "thumbTime": coalesce(asset->thumbTime, 1),  "duration": asset->data.duration,  "dimensions": {    "width": asset->data.tracks[0].max_width,    "height": asset->data.tracks[0].max_height,    "aspectRatio": asset->data.tracks[0].max_width / asset->data.tracks[0].max_height,  }},    "videoCover": frag::image(videoCover),    animatedThumbnail{enabled, start, end},    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => video.asset->data.tracks[0].max_width / video.asset->data.tracks[0].max_height,    ),  },  type == "lottie" && defined(lottieFile.asset) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": {      "_id": lottieFile.asset->_id,      "url": lottieFile.asset->url,      "dimensions": select(        defined(lottieDimensions.width) && defined(lottieDimensions.height) && lottieDimensions.width > 0 => {          "width": lottieDimensions.width,          "height": lottieDimensions.height,          "aspectRatio": lottieDimensions.width / lottieDimensions.height,        },        true => null      )    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      defined(lottieDimensions.width) && defined(lottieDimensions.height) && lottieDimensions.width > 0 => lottieDimensions.width / lottieDimensions.height,      true => null    ),  },  type == "rive" && defined(riveFile.asset) => {    type,    "image": null,    "video": null,    "lottie": null,    "rive": {      "_id": riveFile.asset->_id,      "url": riveFile.asset->url,      "dimensions": select(        defined(riveDimensions.width) && defined(riveDimensions.height) && riveDimensions.width > 0 => {          "width": riveDimensions.width,          "height": riveDimensions.height,          "aspectRatio": riveDimensions.width / riveDimensions.height,        },        true => null      )    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      defined(riveDimensions.width) && defined(riveDimensions.height) && riveDimensions.width > 0 => riveDimensions.width / riveDimensions.height,      true => null    ),  },  type == "videoFile" && defined(videoFile.asset) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoCover": frag::image(videoCover),    "videoFile": {      "_id": videoFile.asset->_id,      "url": videoFile.asset->url,      "mimeType": videoFile.asset->mimeType,      "dimensions": videoCover.asset->metadata.dimensions    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => videoCover.asset->metadata.dimensions.aspectRatio    ),  },  type == "videoUrl" && defined(videoUrl) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoFile": null,    "videoCover": frag::image(videoCover),    "videoUrl": {      "url": videoUrl,      "dimensions": videoCover.asset->metadata.dimensions    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => videoCover.asset->metadata.dimensions.aspectRatio    ),  },  true => {    "type": null,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoFile": null,    "videoUrl": null,    "aspectRatio": null,  })};fn frag::richText($value) = $value[]{  ...,  _type == "mediaBlock" => {  caption,  useParallax,  "media": frag::media(appMedia),},  // PLOP: Add Export  markDefs[] {    ...,    _type == "linkField" => frag::link(@),  },  children[] {    ...,    _type == "inlineMediaField" => {      "media": frag::media(media),    },  }};*[_id == $docId][0].pageBuilder.sectionsArray[_type == "contactFormSectionField" && _key == $sectionKey][0]{    "content": sectionContent{      headline,      "text": frag::richText(appRichText),    },    "settings": sectionSettings{      "hash": coalesce(sectionHash.current, _key),      "width": coalesce(width, "column"),    },}
 export type ContactFormSectionQResult = {
   content: {
     headline: string | undefined;
@@ -3218,7 +5343,603 @@ export type ContactFormSectionQResult = {
   } | undefined;
   settings: {
     hash: string | undefined;
-    fullBleed: boolean | undefined;
+    width: "bleed" | "column" | "edge";
+  } | undefined;
+} | undefined;
+
+// Source: src/features/page-builder/queries.ts
+// Variable: HeroSectionQ
+// Query: *[_id == $docId][0].pageBuilder.sectionsArray[_type == "heroSectionField" && _key == $sectionKey][0]{    "content": sectionContent{      headline,      highlight,      lede,    },    "settings": sectionSettings{      "hash": coalesce(sectionHash.current, _key),      "width": coalesce(width, "column"),    },}
+export type HeroSectionQResult = {
+  content: {
+    headline: string | undefined;
+    highlight: string | undefined;
+    lede: string | undefined;
+  } | undefined;
+  settings: {
+    hash: string | undefined;
+    width: "bleed" | "column" | "edge";
+  } | undefined;
+} | undefined;
+
+// Source: src/features/page-builder/queries.ts
+// Variable: GallerySectionQ
+// Query: *[_id == $docId][0].pageBuilder.sectionsArray[_type == "gallerySectionField" && _key == $sectionKey][0]{    "content": sectionContent{      "cycleMs": coalesce(cycleMs, 400),      "images": images[]{        "_key": _key,          "_id": asset->._id,  "_rev": asset->._rev,  "altText": asset->.altText,  "description": asset->.description,  "title": asset->.title,  "lqip": asset->.metadata.lqip,  "dimensions": asset->.metadata.dimensions,  crop,  hotspot,      },    },    "settings": sectionSettings{      "hash": coalesce(sectionHash.current, _key),      "width": coalesce(width, "column"),    },}
+export type GallerySectionQResult = {
+  content: {
+    cycleMs: number | 400;
+    images: Array<{
+      _key: string;
+      _id: string | undefined;
+      _rev: string | undefined;
+      altText: string | undefined;
+      description: string | undefined;
+      title: string | undefined;
+      lqip: string | undefined;
+      dimensions: SanityImageDimensions | undefined;
+      crop: SanityImageCrop | undefined;
+      hotspot: SanityImageHotspot | undefined;
+    }> | undefined;
+  } | undefined;
+  settings: {
+    hash: string | undefined;
+    width: "bleed" | "column" | "edge";
+  } | undefined;
+} | undefined;
+
+// Source: src/features/page-builder/queries.ts
+// Variable: ImageGridSectionQ
+// Query: *[_id == $docId][0].pageBuilder.sectionsArray[_type == "imageGridSectionField" && _key == $sectionKey][0]{    "content": sectionContent{      "images": images[]{        "_key": _key,        width,          "_id": asset->._id,  "_rev": asset->._rev,  "altText": asset->.altText,  "description": asset->.description,  "title": asset->.title,  "lqip": asset->.metadata.lqip,  "dimensions": asset->.metadata.dimensions,  crop,  hotspot,      },    },    "settings": sectionSettings{      "hash": coalesce(sectionHash.current, _key),      "width": coalesce(width, "column"),    },}
+export type ImageGridSectionQResult = {
+  content: {
+    images: Array<{
+      _key: string;
+      width: "full" | "half" | undefined;
+      _id: string | undefined;
+      _rev: string | undefined;
+      altText: string | undefined;
+      description: string | undefined;
+      title: string | undefined;
+      lqip: string | undefined;
+      dimensions: SanityImageDimensions | undefined;
+      crop: SanityImageCrop | undefined;
+      hotspot: SanityImageHotspot | undefined;
+    }> | undefined;
+  } | undefined;
+  settings: {
+    hash: string | undefined;
+    width: "bleed" | "column" | "edge";
+  } | undefined;
+} | undefined;
+
+// Source: src/features/page-builder/queries.ts
+// Variable: StatementSectionQ
+// Query: *[_id == $docId][0].pageBuilder.sectionsArray[_type == "statementSectionField" && _key == $sectionKey][0]{    "content": sectionContent{      headline,      statement,      support,    },    "settings": sectionSettings{      "hash": coalesce(sectionHash.current, _key),      "width": coalesce(width, "column"),    },}
+export type StatementSectionQResult = {
+  content: {
+    headline: string | undefined;
+    statement: string | undefined;
+    support: string | undefined;
+  } | undefined;
+  settings: {
+    hash: string | undefined;
+    width: "bleed" | "column" | "edge";
+  } | undefined;
+} | undefined;
+
+// Source: src/features/page-builder/queries.ts
+// Variable: SolutionSectionQ
+// Query: *[_id == $docId][0].pageBuilder.sectionsArray[_type == "solutionSectionField" && _key == $sectionKey][0]{    "content": sectionContent{      eyebrow,      headline,      underline,      lede,      "items": items[]{        "_key": _key,        title,        text,        "image": image{  "_id": asset->._id,  "_rev": asset->._rev,  "altText": asset->.altText,  "description": asset->.description,  "title": asset->.title,  "lqip": asset->.metadata.lqip,  "dimensions": asset->.metadata.dimensions,  crop,  hotspot,},      },    },    "settings": sectionSettings{      "hash": coalesce(sectionHash.current, _key),      "width": coalesce(width, "column"),    },}
+export type SolutionSectionQResult = {
+  content: {
+    eyebrow: string | undefined;
+    headline: string | undefined;
+    underline: string | undefined;
+    lede: string | undefined;
+    items: Array<{
+      _key: string;
+      title: string | undefined;
+      text: string | undefined;
+      image: {
+        _id: string | undefined;
+        _rev: string | undefined;
+        altText: string | undefined;
+        description: string | undefined;
+        title: string | undefined;
+        lqip: string | undefined;
+        dimensions: SanityImageDimensions | undefined;
+        crop: SanityImageCrop | undefined;
+        hotspot: SanityImageHotspot | undefined;
+      } | undefined;
+    }> | undefined;
+  } | undefined;
+  settings: {
+    hash: string | undefined;
+    width: "bleed" | "column" | "edge";
+  } | undefined;
+} | undefined;
+
+// Source: src/features/page-builder/queries.ts
+// Variable: IntersectionSectionQ
+// Query: *[_id == $docId][0].pageBuilder.sectionsArray[_type == "intersectionSectionField" && _key == $sectionKey][0]{    "content": sectionContent{      eyebrow,      headline,      lede,      leftLabel,      rightLabel,    },    "settings": sectionSettings{      "hash": coalesce(sectionHash.current, _key),      "width": coalesce(width, "column"),    },}
+export type IntersectionSectionQResult = {
+  content: {
+    eyebrow: string | undefined;
+    headline: string | undefined;
+    lede: string | undefined;
+    leftLabel: string | undefined;
+    rightLabel: string | undefined;
+  } | undefined;
+  settings: {
+    hash: string | undefined;
+    width: "bleed" | "column" | "edge";
+  } | undefined;
+} | undefined;
+
+// Source: src/features/page-builder/queries.ts
+// Variable: WebosSectionQ
+// Query: *[_id == $docId][0].pageBuilder.sectionsArray[_type == "webosSectionField" && _key == $sectionKey][0]{    "content": sectionContent{      eyebrow,      headline,      underline,      body,      "items": items[]{        "_key": _key,        title,        text,      },    },    "settings": sectionSettings{      "hash": coalesce(sectionHash.current, _key),      "width": coalesce(width, "column"),    },}
+export type WebosSectionQResult = {
+  content: {
+    eyebrow: string | undefined;
+    headline: string | undefined;
+    underline: string | undefined;
+    body: string | undefined;
+    items: Array<{
+      _key: string;
+      title: string | undefined;
+      text: string | undefined;
+    }> | undefined;
+  } | undefined;
+  settings: {
+    hash: string | undefined;
+    width: "bleed" | "column" | "edge";
+  } | undefined;
+} | undefined;
+
+// Source: src/features/page-builder/queries.ts
+// Variable: MarqueeSectionQ
+// Query: *[_id == $docId][0].pageBuilder.sectionsArray[_type == "marqueeSectionField" && _key == $sectionKey][0]{    "content": sectionContent{      headline,      statement,      lede,    },    "settings": sectionSettings{      "hash": coalesce(sectionHash.current, _key),      "width": coalesce(width, "column"),    },}
+export type MarqueeSectionQResult = {
+  content: {
+    headline: string | undefined;
+    statement: string | undefined;
+    lede: string | undefined;
+  } | undefined;
+  settings: {
+    hash: string | undefined;
+    width: "bleed" | "column" | "edge";
+  } | undefined;
+} | undefined;
+
+// Source: src/features/page-builder/queries.ts
+// Variable: CaseStudySectionQ
+// Query: fn frag::image($value) = $value{  "_id": asset->._id,  "_rev": asset->._rev,  "altText": asset->.altText,  "description": asset->.description,  "title": asset->.title,  "lqip": asset->.metadata.lqip,  "dimensions": asset->.metadata.dimensions,  crop,  hotspot,};fn frag::media($value) = $value{videoOptions{  loop,  muted,  autoPlay,  "noControls": !controls,},lottieOptions{  loop,  autoPlay,},riveOptions{  loop,  autoPlay,  stateMachine,  autoBind,},...select(  type == "image" && defined(image) => {    type,    "image": frag::image(image),    "video": null,    "rive": null,    "lottie": null,    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => image.asset->metadata.dimensions.aspectRatio,    ),  },  type == "videoMux" && defined(video) => {    type,    "image": null,    "rive": null,    "lottie": null,    video{  "_id": asset->_id,  "_rev": asset->_rev,  "playbackId": asset->playbackId,  "thumbTime": coalesce(asset->thumbTime, 1),  "duration": asset->data.duration,  "dimensions": {    "width": asset->data.tracks[0].max_width,    "height": asset->data.tracks[0].max_height,    "aspectRatio": asset->data.tracks[0].max_width / asset->data.tracks[0].max_height,  }},    "videoCover": frag::image(videoCover),    animatedThumbnail{enabled, start, end},    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => video.asset->data.tracks[0].max_width / video.asset->data.tracks[0].max_height,    ),  },  type == "lottie" && defined(lottieFile.asset) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": {      "_id": lottieFile.asset->_id,      "url": lottieFile.asset->url,      "dimensions": select(        defined(lottieDimensions.width) && defined(lottieDimensions.height) && lottieDimensions.width > 0 => {          "width": lottieDimensions.width,          "height": lottieDimensions.height,          "aspectRatio": lottieDimensions.width / lottieDimensions.height,        },        true => null      )    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      defined(lottieDimensions.width) && defined(lottieDimensions.height) && lottieDimensions.width > 0 => lottieDimensions.width / lottieDimensions.height,      true => null    ),  },  type == "rive" && defined(riveFile.asset) => {    type,    "image": null,    "video": null,    "lottie": null,    "rive": {      "_id": riveFile.asset->_id,      "url": riveFile.asset->url,      "dimensions": select(        defined(riveDimensions.width) && defined(riveDimensions.height) && riveDimensions.width > 0 => {          "width": riveDimensions.width,          "height": riveDimensions.height,          "aspectRatio": riveDimensions.width / riveDimensions.height,        },        true => null      )    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      defined(riveDimensions.width) && defined(riveDimensions.height) && riveDimensions.width > 0 => riveDimensions.width / riveDimensions.height,      true => null    ),  },  type == "videoFile" && defined(videoFile.asset) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoCover": frag::image(videoCover),    "videoFile": {      "_id": videoFile.asset->_id,      "url": videoFile.asset->url,      "mimeType": videoFile.asset->mimeType,      "dimensions": videoCover.asset->metadata.dimensions    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => videoCover.asset->metadata.dimensions.aspectRatio    ),  },  type == "videoUrl" && defined(videoUrl) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoFile": null,    "videoCover": frag::image(videoCover),    "videoUrl": {      "url": videoUrl,      "dimensions": videoCover.asset->metadata.dimensions    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => videoCover.asset->metadata.dimensions.aspectRatio    ),  },  true => {    "type": null,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoFile": null,    "videoUrl": null,    "aspectRatio": null,  })};fn frag::caseStudyCard($value) = $value{  _id,  title,  "href": uri.current,  "services": services[]->name,  "card": {    "width": coalesce(card.width, "half"),    "mode": coalesce(card.mode, "gallery"),    "cycleMs": coalesce(card.cycleMs, 400),    "image": frag::image(card.image),    "images": pageBuilder.sectionsArray[_type == "imageGridSectionField"].sectionContent.images[showInCard == true]{ "_key": _key, ...frag::image(@) },    "media": frag::media(card.appMedia),  }};fn frag::link($value) = $value{  type,  "openInNewTab": coalesce(openInNewTab, false),  "canDownload": select(    type == "file" => coalesce(canDownload, false),    true => false  ),  "href": select(    type == "internal" => coalesce(      select(        defined(internal.sectionTarget) && defined(internal.link->pageBuilder.sectionsArray) => internal.link->uri.current + '#' + coalesce(          internal.link->pageBuilder.sectionsArray[_key == ^.internal.sectionTarget][0].sectionSettings.sectionHash.current,          internal.link->pageBuilder.sectionsArray[_key == ^.internal.sectionTarget][0]._key,        ),        true => internal.link->uri.current,      ),      ""    ),    type == "external" => coalesce(external, ""),    type == "email" => "mailto:" + coalesce(email, ""),    type == "phone" => "tel:" + coalesce(phone, ""),    type == "file" => coalesce(file.asset->url, ""),    type == "params" => coalesce(paramsHref, ""),    true => ""  ),  "text": coalesce(    customText,    select(      type == "internal" => coalesce(        select(          defined(internal.sectionTarget) && defined(internal.link->pageBuilder.sectionsArray) => coalesce(            internal.link->pageBuilder.sectionsArray[_key == ^.internal.sectionTarget][0].sectionSettings.sectionTitle,            internal.link->title,          ),          true => internal.link->title,        ),        internal.link->uri.current,        ""      ),      type == "external" => coalesce(external, ""),      type == "email" => coalesce(email, ""),      type == "phone" => coalesce(phone, ""),      type == "file" => coalesce(file.asset->originalFilename, ""),      type == "params" => coalesce(paramsHref, ""),      true => ""    ),    "",  )};*[_id == $docId][0].pageBuilder.sectionsArray[_type == "caseStudySectionField" && _key == $sectionKey][0]{    "content": sectionContent{      label,      title,      code,      services,      "link": frag::link(appLink),      "caseStudies": caseStudies[]->{        ...frag::caseStudyCard(@)      },    },    "settings": sectionSettings{      "hash": coalesce(sectionHash.current, _key),      "width": coalesce(width, "column"),    },}
+export type CaseStudySectionQResult = {
+  content: {
+    label: string | undefined;
+    title: string | undefined;
+    code: string | undefined;
+    services: Array<string> | undefined;
+    link: {
+      type:
+        "email" | "external" | "file" | "internal" | "params" | "phone" | undefined;
+      openInNewTab: boolean | false;
+      canDownload: boolean | false;
+      href: string | "" | "mailto:" | "tel:";
+      text: string | "";
+    } | undefined;
+    caseStudies: Array<{
+      _id: string;
+      title: string | undefined;
+      href: string | undefined;
+      services: Array<string | undefined> | undefined;
+      card: {
+        width: "full" | "half";
+        mode: "gallery" | "video";
+        cycleMs: number | 400;
+        image: {
+          _id: string | undefined;
+          _rev: string | undefined;
+          altText: string | undefined;
+          description: string | undefined;
+          title: string | undefined;
+          lqip: string | undefined;
+          dimensions: SanityImageDimensions | undefined;
+          crop: SanityImageCrop | undefined;
+          hotspot: SanityImageHotspot | undefined;
+        } | undefined;
+        images: Array<{
+          _key: string;
+          _id: string | undefined;
+          _rev: string | undefined;
+          altText: string | undefined;
+          description: string | undefined;
+          title: string | undefined;
+          lqip: string | undefined;
+          dimensions: SanityImageDimensions | undefined;
+          crop: SanityImageCrop | undefined;
+          hotspot: SanityImageHotspot | undefined;
+        } | undefined> | undefined;
+        media:
+          | {
+              videoOptions: null;
+              lottieOptions: null;
+              riveOptions: null;
+              type: "videoMux";
+              image: null;
+              rive: null;
+              lottie: null;
+              video: {
+                _id: string | undefined;
+                _rev: string | undefined;
+                playbackId: string | undefined;
+                thumbTime: number | 1;
+                duration: number | undefined;
+                dimensions: {
+                  width: number | undefined;
+                  height: number | undefined;
+                  aspectRatio: number | undefined;
+                };
+              };
+              videoCover: {
+                _id: string | undefined;
+                _rev: string | undefined;
+                altText: string | undefined;
+                description: string | undefined;
+                title: string | undefined;
+                lqip: string | undefined;
+                dimensions: SanityImageDimensions | undefined;
+                crop: SanityImageCrop | undefined;
+                hotspot: SanityImageHotspot | undefined;
+              } | undefined;
+              animatedThumbnail: {
+                enabled: boolean | undefined;
+                start: number | undefined;
+                end: number | undefined;
+              } | undefined;
+              aspectRatio: number | undefined;
+            }
+          | {
+              videoOptions: null;
+              lottieOptions: null;
+              riveOptions: null;
+              type: null;
+              image: null;
+              video: null;
+              rive: null;
+              lottie: null;
+              videoFile: null;
+              videoUrl: null;
+              aspectRatio: null;
+            }
+          | {
+              videoOptions: null;
+              lottieOptions: null;
+              riveOptions: null;
+              type: "videoFile";
+              image: null;
+              video: null;
+              rive: null;
+              lottie: null;
+              videoCover: {
+                _id: string | undefined;
+                _rev: string | undefined;
+                altText: string | undefined;
+                description: string | undefined;
+                title: string | undefined;
+                lqip: string | undefined;
+                dimensions: SanityImageDimensions | undefined;
+                crop: SanityImageCrop | undefined;
+                hotspot: SanityImageHotspot | undefined;
+              } | undefined;
+              videoFile: {
+                _id: string;
+                url: string | undefined;
+                mimeType: string | undefined;
+                dimensions: SanityImageDimensions | undefined;
+              };
+              aspectRatio: number | undefined;
+            }
+          | {
+              videoOptions: null;
+              lottieOptions: null;
+              riveOptions: null;
+              type: "videoUrl";
+              image: null;
+              video: null;
+              rive: null;
+              lottie: null;
+              videoFile: null;
+              videoCover: {
+                _id: string | undefined;
+                _rev: string | undefined;
+                altText: string | undefined;
+                description: string | undefined;
+                title: string | undefined;
+                lqip: string | undefined;
+                dimensions: SanityImageDimensions | undefined;
+                crop: SanityImageCrop | undefined;
+                hotspot: SanityImageHotspot | undefined;
+              } | undefined;
+              videoUrl: {
+                url: string;
+                dimensions: SanityImageDimensions | undefined;
+              };
+              aspectRatio: number | undefined;
+            }
+          | undefined;
+      };
+    }> | undefined;
+  } | undefined;
+  settings: {
+    hash: string | undefined;
+    width: "bleed" | "column" | "edge";
+  } | undefined;
+} | undefined;
+
+// Source: src/features/page-builder/queries.ts
+// Variable: LogoWallSectionQ
+// Query: *[_id == $docId][0].pageBuilder.sectionsArray[_type == "logoWallSectionField" && _key == $sectionKey][0]{    "content": sectionContent{      metric,      statement,      "swapMs": coalesce(swapMs, 1500),      "logos": logos[]{        "_key": _key,        name,        "url": image.asset->url,      },    },    "settings": sectionSettings{      "hash": coalesce(sectionHash.current, _key),      "width": coalesce(width, "column"),    },}
+export type LogoWallSectionQResult = {
+  content: {
+    metric: string | undefined;
+    statement: string | undefined;
+    swapMs: number | 1500;
+    logos: Array<{
+      _key: string;
+      name: string | undefined;
+      url: string | undefined;
+    }> | undefined;
+  } | undefined;
+  settings: {
+    hash: string | undefined;
+    width: "bleed" | "column" | "edge";
+  } | undefined;
+} | undefined;
+
+// Source: src/features/page-builder/queries.ts
+// Variable: ProcessSectionQ
+// Query: *[_id == $docId][0].pageBuilder.sectionsArray[_type == "processSectionField" && _key == $sectionKey][0]{    "content": sectionContent{      eyebrow,      headline,      underline,      lede,      timelineLabel,      oldTitle,      oldCaption,      "oldSteps": oldSteps[]{        "_key": _key,        label,        "days": coalesce(days, 1),      },      newTitle,      newCaption,      newLabel,      "newSteps": newSteps[]{        "_key": _key,        label,        icon,        isFinal,        showOnMobile,      },      closingTitle,      closingText,    },    "settings": sectionSettings{      "hash": coalesce(sectionHash.current, _key),      "width": coalesce(width, "column"),    },}
+export type ProcessSectionQResult = {
+  content: {
+    eyebrow: string | undefined;
+    headline: string | undefined;
+    underline: string | undefined;
+    lede: string | undefined;
+    timelineLabel: string | undefined;
+    oldTitle: string | undefined;
+    oldCaption: string | undefined;
+    oldSteps: Array<{
+      _key: string;
+      label: string | undefined;
+      days: number | 1;
+    }> | undefined;
+    newTitle: string | undefined;
+    newCaption: string | undefined;
+    newLabel: string | undefined;
+    newSteps: Array<{
+      _key: string;
+      label: string | undefined;
+      icon: "arrow-up-right" | "sparkle" | "webos-brand" | "webos-pixel" | undefined;
+      isFinal: boolean | undefined;
+      showOnMobile: boolean | undefined;
+    }> | undefined;
+    closingTitle: string | undefined;
+    closingText: string | undefined;
+  } | undefined;
+  settings: {
+    hash: string | undefined;
+    width: "bleed" | "column" | "edge";
+  } | undefined;
+} | undefined;
+
+// Source: src/features/page-builder/queries.ts
+// Variable: LogoStripSectionQ
+// Query: *[_id == $docId][0].pageBuilder.sectionsArray[_type == "logoStripSectionField" && _key == $sectionKey][0]{    "content": sectionContent{      statement,      "logos": logos[]{        "_key": _key,        name,        "url": image.asset->url,        "ratio": coalesce(image.asset->metadata.dimensions.aspectRatio, 4),        "href": caseStudy->uri.current,      },    },    "settings": sectionSettings{      "hash": coalesce(sectionHash.current, _key),      "width": coalesce(width, "column"),    },}
+export type LogoStripSectionQResult = {
+  content: {
+    statement: string | undefined;
+    logos: Array<{
+      _key: string;
+      name: string | undefined;
+      url: string | undefined;
+      ratio: number | 4;
+      href: string | undefined;
+    }> | undefined;
+  } | undefined;
+  settings: {
+    hash: string | undefined;
+    width: "bleed" | "column" | "edge";
+  } | undefined;
+} | undefined;
+
+// Source: src/features/page-builder/queries.ts
+// Variable: TeamSectionQ
+// Query: fn frag::image($value) = $value{  "_id": asset->._id,  "_rev": asset->._rev,  "altText": asset->.altText,  "description": asset->.description,  "title": asset->.title,  "lqip": asset->.metadata.lqip,  "dimensions": asset->.metadata.dimensions,  crop,  hotspot,};fn frag::media($value) = $value{videoOptions{  loop,  muted,  autoPlay,  "noControls": !controls,},lottieOptions{  loop,  autoPlay,},riveOptions{  loop,  autoPlay,  stateMachine,  autoBind,},...select(  type == "image" && defined(image) => {    type,    "image": frag::image(image),    "video": null,    "rive": null,    "lottie": null,    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => image.asset->metadata.dimensions.aspectRatio,    ),  },  type == "videoMux" && defined(video) => {    type,    "image": null,    "rive": null,    "lottie": null,    video{  "_id": asset->_id,  "_rev": asset->_rev,  "playbackId": asset->playbackId,  "thumbTime": coalesce(asset->thumbTime, 1),  "duration": asset->data.duration,  "dimensions": {    "width": asset->data.tracks[0].max_width,    "height": asset->data.tracks[0].max_height,    "aspectRatio": asset->data.tracks[0].max_width / asset->data.tracks[0].max_height,  }},    "videoCover": frag::image(videoCover),    animatedThumbnail{enabled, start, end},    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => video.asset->data.tracks[0].max_width / video.asset->data.tracks[0].max_height,    ),  },  type == "lottie" && defined(lottieFile.asset) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": {      "_id": lottieFile.asset->_id,      "url": lottieFile.asset->url,      "dimensions": select(        defined(lottieDimensions.width) && defined(lottieDimensions.height) && lottieDimensions.width > 0 => {          "width": lottieDimensions.width,          "height": lottieDimensions.height,          "aspectRatio": lottieDimensions.width / lottieDimensions.height,        },        true => null      )    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      defined(lottieDimensions.width) && defined(lottieDimensions.height) && lottieDimensions.width > 0 => lottieDimensions.width / lottieDimensions.height,      true => null    ),  },  type == "rive" && defined(riveFile.asset) => {    type,    "image": null,    "video": null,    "lottie": null,    "rive": {      "_id": riveFile.asset->_id,      "url": riveFile.asset->url,      "dimensions": select(        defined(riveDimensions.width) && defined(riveDimensions.height) && riveDimensions.width > 0 => {          "width": riveDimensions.width,          "height": riveDimensions.height,          "aspectRatio": riveDimensions.width / riveDimensions.height,        },        true => null      )    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      defined(riveDimensions.width) && defined(riveDimensions.height) && riveDimensions.width > 0 => riveDimensions.width / riveDimensions.height,      true => null    ),  },  type == "videoFile" && defined(videoFile.asset) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoCover": frag::image(videoCover),    "videoFile": {      "_id": videoFile.asset->_id,      "url": videoFile.asset->url,      "mimeType": videoFile.asset->mimeType,      "dimensions": videoCover.asset->metadata.dimensions    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => videoCover.asset->metadata.dimensions.aspectRatio    ),  },  type == "videoUrl" && defined(videoUrl) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoFile": null,    "videoCover": frag::image(videoCover),    "videoUrl": {      "url": videoUrl,      "dimensions": videoCover.asset->metadata.dimensions    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => videoCover.asset->metadata.dimensions.aspectRatio    ),  },  true => {    "type": null,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoFile": null,    "videoUrl": null,    "aspectRatio": null,  })};*[_id == $docId][0].pageBuilder.sectionsArray[_type == "teamSectionField" && _key == $sectionKey][0]{    "content": sectionContent{      eyebrow,      headline,      lede,      "layout": coalesce(layout, "stage"),      outro,      "moments": moments[]{        "_key": _key,        caption,        isHero,        "media": frag::media(appMedia)      },    },    "settings": sectionSettings{      "hash": coalesce(sectionHash.current, _key),      "width": coalesce(width, "column"),    },}
+export type TeamSectionQResult = {
+  content: {
+    eyebrow: string | undefined;
+    headline: string | undefined;
+    lede: string | undefined;
+    layout: "postcards" | "stage";
+    outro: string | undefined;
+    moments: Array<{
+      _key: string;
+      caption: string | undefined;
+      isHero: boolean | undefined;
+      media:
+        | {
+            videoOptions: null;
+            lottieOptions: null;
+            riveOptions: null;
+            type: "videoMux";
+            image: null;
+            rive: null;
+            lottie: null;
+            video: {
+              _id: string | undefined;
+              _rev: string | undefined;
+              playbackId: string | undefined;
+              thumbTime: number | 1;
+              duration: number | undefined;
+              dimensions: {
+                width: number | undefined;
+                height: number | undefined;
+                aspectRatio: number | undefined;
+              };
+            };
+            videoCover: {
+              _id: string | undefined;
+              _rev: string | undefined;
+              altText: string | undefined;
+              description: string | undefined;
+              title: string | undefined;
+              lqip: string | undefined;
+              dimensions: SanityImageDimensions | undefined;
+              crop: SanityImageCrop | undefined;
+              hotspot: SanityImageHotspot | undefined;
+            } | undefined;
+            animatedThumbnail: {
+              enabled: boolean | undefined;
+              start: number | undefined;
+              end: number | undefined;
+            } | undefined;
+            aspectRatio: number | undefined;
+          }
+        | {
+            videoOptions: null;
+            lottieOptions: null;
+            riveOptions: null;
+            type: null;
+            image: null;
+            video: null;
+            rive: null;
+            lottie: null;
+            videoFile: null;
+            videoUrl: null;
+            aspectRatio: null;
+          }
+        | {
+            videoOptions: null;
+            lottieOptions: null;
+            riveOptions: null;
+            type: "videoUrl";
+            image: null;
+            video: null;
+            rive: null;
+            lottie: null;
+            videoFile: null;
+            videoCover: {
+              _id: string | undefined;
+              _rev: string | undefined;
+              altText: string | undefined;
+              description: string | undefined;
+              title: string | undefined;
+              lqip: string | undefined;
+              dimensions: SanityImageDimensions | undefined;
+              crop: SanityImageCrop | undefined;
+              hotspot: SanityImageHotspot | undefined;
+            } | undefined;
+            videoUrl: {
+              url: string;
+              dimensions: SanityImageDimensions | undefined;
+            };
+            aspectRatio: number | undefined;
+          }
+        | {
+            videoOptions: null;
+            lottieOptions: null;
+            riveOptions: null;
+            type: "image" | "videoFile" | "videoMux" | "videoUrl" | undefined;
+            image: null;
+            video: null;
+            rive: null;
+            lottie: null;
+            videoCover: {
+              _id: string | undefined;
+              _rev: string | undefined;
+              altText: string | undefined;
+              description: string | undefined;
+              title: string | undefined;
+              lqip: string | undefined;
+              dimensions: SanityImageDimensions | undefined;
+              crop: SanityImageCrop | undefined;
+              hotspot: SanityImageHotspot | undefined;
+            } | undefined;
+            videoFile: {
+              _id: string | undefined;
+              url: string | undefined;
+              mimeType: string | undefined;
+              dimensions: SanityImageDimensions | undefined;
+            };
+            aspectRatio: number | undefined;
+          }
+        | {
+            videoOptions: null;
+            lottieOptions: null;
+            riveOptions: null;
+            type: "image";
+            image: {
+              _id: string | undefined;
+              _rev: string | undefined;
+              altText: string | undefined;
+              description: string | undefined;
+              title: string | undefined;
+              lqip: string | undefined;
+              dimensions: SanityImageDimensions | undefined;
+              crop: SanityImageCrop | undefined;
+              hotspot: SanityImageHotspot | undefined;
+            };
+            video: null;
+            rive: null;
+            lottie: null;
+            aspectRatio: number | undefined;
+          }
+        | undefined;
+    }> | undefined;
+  } | undefined;
+  settings: {
+    hash: string | undefined;
+    width: "bleed" | "column" | "edge";
+  } | undefined;
+} | undefined;
+
+// Source: src/features/page-builder/queries.ts
+// Variable: LeadFormSectionQ
+// Query: *[_id == $docId][0].pageBuilder.sectionsArray[_type == "leadFormSectionField" && _key == $sectionKey][0]{    "content": sectionContent{      eyebrow,      headline,      underline,      lede,      bookingIntro,      calLink,      calNamespace,      reassurance,      contact{        name,        role,        note,        email,        phone,        "portrait": portrait{            "_id": asset->._id,  "_rev": asset->._rev,  "altText": asset->.altText,  "description": asset->.description,  "title": asset->.title,  "lqip": asset->.metadata.lqip,  "dimensions": asset->.metadata.dimensions,  crop,  hotspot,        },      },    },    "settings": sectionSettings{      "hash": coalesce(sectionHash.current, _key),      "width": coalesce(width, "column"),    },}
+export type LeadFormSectionQResult = {
+  content: {
+    eyebrow: string | undefined;
+    headline: string | undefined;
+    underline: string | undefined;
+    lede: string | undefined;
+    bookingIntro: string | undefined;
+    calLink: string | undefined;
+    calNamespace: string | undefined;
+    reassurance: string | undefined;
+    contact: {
+      name: string | undefined;
+      role: string | undefined;
+      note: string | undefined;
+      email: string | undefined;
+      phone: string | undefined;
+      portrait: {
+        _id: string | undefined;
+        _rev: string | undefined;
+        altText: string | undefined;
+        description: string | undefined;
+        title: string | undefined;
+        lqip: string | undefined;
+        dimensions: SanityImageDimensions | undefined;
+        crop: SanityImageCrop | undefined;
+        hotspot: SanityImageHotspot | undefined;
+      } | undefined;
+    } | undefined;
+  } | undefined;
+  settings: {
+    hash: string | undefined;
+    width: "bleed" | "column" | "edge";
   } | undefined;
 } | undefined;
 
@@ -3401,13 +6122,6 @@ export type SiteHeaderQResult = {
       text: string | "";
     }> | undefined;
   } | undefined;
-} | undefined;
-
-// Source: src/pages/api/contact-form.ts
-// Variable: SiteNotificationEmailsQ
-// Query: *[_type == "siteSettings"][0]{  contactFormNotificationEmails}
-export type SiteNotificationEmailsQResult = {
-  contactFormNotificationEmails: Array<string> | undefined;
 } | undefined;
 
 // Source: src/sanity/queries.ts
@@ -4677,6 +7391,31 @@ export type BlogPageQResult =
     }
   | {
       _id: "blog";
+      _type: "caseStudy";
+      title: string | undefined;
+      heading: null;
+      uri: string | "/blog";
+      showHeader: boolean | true;
+      showFooter: boolean | true;
+      seoMetadata: {
+        title: string | undefined;
+        description: string | undefined;
+        image: {
+          _id: string | undefined;
+          _rev: string | undefined;
+          altText: string | undefined;
+          description: string | undefined;
+          title: string | undefined;
+          lqip: string | undefined;
+          dimensions: SanityImageDimensions | undefined;
+          crop: SanityImageCrop | undefined;
+          hotspot: SanityImageHotspot | undefined;
+        } | undefined;
+        robots: "noindex,follow" | undefined;
+      } | undefined;
+    }
+  | {
+      _id: "blog";
       _type: "contactFormSubmission";
       title: null;
       heading: null;
@@ -4688,6 +7427,16 @@ export type BlogPageQResult =
   | {
       _id: "blog";
       _type: "imageAltText";
+      title: null;
+      heading: null;
+      uri: "/blog";
+      showHeader: true;
+      showFooter: true;
+      seoMetadata: null;
+    }
+  | {
+      _id: "blog";
+      _type: "leadFormSubmission";
       title: null;
       heading: null;
       uri: "/blog";
@@ -4832,6 +7581,16 @@ export type BlogPageQResult =
     }
   | {
       _id: "blog";
+      _type: "service";
+      title: null;
+      heading: null;
+      uri: "/blog";
+      showHeader: true;
+      showFooter: true;
+      seoMetadata: null;
+    }
+  | {
+      _id: "blog";
       _type: "site";
       title: null;
       heading: null;
@@ -4864,6 +7623,31 @@ export type BlogPageQResult =
       showHeader: true;
       showFooter: true;
       seoMetadata: null;
+    }
+  | {
+      _id: "blog";
+      _type: "work";
+      title: string | undefined;
+      heading: string | undefined;
+      uri: string | "/blog";
+      showHeader: boolean | true;
+      showFooter: boolean | true;
+      seoMetadata: {
+        title: string | undefined;
+        description: string | undefined;
+        image: {
+          _id: string | undefined;
+          _rev: string | undefined;
+          altText: string | undefined;
+          description: string | undefined;
+          title: string | undefined;
+          lqip: string | undefined;
+          dimensions: SanityImageDimensions | undefined;
+          crop: SanityImageCrop | undefined;
+          hotspot: SanityImageHotspot | undefined;
+        } | undefined;
+        robots: "noindex,follow" | undefined;
+      } | undefined;
     }
   | undefined;
 
@@ -4976,6 +7760,729 @@ export type AuthorPageQResult = {
     publishedAt: string | undefined;
     categories: Array<string | undefined> | undefined;
   }>;
+} | undefined;
+
+// Source: src/sanity/queries.ts
+// Variable: WorkPageQ
+// Query: fn frag::link($value) = $value{  type,  "openInNewTab": coalesce(openInNewTab, false),  "canDownload": select(    type == "file" => coalesce(canDownload, false),    true => false  ),  "href": select(    type == "internal" => coalesce(      select(        defined(internal.sectionTarget) && defined(internal.link->pageBuilder.sectionsArray) => internal.link->uri.current + '#' + coalesce(          internal.link->pageBuilder.sectionsArray[_key == ^.internal.sectionTarget][0].sectionSettings.sectionHash.current,          internal.link->pageBuilder.sectionsArray[_key == ^.internal.sectionTarget][0]._key,        ),        true => internal.link->uri.current,      ),      ""    ),    type == "external" => coalesce(external, ""),    type == "email" => "mailto:" + coalesce(email, ""),    type == "phone" => "tel:" + coalesce(phone, ""),    type == "file" => coalesce(file.asset->url, ""),    type == "params" => coalesce(paramsHref, ""),    true => ""  ),  "text": coalesce(    customText,    select(      type == "internal" => coalesce(        select(          defined(internal.sectionTarget) && defined(internal.link->pageBuilder.sectionsArray) => coalesce(            internal.link->pageBuilder.sectionsArray[_key == ^.internal.sectionTarget][0].sectionSettings.sectionTitle,            internal.link->title,          ),          true => internal.link->title,        ),        internal.link->uri.current,        ""      ),      type == "external" => coalesce(external, ""),      type == "email" => coalesce(email, ""),      type == "phone" => coalesce(phone, ""),      type == "file" => coalesce(file.asset->originalFilename, ""),      type == "params" => coalesce(paramsHref, ""),      true => ""    ),    "",  )};fn frag::image($value) = $value{  "_id": asset->._id,  "_rev": asset->._rev,  "altText": asset->.altText,  "description": asset->.description,  "title": asset->.title,  "lqip": asset->.metadata.lqip,  "dimensions": asset->.metadata.dimensions,  crop,  hotspot,};fn frag::media($value) = $value{videoOptions{  loop,  muted,  autoPlay,  "noControls": !controls,},lottieOptions{  loop,  autoPlay,},riveOptions{  loop,  autoPlay,  stateMachine,  autoBind,},...select(  type == "image" && defined(image) => {    type,    "image": frag::image(image),    "video": null,    "rive": null,    "lottie": null,    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => image.asset->metadata.dimensions.aspectRatio,    ),  },  type == "videoMux" && defined(video) => {    type,    "image": null,    "rive": null,    "lottie": null,    video{  "_id": asset->_id,  "_rev": asset->_rev,  "playbackId": asset->playbackId,  "thumbTime": coalesce(asset->thumbTime, 1),  "duration": asset->data.duration,  "dimensions": {    "width": asset->data.tracks[0].max_width,    "height": asset->data.tracks[0].max_height,    "aspectRatio": asset->data.tracks[0].max_width / asset->data.tracks[0].max_height,  }},    "videoCover": frag::image(videoCover),    animatedThumbnail{enabled, start, end},    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => video.asset->data.tracks[0].max_width / video.asset->data.tracks[0].max_height,    ),  },  type == "lottie" && defined(lottieFile.asset) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": {      "_id": lottieFile.asset->_id,      "url": lottieFile.asset->url,      "dimensions": select(        defined(lottieDimensions.width) && defined(lottieDimensions.height) && lottieDimensions.width > 0 => {          "width": lottieDimensions.width,          "height": lottieDimensions.height,          "aspectRatio": lottieDimensions.width / lottieDimensions.height,        },        true => null      )    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      defined(lottieDimensions.width) && defined(lottieDimensions.height) && lottieDimensions.width > 0 => lottieDimensions.width / lottieDimensions.height,      true => null    ),  },  type == "rive" && defined(riveFile.asset) => {    type,    "image": null,    "video": null,    "lottie": null,    "rive": {      "_id": riveFile.asset->_id,      "url": riveFile.asset->url,      "dimensions": select(        defined(riveDimensions.width) && defined(riveDimensions.height) && riveDimensions.width > 0 => {          "width": riveDimensions.width,          "height": riveDimensions.height,          "aspectRatio": riveDimensions.width / riveDimensions.height,        },        true => null      )    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      defined(riveDimensions.width) && defined(riveDimensions.height) && riveDimensions.width > 0 => riveDimensions.width / riveDimensions.height,      true => null    ),  },  type == "videoFile" && defined(videoFile.asset) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoCover": frag::image(videoCover),    "videoFile": {      "_id": videoFile.asset->_id,      "url": videoFile.asset->url,      "mimeType": videoFile.asset->mimeType,      "dimensions": videoCover.asset->metadata.dimensions    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => videoCover.asset->metadata.dimensions.aspectRatio    ),  },  type == "videoUrl" && defined(videoUrl) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoFile": null,    "videoCover": frag::image(videoCover),    "videoUrl": {      "url": videoUrl,      "dimensions": videoCover.asset->metadata.dimensions    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => videoCover.asset->metadata.dimensions.aspectRatio    ),  },  true => {    "type": null,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoFile": null,    "videoUrl": null,    "aspectRatio": null,  })};fn frag::richText($value) = $value[]{  ...,  _type == "mediaBlock" => {  caption,  useParallax,  "media": frag::media(appMedia),},  // PLOP: Add Export  markDefs[] {    ...,    _type == "linkField" => frag::link(@),  },  children[] {    ...,    _type == "inlineMediaField" => {      "media": frag::media(media),    },  }};  *[_id == "work"][0]{    _id,    _type,    title,    eyebrow,    heading,    "intro": frag::richText(intro),    "uri": coalesce(uri.current, "/work"),    "showHeader": coalesce(showHeader, true),    "showFooter": coalesce(showFooter, true),    seoMetadata{  title,  description,  "image": frag::image(image),  "robots": select(noIndex => "noindex,follow", true => undefined),},  }
+export type WorkPageQResult =
+  | {
+      _id: "work";
+      _type: "article";
+      title: string | undefined;
+      eyebrow: null;
+      heading: null;
+      intro: null;
+      uri: string | "/work";
+      showHeader: boolean | true;
+      showFooter: boolean | true;
+      seoMetadata: {
+        title: string | undefined;
+        description: string | undefined;
+        image: {
+          _id: string | undefined;
+          _rev: string | undefined;
+          altText: string | undefined;
+          description: string | undefined;
+          title: string | undefined;
+          lqip: string | undefined;
+          dimensions: SanityImageDimensions | undefined;
+          crop: SanityImageCrop | undefined;
+          hotspot: SanityImageHotspot | undefined;
+        } | undefined;
+        robots: "noindex,follow" | undefined;
+      } | undefined;
+    }
+  | {
+      _id: "work";
+      _type: "articleCategory";
+      title: null;
+      eyebrow: null;
+      heading: null;
+      intro: null;
+      uri: "/work";
+      showHeader: true;
+      showFooter: true;
+      seoMetadata: null;
+    }
+  | {
+      _id: "work";
+      _type: "blog";
+      title: string | undefined;
+      eyebrow: null;
+      heading: string | undefined;
+      intro: Array<{
+        children: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }> | undefined;
+        style?: "caption" | "normal";
+        listItem?: never;
+        markDefs: Array<
+          | {
+              color?: AppColor;
+              _type: "highlightColorField";
+              _key: string;
+            }
+          | {
+              widthPercent?: number;
+              _type: "indentField";
+              _key: string;
+            }
+          | {
+              type:
+                | "email"
+                | "external"
+                | "file"
+                | "internal"
+                | "params"
+                | "phone"
+                | undefined;
+              external?: string;
+              email?: string;
+              phone?: string;
+              file?: LinkFieldFile;
+              canDownload: boolean | false;
+              paramsHref?: string;
+              internal?: Internal;
+              openInNewTab: boolean | false;
+              _type: "linkField";
+              _key: string;
+              href: string | "" | "mailto:" | "tel:";
+              text: string | "";
+            }
+          | {
+              color?: AppColor;
+              _type: "textColorField";
+              _key: string;
+            }
+        > | undefined;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | undefined;
+      uri: string | "/work";
+      showHeader: boolean | true;
+      showFooter: boolean | true;
+      seoMetadata: {
+        title: string | undefined;
+        description: string | undefined;
+        image: {
+          _id: string | undefined;
+          _rev: string | undefined;
+          altText: string | undefined;
+          description: string | undefined;
+          title: string | undefined;
+          lqip: string | undefined;
+          dimensions: SanityImageDimensions | undefined;
+          crop: SanityImageCrop | undefined;
+          hotspot: SanityImageHotspot | undefined;
+        } | undefined;
+        robots: "noindex,follow" | undefined;
+      } | undefined;
+    }
+  | {
+      _id: "work";
+      _type: "caseStudy";
+      title: string | undefined;
+      eyebrow: null;
+      heading: null;
+      intro: null;
+      uri: string | "/work";
+      showHeader: boolean | true;
+      showFooter: boolean | true;
+      seoMetadata: {
+        title: string | undefined;
+        description: string | undefined;
+        image: {
+          _id: string | undefined;
+          _rev: string | undefined;
+          altText: string | undefined;
+          description: string | undefined;
+          title: string | undefined;
+          lqip: string | undefined;
+          dimensions: SanityImageDimensions | undefined;
+          crop: SanityImageCrop | undefined;
+          hotspot: SanityImageHotspot | undefined;
+        } | undefined;
+        robots: "noindex,follow" | undefined;
+      } | undefined;
+    }
+  | {
+      _id: "work";
+      _type: "contactFormSubmission";
+      title: null;
+      eyebrow: null;
+      heading: null;
+      intro: null;
+      uri: "/work";
+      showHeader: true;
+      showFooter: true;
+      seoMetadata: null;
+    }
+  | {
+      _id: "work";
+      _type: "imageAltText";
+      title: null;
+      eyebrow: null;
+      heading: null;
+      intro: null;
+      uri: "/work";
+      showHeader: true;
+      showFooter: true;
+      seoMetadata: null;
+    }
+  | {
+      _id: "work";
+      _type: "leadFormSubmission";
+      title: null;
+      eyebrow: null;
+      heading: null;
+      intro: null;
+      uri: "/work";
+      showHeader: true;
+      showFooter: true;
+      seoMetadata: null;
+    }
+  | {
+      _id: "work";
+      _type: "legalPage";
+      title: string | undefined;
+      eyebrow: null;
+      heading: null;
+      intro: null;
+      uri: string | "/work";
+      showHeader: boolean | true;
+      showFooter: boolean | true;
+      seoMetadata: {
+        title: string | undefined;
+        description: string | undefined;
+        image: {
+          _id: string | undefined;
+          _rev: string | undefined;
+          altText: string | undefined;
+          description: string | undefined;
+          title: string | undefined;
+          lqip: string | undefined;
+          dimensions: SanityImageDimensions | undefined;
+          crop: SanityImageCrop | undefined;
+          hotspot: SanityImageHotspot | undefined;
+        } | undefined;
+        robots: "noindex,follow" | undefined;
+      } | undefined;
+    }
+  | {
+      _id: "work";
+      _type: "media.folder";
+      title: null;
+      eyebrow: null;
+      heading: null;
+      intro: null;
+      uri: "/work";
+      showHeader: true;
+      showFooter: true;
+      seoMetadata: null;
+    }
+  | {
+      _id: "work";
+      _type: "media.tag";
+      title: null;
+      eyebrow: null;
+      heading: null;
+      intro: null;
+      uri: "/work";
+      showHeader: true;
+      showFooter: true;
+      seoMetadata: null;
+    }
+  | {
+      _id: "work";
+      _type: "mux.videoAsset";
+      title: null;
+      eyebrow: null;
+      heading: null;
+      intro: null;
+      uri: "/work";
+      showHeader: true;
+      showFooter: true;
+      seoMetadata: null;
+    }
+  | {
+      _id: "work";
+      _type: "page";
+      title: string | undefined;
+      eyebrow: null;
+      heading: null;
+      intro: null;
+      uri: string | "/work";
+      showHeader: boolean | true;
+      showFooter: boolean | true;
+      seoMetadata: {
+        title: string | undefined;
+        description: string | undefined;
+        image: {
+          _id: string | undefined;
+          _rev: string | undefined;
+          altText: string | undefined;
+          description: string | undefined;
+          title: string | undefined;
+          lqip: string | undefined;
+          dimensions: SanityImageDimensions | undefined;
+          crop: SanityImageCrop | undefined;
+          hotspot: SanityImageHotspot | undefined;
+        } | undefined;
+        robots: "noindex,follow" | undefined;
+      } | undefined;
+    }
+  | {
+      _id: "work";
+      _type: "person";
+      title: null;
+      eyebrow: null;
+      heading: null;
+      intro: null;
+      uri: string | "/work";
+      showHeader: boolean | true;
+      showFooter: boolean | true;
+      seoMetadata: {
+        title: string | undefined;
+        description: string | undefined;
+        image: {
+          _id: string | undefined;
+          _rev: string | undefined;
+          altText: string | undefined;
+          description: string | undefined;
+          title: string | undefined;
+          lqip: string | undefined;
+          dimensions: SanityImageDimensions | undefined;
+          crop: SanityImageCrop | undefined;
+          hotspot: SanityImageHotspot | undefined;
+        } | undefined;
+        robots: "noindex,follow" | undefined;
+      } | undefined;
+    }
+  | {
+      _id: "work";
+      _type: "redirect";
+      title: null;
+      eyebrow: null;
+      heading: null;
+      intro: null;
+      uri: "/work";
+      showHeader: true;
+      showFooter: true;
+      seoMetadata: null;
+    }
+  | {
+      _id: "work";
+      _type: "sanity.fileAsset";
+      title: string | undefined;
+      eyebrow: null;
+      heading: null;
+      intro: null;
+      uri: "/work";
+      showHeader: true;
+      showFooter: true;
+      seoMetadata: null;
+    }
+  | {
+      _id: "work";
+      _type: "sanity.imageAsset";
+      title: string | undefined;
+      eyebrow: null;
+      heading: null;
+      intro: null;
+      uri: "/work";
+      showHeader: true;
+      showFooter: true;
+      seoMetadata: null;
+    }
+  | {
+      _id: "work";
+      _type: "service";
+      title: null;
+      eyebrow: null;
+      heading: null;
+      intro: null;
+      uri: "/work";
+      showHeader: true;
+      showFooter: true;
+      seoMetadata: null;
+    }
+  | {
+      _id: "work";
+      _type: "site";
+      title: null;
+      eyebrow: null;
+      heading: null;
+      intro: null;
+      uri: "/work";
+      showHeader: true;
+      showFooter: true;
+      seoMetadata: {
+        title: string | undefined;
+        description: string | undefined;
+        image: {
+          _id: string | undefined;
+          _rev: string | undefined;
+          altText: string | undefined;
+          description: string | undefined;
+          title: string | undefined;
+          lqip: string | undefined;
+          dimensions: SanityImageDimensions | undefined;
+          crop: SanityImageCrop | undefined;
+          hotspot: SanityImageHotspot | undefined;
+        } | undefined;
+        robots: "noindex,follow" | undefined;
+      } | undefined;
+    }
+  | {
+      _id: "work";
+      _type: "siteSettings";
+      title: null;
+      eyebrow: null;
+      heading: null;
+      intro: null;
+      uri: "/work";
+      showHeader: true;
+      showFooter: true;
+      seoMetadata: null;
+    }
+  | {
+      _id: "work";
+      _type: "work";
+      title: string | undefined;
+      eyebrow: string | undefined;
+      heading: string | undefined;
+      intro: Array<{
+        children: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }> | undefined;
+        style?: "caption" | "normal";
+        listItem?: never;
+        markDefs: Array<
+          | {
+              color?: AppColor;
+              _type: "highlightColorField";
+              _key: string;
+            }
+          | {
+              widthPercent?: number;
+              _type: "indentField";
+              _key: string;
+            }
+          | {
+              type:
+                | "email"
+                | "external"
+                | "file"
+                | "internal"
+                | "params"
+                | "phone"
+                | undefined;
+              external?: string;
+              email?: string;
+              phone?: string;
+              file?: LinkFieldFile;
+              canDownload: boolean | false;
+              paramsHref?: string;
+              internal?: Internal;
+              openInNewTab: boolean | false;
+              _type: "linkField";
+              _key: string;
+              href: string | "" | "mailto:" | "tel:";
+              text: string | "";
+            }
+          | {
+              color?: AppColor;
+              _type: "textColorField";
+              _key: string;
+            }
+        > | undefined;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | undefined;
+      uri: string | "/work";
+      showHeader: boolean | true;
+      showFooter: boolean | true;
+      seoMetadata: {
+        title: string | undefined;
+        description: string | undefined;
+        image: {
+          _id: string | undefined;
+          _rev: string | undefined;
+          altText: string | undefined;
+          description: string | undefined;
+          title: string | undefined;
+          lqip: string | undefined;
+          dimensions: SanityImageDimensions | undefined;
+          crop: SanityImageCrop | undefined;
+          hotspot: SanityImageHotspot | undefined;
+        } | undefined;
+        robots: "noindex,follow" | undefined;
+      } | undefined;
+    }
+  | undefined;
+
+// Source: src/sanity/queries.ts
+// Variable: CaseStudyListQ
+// Query: fn frag::image($value) = $value{  "_id": asset->._id,  "_rev": asset->._rev,  "altText": asset->.altText,  "description": asset->.description,  "title": asset->.title,  "lqip": asset->.metadata.lqip,  "dimensions": asset->.metadata.dimensions,  crop,  hotspot,};fn frag::media($value) = $value{videoOptions{  loop,  muted,  autoPlay,  "noControls": !controls,},lottieOptions{  loop,  autoPlay,},riveOptions{  loop,  autoPlay,  stateMachine,  autoBind,},...select(  type == "image" && defined(image) => {    type,    "image": frag::image(image),    "video": null,    "rive": null,    "lottie": null,    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => image.asset->metadata.dimensions.aspectRatio,    ),  },  type == "videoMux" && defined(video) => {    type,    "image": null,    "rive": null,    "lottie": null,    video{  "_id": asset->_id,  "_rev": asset->_rev,  "playbackId": asset->playbackId,  "thumbTime": coalesce(asset->thumbTime, 1),  "duration": asset->data.duration,  "dimensions": {    "width": asset->data.tracks[0].max_width,    "height": asset->data.tracks[0].max_height,    "aspectRatio": asset->data.tracks[0].max_width / asset->data.tracks[0].max_height,  }},    "videoCover": frag::image(videoCover),    animatedThumbnail{enabled, start, end},    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => video.asset->data.tracks[0].max_width / video.asset->data.tracks[0].max_height,    ),  },  type == "lottie" && defined(lottieFile.asset) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": {      "_id": lottieFile.asset->_id,      "url": lottieFile.asset->url,      "dimensions": select(        defined(lottieDimensions.width) && defined(lottieDimensions.height) && lottieDimensions.width > 0 => {          "width": lottieDimensions.width,          "height": lottieDimensions.height,          "aspectRatio": lottieDimensions.width / lottieDimensions.height,        },        true => null      )    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      defined(lottieDimensions.width) && defined(lottieDimensions.height) && lottieDimensions.width > 0 => lottieDimensions.width / lottieDimensions.height,      true => null    ),  },  type == "rive" && defined(riveFile.asset) => {    type,    "image": null,    "video": null,    "lottie": null,    "rive": {      "_id": riveFile.asset->_id,      "url": riveFile.asset->url,      "dimensions": select(        defined(riveDimensions.width) && defined(riveDimensions.height) && riveDimensions.width > 0 => {          "width": riveDimensions.width,          "height": riveDimensions.height,          "aspectRatio": riveDimensions.width / riveDimensions.height,        },        true => null      )    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      defined(riveDimensions.width) && defined(riveDimensions.height) && riveDimensions.width > 0 => riveDimensions.width / riveDimensions.height,      true => null    ),  },  type == "videoFile" && defined(videoFile.asset) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoCover": frag::image(videoCover),    "videoFile": {      "_id": videoFile.asset->_id,      "url": videoFile.asset->url,      "mimeType": videoFile.asset->mimeType,      "dimensions": videoCover.asset->metadata.dimensions    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => videoCover.asset->metadata.dimensions.aspectRatio    ),  },  type == "videoUrl" && defined(videoUrl) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoFile": null,    "videoCover": frag::image(videoCover),    "videoUrl": {      "url": videoUrl,      "dimensions": videoCover.asset->metadata.dimensions    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => videoCover.asset->metadata.dimensions.aspectRatio    ),  },  true => {    "type": null,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoFile": null,    "videoUrl": null,    "aspectRatio": null,  })};fn frag::caseStudyCard($value) = $value{  _id,  title,  "href": uri.current,  "services": services[]->name,  "card": {    "width": coalesce(card.width, "half"),    "mode": coalesce(card.mode, "gallery"),    "cycleMs": coalesce(card.cycleMs, 400),    "image": frag::image(card.image),    "images": pageBuilder.sectionsArray[_type == "imageGridSectionField"].sectionContent.images[showInCard == true]{ "_key": _key, ...frag::image(@) },    "media": frag::media(card.appMedia),  }};  *[    _type == "caseStudy"    && defined(uri.current)    && passwordProtected != true  ] | order(publishedAt desc){    ...frag::caseStudyCard(@)  }
+export type CaseStudyListQResult = Array<{
+  _id: string;
+  title: string | undefined;
+  href: string | undefined;
+  services: Array<string | undefined> | undefined;
+  card: {
+    width: "full" | "half";
+    mode: "gallery" | "video";
+    cycleMs: number | 400;
+    image: {
+      _id: string | undefined;
+      _rev: string | undefined;
+      altText: string | undefined;
+      description: string | undefined;
+      title: string | undefined;
+      lqip: string | undefined;
+      dimensions: SanityImageDimensions | undefined;
+      crop: SanityImageCrop | undefined;
+      hotspot: SanityImageHotspot | undefined;
+    } | undefined;
+    images: Array<{
+      _key: string;
+      _id: string | undefined;
+      _rev: string | undefined;
+      altText: string | undefined;
+      description: string | undefined;
+      title: string | undefined;
+      lqip: string | undefined;
+      dimensions: SanityImageDimensions | undefined;
+      crop: SanityImageCrop | undefined;
+      hotspot: SanityImageHotspot | undefined;
+    } | undefined> | undefined;
+    media:
+      | {
+          videoOptions: null;
+          lottieOptions: null;
+          riveOptions: null;
+          type: "videoMux";
+          image: null;
+          rive: null;
+          lottie: null;
+          video: {
+            _id: string | undefined;
+            _rev: string | undefined;
+            playbackId: string | undefined;
+            thumbTime: number | 1;
+            duration: number | undefined;
+            dimensions: {
+              width: number | undefined;
+              height: number | undefined;
+              aspectRatio: number | undefined;
+            };
+          };
+          videoCover: {
+            _id: string | undefined;
+            _rev: string | undefined;
+            altText: string | undefined;
+            description: string | undefined;
+            title: string | undefined;
+            lqip: string | undefined;
+            dimensions: SanityImageDimensions | undefined;
+            crop: SanityImageCrop | undefined;
+            hotspot: SanityImageHotspot | undefined;
+          } | undefined;
+          animatedThumbnail: {
+            enabled: boolean | undefined;
+            start: number | undefined;
+            end: number | undefined;
+          } | undefined;
+          aspectRatio: number | undefined;
+        }
+      | {
+          videoOptions: null;
+          lottieOptions: null;
+          riveOptions: null;
+          type: null;
+          image: null;
+          video: null;
+          rive: null;
+          lottie: null;
+          videoFile: null;
+          videoUrl: null;
+          aspectRatio: null;
+        }
+      | {
+          videoOptions: null;
+          lottieOptions: null;
+          riveOptions: null;
+          type: "videoFile";
+          image: null;
+          video: null;
+          rive: null;
+          lottie: null;
+          videoCover: {
+            _id: string | undefined;
+            _rev: string | undefined;
+            altText: string | undefined;
+            description: string | undefined;
+            title: string | undefined;
+            lqip: string | undefined;
+            dimensions: SanityImageDimensions | undefined;
+            crop: SanityImageCrop | undefined;
+            hotspot: SanityImageHotspot | undefined;
+          } | undefined;
+          videoFile: {
+            _id: string;
+            url: string | undefined;
+            mimeType: string | undefined;
+            dimensions: SanityImageDimensions | undefined;
+          };
+          aspectRatio: number | undefined;
+        }
+      | {
+          videoOptions: null;
+          lottieOptions: null;
+          riveOptions: null;
+          type: "videoUrl";
+          image: null;
+          video: null;
+          rive: null;
+          lottie: null;
+          videoFile: null;
+          videoCover: {
+            _id: string | undefined;
+            _rev: string | undefined;
+            altText: string | undefined;
+            description: string | undefined;
+            title: string | undefined;
+            lqip: string | undefined;
+            dimensions: SanityImageDimensions | undefined;
+            crop: SanityImageCrop | undefined;
+            hotspot: SanityImageHotspot | undefined;
+          } | undefined;
+          videoUrl: {
+            url: string;
+            dimensions: SanityImageDimensions | undefined;
+          };
+          aspectRatio: number | undefined;
+        }
+      | undefined;
+  };
+}>;
+
+// Source: src/sanity/queries.ts
+// Variable: CaseStudyPageQ
+// Query: fn frag::link($value) = $value{  type,  "openInNewTab": coalesce(openInNewTab, false),  "canDownload": select(    type == "file" => coalesce(canDownload, false),    true => false  ),  "href": select(    type == "internal" => coalesce(      select(        defined(internal.sectionTarget) && defined(internal.link->pageBuilder.sectionsArray) => internal.link->uri.current + '#' + coalesce(          internal.link->pageBuilder.sectionsArray[_key == ^.internal.sectionTarget][0].sectionSettings.sectionHash.current,          internal.link->pageBuilder.sectionsArray[_key == ^.internal.sectionTarget][0]._key,        ),        true => internal.link->uri.current,      ),      ""    ),    type == "external" => coalesce(external, ""),    type == "email" => "mailto:" + coalesce(email, ""),    type == "phone" => "tel:" + coalesce(phone, ""),    type == "file" => coalesce(file.asset->url, ""),    type == "params" => coalesce(paramsHref, ""),    true => ""  ),  "text": coalesce(    customText,    select(      type == "internal" => coalesce(        select(          defined(internal.sectionTarget) && defined(internal.link->pageBuilder.sectionsArray) => coalesce(            internal.link->pageBuilder.sectionsArray[_key == ^.internal.sectionTarget][0].sectionSettings.sectionTitle,            internal.link->title,          ),          true => internal.link->title,        ),        internal.link->uri.current,        ""      ),      type == "external" => coalesce(external, ""),      type == "email" => coalesce(email, ""),      type == "phone" => coalesce(phone, ""),      type == "file" => coalesce(file.asset->originalFilename, ""),      type == "params" => coalesce(paramsHref, ""),      true => ""    ),    "",  )};fn frag::image($value) = $value{  "_id": asset->._id,  "_rev": asset->._rev,  "altText": asset->.altText,  "description": asset->.description,  "title": asset->.title,  "lqip": asset->.metadata.lqip,  "dimensions": asset->.metadata.dimensions,  crop,  hotspot,};fn frag::media($value) = $value{videoOptions{  loop,  muted,  autoPlay,  "noControls": !controls,},lottieOptions{  loop,  autoPlay,},riveOptions{  loop,  autoPlay,  stateMachine,  autoBind,},...select(  type == "image" && defined(image) => {    type,    "image": frag::image(image),    "video": null,    "rive": null,    "lottie": null,    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => image.asset->metadata.dimensions.aspectRatio,    ),  },  type == "videoMux" && defined(video) => {    type,    "image": null,    "rive": null,    "lottie": null,    video{  "_id": asset->_id,  "_rev": asset->_rev,  "playbackId": asset->playbackId,  "thumbTime": coalesce(asset->thumbTime, 1),  "duration": asset->data.duration,  "dimensions": {    "width": asset->data.tracks[0].max_width,    "height": asset->data.tracks[0].max_height,    "aspectRatio": asset->data.tracks[0].max_width / asset->data.tracks[0].max_height,  }},    "videoCover": frag::image(videoCover),    animatedThumbnail{enabled, start, end},    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => video.asset->data.tracks[0].max_width / video.asset->data.tracks[0].max_height,    ),  },  type == "lottie" && defined(lottieFile.asset) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": {      "_id": lottieFile.asset->_id,      "url": lottieFile.asset->url,      "dimensions": select(        defined(lottieDimensions.width) && defined(lottieDimensions.height) && lottieDimensions.width > 0 => {          "width": lottieDimensions.width,          "height": lottieDimensions.height,          "aspectRatio": lottieDimensions.width / lottieDimensions.height,        },        true => null      )    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      defined(lottieDimensions.width) && defined(lottieDimensions.height) && lottieDimensions.width > 0 => lottieDimensions.width / lottieDimensions.height,      true => null    ),  },  type == "rive" && defined(riveFile.asset) => {    type,    "image": null,    "video": null,    "lottie": null,    "rive": {      "_id": riveFile.asset->_id,      "url": riveFile.asset->url,      "dimensions": select(        defined(riveDimensions.width) && defined(riveDimensions.height) && riveDimensions.width > 0 => {          "width": riveDimensions.width,          "height": riveDimensions.height,          "aspectRatio": riveDimensions.width / riveDimensions.height,        },        true => null      )    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      defined(riveDimensions.width) && defined(riveDimensions.height) && riveDimensions.width > 0 => riveDimensions.width / riveDimensions.height,      true => null    ),  },  type == "videoFile" && defined(videoFile.asset) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoCover": frag::image(videoCover),    "videoFile": {      "_id": videoFile.asset->_id,      "url": videoFile.asset->url,      "mimeType": videoFile.asset->mimeType,      "dimensions": videoCover.asset->metadata.dimensions    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => videoCover.asset->metadata.dimensions.aspectRatio    ),  },  type == "videoUrl" && defined(videoUrl) => {    type,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoFile": null,    "videoCover": frag::image(videoCover),    "videoUrl": {      "url": videoUrl,      "dimensions": videoCover.asset->metadata.dimensions    },    "aspectRatio": select(      defined(aspectRatio) && aspectRatio != 0 => aspectRatio,      true => videoCover.asset->metadata.dimensions.aspectRatio    ),  },  true => {    "type": null,    "image": null,    "video": null,    "rive": null,    "lottie": null,    "videoFile": null,    "videoUrl": null,    "aspectRatio": null,  })};fn frag::richText($value) = $value[]{  ...,  _type == "mediaBlock" => {  caption,  useParallax,  "media": frag::media(appMedia),},  // PLOP: Add Export  markDefs[] {    ...,    _type == "linkField" => frag::link(@),  },  children[] {    ...,    _type == "inlineMediaField" => {      "media": frag::media(media),    },  }};  *[_type == "caseStudy" && defined(uri.current) && uri.current == $uri][0]{    _id,    _type,    title,    _updatedAt,    publishedAt,    lede,    "services": services[]->name,    "cover": frag::image(cover),    "content": frag::richText(content),    "facts": facts[]{ "_key": _key, label, value },    "website": frag::link(appLink),    "workTitle": *[_id == "work"][0].title,    "uri": coalesce(uri.current, "/work"),    "showHeader": coalesce(showHeader, true),    "showFooter": coalesce(showFooter, true),    seoMetadata{  title,  description,  "image": frag::image(image),  "robots": select(noIndex => "noindex,follow", true => undefined),},  }
+export type CaseStudyPageQResult = {
+  _id: string;
+  _type: "caseStudy";
+  title: string | undefined;
+  _updatedAt: string;
+  publishedAt: string | undefined;
+  lede: string | undefined;
+  services: Array<string | undefined> | undefined;
+  cover: {
+    _id: string | undefined;
+    _rev: string | undefined;
+    altText: string | undefined;
+    description: string | undefined;
+    title: string | undefined;
+    lqip: string | undefined;
+    dimensions: SanityImageDimensions | undefined;
+    crop: SanityImageCrop | undefined;
+    hotspot: SanityImageHotspot | undefined;
+  } | undefined;
+  content: Array<{
+    children: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }> | undefined;
+    style?: "caption" | "normal";
+    listItem?: never;
+    markDefs: Array<
+      | {
+          color?: AppColor;
+          _type: "highlightColorField";
+          _key: string;
+        }
+      | {
+          widthPercent?: number;
+          _type: "indentField";
+          _key: string;
+        }
+      | {
+          type:
+            | "email"
+            | "external"
+            | "file"
+            | "internal"
+            | "params"
+            | "phone"
+            | undefined;
+          external?: string;
+          email?: string;
+          phone?: string;
+          file?: LinkFieldFile;
+          canDownload: boolean | false;
+          paramsHref?: string;
+          internal?: Internal;
+          openInNewTab: boolean | false;
+          _type: "linkField";
+          _key: string;
+          href: string | "" | "mailto:" | "tel:";
+          text: string | "";
+        }
+      | {
+          color?: AppColor;
+          _type: "textColorField";
+          _key: string;
+        }
+    > | undefined;
+    level?: number;
+    _type: "block";
+    _key: string;
+  }> | undefined;
+  facts: Array<{
+    _key: string;
+    label: string | undefined;
+    value: string | undefined;
+  }> | undefined;
+  website: {
+    type:
+      "email" | "external" | "file" | "internal" | "params" | "phone" | undefined;
+    openInNewTab: boolean | false;
+    canDownload: boolean | false;
+    href: string | "" | "mailto:" | "tel:";
+    text: string | "";
+  } | undefined;
+  workTitle: undefined | string;
+  uri: string | "/work";
+  showHeader: boolean | true;
+  showFooter: boolean | true;
+  seoMetadata: {
+    title: string | undefined;
+    description: string | undefined;
+    image: {
+      _id: string | undefined;
+      _rev: string | undefined;
+      altText: string | undefined;
+      description: string | undefined;
+      title: string | undefined;
+      lqip: string | undefined;
+      dimensions: SanityImageDimensions | undefined;
+      crop: SanityImageCrop | undefined;
+      hotspot: SanityImageHotspot | undefined;
+    } | undefined;
+    robots: "noindex,follow" | undefined;
+  } | undefined;
 } | undefined;
 
 // Source: src/sanity/queries.ts

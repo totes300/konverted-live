@@ -15,10 +15,12 @@ type Props = {
   gap?: number;
   /** Room to keep clear at both ends, for chrome that sits over the line rather than beside it. */
   reserve?: number;
+  /** Hold the line still under the cursor, so what it carries can be read or clicked. */
+  pauseOnHover?: boolean;
   class?: string;
 };
 
-const { loop = "overflow", speed = 60, gap = 0, reserve = 0, class: className } = Astro.props;
+const { loop = "overflow", speed = 60, gap = 0, reserve = 0, pauseOnHover = false, class: className } = Astro.props;
 ---
 
 <marquee-line
@@ -32,7 +34,14 @@ const { loop = "overflow", speed = 60, gap = 0, reserve = 0, class: className } 
     data-marquee-viewport
     class="scrollbar-invisible flex min-w-0 flex-1 justify-center overflow-x-clip group-data-marquee/marquee:justify-start group-data-scroll/marquee:justify-start group-data-scroll/marquee:overflow-x-auto"
   >
-    <div data-marquee-track class="flex w-max group-data-marquee/marquee:animate-marquee">
+    <div
+      data-marquee-track
+      class={cx(
+        'flex w-max group-data-marquee/marquee:animate-marquee',
+        // Important because `animate-*` is the `animation` shorthand, which resets the play state.
+        pauseOnHover && 'group-hover/marquee:[animation-play-state:paused]!'
+      )}
+    >
       <div data-marquee-content class="flex shrink-0 items-center whitespace-nowrap">
         <slot />
       </div>

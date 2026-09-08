@@ -1,0 +1,37 @@
+---
+import type { IconName } from "~/components/Icon/Icon.astro";
+import Icon from "~/components/Icon/Icon.astro";
+
+// The WebOS stack mockup. Lengths are in cqw off the Figma card's 281px artboard (see StepAgentCard).
+const rows: { icon: IconName; title: string; caption: string }[] = [
+  { icon: "webos-strategy", title: "StrategyOS", caption: "Positioning, audience, messaging" },
+  { icon: "webos-brand", title: "BrandOS", caption: "Voice, identity, design" },
+  { icon: "webos-build", title: "BuildOS", caption: "Components, layouts, guardrails" },
+  { icon: "webos-growth", title: "GrowthOS", caption: "SEO, testing, optimization" },
+];
+---
+
+<div class="@container aspect-[281/446] w-full">
+  <div class="flex size-full flex-col rounded-[2.85cqw] bg-paper-warm p-[5.69cqw]">
+  {/* The official WebOS lockup, used as-is: one intact asset, proportions preserved by h-auto. */}
+  <div data-diagram-piece class="flex items-center">
+    <Icon name="webos-logo" class="h-auto w-[44cqw] text-accent" />
+  </div>
+
+  <div class="mt-[5.69cqw] flex flex-1 flex-col justify-between gap-[3.91cqw]">
+    {
+      rows.map((row) => (
+        <div data-diagram-piece class="flex min-h-0 flex-1 items-center gap-[5.87cqw] rounded-[2.67cqw] border border-black/10 px-[4.45cqw] py-[3.5cqw]">
+          <span class="size-[17.08cqw] shrink-0 rounded-[2.28cqw] bg-white">
+            <Icon name={row.icon} class="size-full text-accent" />
+          </span>
+          <div>
+            <p class="text-[4.9cqw] font-medium leading-[1.15] tracking-[-0.01em] text-ink-soft">{row.title}</p>
+            <p class="mt-[1.4cqw] text-[3.8cqw] leading-[1.2] text-black/50">{row.caption}</p>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</div>
+</div>

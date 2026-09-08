@@ -1,0 +1,66 @@
+---
+import { stegaClean } from "@sanity/client/stega";
+import { createDataAttribute } from "@sanity/visual-editing";
+import { ImageGridSectionQ } from "~/features/page-builder/queries";
+import SectionFrame from "~/features/page-builder/SectionFrame.astro";
+import type { SectionProps } from "~/features/page-builder/types";
+import { cx } from "~/features/style/utils";
+import type { ImageGridSectionQResult } from "~/sanity/types";
+import { getDraftModeProps, isDraftMode } from "../../../sanity/lib/draft-mode";
+import { loadQuery } from "../../../sanity/lib/load-query";
+import SanityImage from "../../../sanity/media/SanityImage.astro";
+
+type Props = SectionProps;
+
+const { docId, docType, sectionKey, isFirst = false } = Astro.props;
+
+const { data: section } = await loadQuery<ImageGridSectionQResult>({
+  query: ImageGridSectionQ,
+  params: { docId, sectionKey },
+  ...getDraftModeProps(Astro),
+});
+
+const images = section?.content?.images ?? [];
+
+type GridImage = (typeof images)[number];
+
+/** A frame is only ever paired when the editor says so; a dropped image that was never set runs the full row. */
+const isFullRow = (image: GridImage) => stegaClean(image.width) !== "half";
+
+// Images carry no stega, so without an explicit edit intent the Presentation tool resolves a click
+// to the image ASSET document rather than to this section's array item.
+const isDraft = isDraftMode(Astro);
+const imagesPath = `pageBuilder.sectionsArray[_key=="${sectionKey}"].sectionContent.images`;
+const frameEditAttribute = (imageKey: string | undefined) =>
+  isDraft && imageKey
+    ? createDataAttribute({ id: docId, type: docType, path: `${imagesPath}[_key=="${imageKey}"]` }).toString()
+    : undefined;
+---
+
+{/* One column on a phone; from `lg` it is two, and a full-row frame spans both — which is what lets
+    consecutive half-row frames pair up beside each other. */}
+{
+  images.length > 0 && (
+    <SectionFrame
+      as="div"
+      settings={section?.settings}
+      id={stegaClean(section?.settings?.hash) ?? undefined}
+      data-page-builder-section="imageGridSection"
+      class="grid items-start gap-x-32 gap-y-32 lg:grid-cols-2 lg:gap-y-64"
+    >
+      {images.map((image, index) => {
+        const isFull = isFullRow(image);
+
+        return (
+          <SanityImage
+            media={{ type: "image", image }}
+            sizes={isFull ? "100vw" : "100vw lg:50vw"}
+            class={cx("w-full", isFull && "lg:col-span-2")}
+            priority={isFirst && index === 0}
+            data-sanity={frameEditAttribute(image._key ?? undefined)}
+          />
+        );
+      })}
+    </SectionFrame>
+  )
+}

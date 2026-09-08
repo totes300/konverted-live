@@ -1,0 +1,47 @@
+---
+import { stegaClean } from "@sanity/client/stega";
+import { TeamSectionQ } from "~/features/page-builder/queries";
+import SectionFrame from "~/features/page-builder/SectionFrame.astro";
+import type { SectionProps } from "~/features/page-builder/types";
+import type { TeamSectionQResult } from "~/sanity/types";
+import { getDraftModeProps } from "../../../../sanity/lib/draft-mode";
+import { loadQuery } from "../../../../sanity/lib/load-query";
+import TeamPostcards from "./TeamPostcards.astro";
+import TeamStage from "./TeamStage.astro";
+
+type Props = SectionProps;
+
+const { docId, sectionKey } = Astro.props;
+
+const { data: section } = await loadQuery<TeamSectionQResult>({
+  query: TeamSectionQ,
+  params: { docId, sectionKey },
+  ...getDraftModeProps(Astro),
+});
+
+const content = section?.content;
+const moments = content?.moments ?? [];
+
+// The editor's pick between the two layouts the section can take. Stega would split the value, so
+// it is cleaned before it decides anything.
+const isPostcards = stegaClean(content?.layout) === "postcards";
+---
+
+{/* Both layouts want the editor's Edge to Edge width: the stage paints its ink to the viewport
+    edges and the postcard row runs there too, so each brings the page gutter back for its copy. On
+    a wide screen the postcards end on a full-bleed video, which wants the next section hard against
+    it, so that layout takes back the page's gap below itself — and a pixel more: the stage's clip
+    edge lands on a fraction, and the video layer's anti-aliased last row let the page background
+    through as a hairline. */}
+{
+  content && moments.length > 0 && (
+    <SectionFrame
+      settings={section.settings}
+      id={stegaClean(section.settings?.hash) ?? undefined}
+      class={isPostcards ? "lg:-mb-[calc(var(--section-gap)+1px)]" : "bg-ink py-64 text-paper lg:py-96"}
+      data-page-builder-section="teamSection"
+    >
+      {isPostcards ? <TeamPostcards content={content} /> : <TeamStage content={content} />}
+    </SectionFrame>
+  )
+}

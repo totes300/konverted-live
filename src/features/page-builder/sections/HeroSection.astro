@@ -1,0 +1,94 @@
+---
+import { stegaClean } from "@sanity/client/stega";
+import { createDataAttribute } from "@sanity/visual-editing";
+import Icon from "~/components/Icon/Icon.astro";
+import { HeroSectionQ } from "~/features/page-builder/queries";
+import SectionFrame from "~/features/page-builder/SectionFrame.astro";
+import type { SectionProps } from "~/features/page-builder/types";
+import type { HeroSectionQResult } from "~/sanity/types";
+import { getDraftModeProps, isDraftMode } from "../../../sanity/lib/draft-mode";
+import { loadQuery } from "../../../sanity/lib/load-query";
+
+type Props = SectionProps;
+
+const { docId, docType, sectionKey } = Astro.props;
+
+const { data: section } = await loadQuery<HeroSectionQResult>({
+  query: HeroSectionQ,
+  params: { docId, sectionKey },
+  ...getDraftModeProps(Astro),
+});
+
+// Stega splits the headline mid-word, so the encircled word is located on the cleaned string; the
+// heading keeps its Presentation click target through the edit attribute below.
+const headline = stegaClean(section?.content?.headline ?? "");
+const highlight = stegaClean(section?.content?.highlight ?? "").trim();
+const highlightAt = highlight ? headline.indexOf(highlight) : -1;
+const line =
+  highlightAt < 0
+    ? { before: headline, circled: "", after: "" }
+    : {
+        before: headline.slice(0, highlightAt),
+        circled: highlight,
+        after: headline.slice(highlightAt + highlight.length),
+      };
+
+const headlineEditAttribute = isDraftMode(Astro)
+  ? createDataAttribute({
+      id: docId,
+      type: docType,
+      path: `pageBuilder.sectionsArray[_key=="${sectionKey}"].sectionContent.headline`,
+    }).toString()
+  : undefined;
+---
+
+{/* From `lg` up the hero is a fixed-proportion composition: every position is a percentage of the
+    viewport and every length a `vw` fraction of the 1440 Figma artboard (the display is 10.8vw,
+    a step up from the frame's 148px so the line fills the width), so any monitor shows the same
+    picture, linearly scaled — which is why the section runs Edge to
+    Edge (the editor's width setting) and lays out its own margins from `--linear-margin`. Below
+    `lg` it falls back to normal flow with the fluid tokens. */}
+{
+  section?.content && (
+    <SectionFrame
+      settings={section.settings}
+      id={stegaClean(section.settings?.hash) ?? undefined}
+      data-page-builder-section="heroSection"
+    >
+      {/* Canvas height is the Figma hero frame's own 421px (29.24vw at 1440), so the two display
+          lines and the lede fit without dead air under the composition. */}
+      <div class="relative px-(--page-gutter) pt-40 pb-24 lg:h-[29.24vw] lg:p-0">
+        <h1
+          data-sanity={headlineEditAttribute}
+          class="font-display text-display text-accent lg:absolute lg:top-[6.111vw] lg:left-(--linear-margin) lg:w-[96%] lg:text-[10.8vw] lg:leading-none lg:tracking-[-0.01em]"
+        >
+          {line.before}
+          {/* The circle is drawn around the word's own box, so it follows the word through every
+              viewport and every line break instead of sitting on artboard coordinates. The box is
+              wider than the word and shorter than the line: x-height letters sit in the lower part of
+              the em, and a hand-drawn loop overshoots the ends more than the top and bottom. */}
+          {line.circled && (
+            <span class="relative inline-block">
+              {line.circled}
+              <Icon
+                name="hero-scribble"
+                class="pointer-events-none absolute top-[14%] -left-[16%] h-[84%] w-[132%] rotate-[172.81deg]"
+              />
+            </span>
+          )}
+          {line.after}
+        </h1>
+        {/* The lede hangs from the display's baseline: its last line shares the second display line's
+            baseline (that baseline sits 25.97vw below the canvas top, the lede's descent adds 0.56vw),
+            so the two texts end on one line. The column ends on the headline box's right edge and is
+            exactly as wide as its three lines need, which keeps its ragged right inside the display
+            line above it and its left edge clear of the second display line by about 5vw. */}
+        {section.content.lede && (
+          <p class="mt-24 max-w-[42ch] text-pretty text-body-20 text-ink-soft lg:absolute lg:bottom-[2.71vw] lg:left-[65%] lg:mt-0 lg:w-[28.2%] lg:max-w-none lg:text-[1.389vw] lg:leading-[1.5]">
+            {section.content.lede}
+          </p>
+        )}
+      </div>
+    </SectionFrame>
+  )
+}

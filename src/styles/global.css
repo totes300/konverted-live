@@ -1,7 +1,7 @@
 /* The document scrolls itself, so the browser's own scroll restoration just works. */
 html,
 body {
-  @apply relative bg-black [scrollbar-color:gray_transparent];
+  @apply relative bg-paper [scrollbar-color:gray_transparent];
 }
 
 /* Set on <html> while a page transition runs (see src/lib/transitions/page-transitions.ts). */
@@ -11,11 +11,11 @@ html[data-vt-loading] * {
 }
 
 body {
-  @apply flex flex-col font-sans text-body-20 text-white antialiased;
+  @apply flex flex-col font-sans text-body-20 text-ink-soft antialiased;
 }
 
 main {
-  @apply flex-1 bg-black;
+  @apply flex-1 bg-paper;
 }
 
 img {
@@ -51,16 +51,16 @@ input[type="search"] {
     [tabindex]:not([tabindex="-1"]),
     [contenteditable="true"]:not([contenteditable="false"])
   ):focus-visible {
-    @apply ring-2 ring-[#ff9100] outline-none;
+    @apply ring-2 ring-accent outline-none;
   }
 
   html[data-keyboard-focus] :where(input:not([type="hidden"]), textarea):focus {
-    @apply ring-2 ring-[#ff9100] outline-none;
+    @apply ring-2 ring-accent outline-none;
   }
 
   /* Alone: grouped with `::-moz-selection` the whole list is invalid outside Firefox, so the rule is dropped. */
   ::selection {
-    @apply bg-white text-black;
+    @apply bg-ink text-paper;
   }
 
   /*

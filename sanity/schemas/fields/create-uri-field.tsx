@@ -1,7 +1,7 @@
 import * as changeCase from "change-case";
 import { defineField, type SlugOptions, type SlugRule, type SlugValue, type ValidationBuilder } from "sanity";
 import { sanityConfig } from "../../config";
-import { SANITY_BLOG_INDEX_URI, SINGLETON_IDS } from "../../constants";
+import { SANITY_BLOG_INDEX_URI, SANITY_WORK_INDEX_URI, SINGLETON_IDS } from "../../constants";
 import { composeValidation } from "../../utils";
 
 function normalizeSitePath(path: string) {
@@ -48,6 +48,10 @@ const reservedPathValidation: ValidationBuilder<SlugRule> = (R) =>
 
     if (uriP === comparableUriPath(SANITY_BLOG_INDEX_URI) && docId !== SINGLETON_IDS.blog) {
       return `This URI is reserved for the Blog index (${SANITY_BLOG_INDEX_URI}). Choose a different path.`;
+    }
+
+    if (uriP === comparableUriPath(SANITY_WORK_INDEX_URI) && docId !== SINGLETON_IDS.work) {
+      return `This URI is reserved for the Work index (${SANITY_WORK_INDEX_URI}). Choose a different path.`;
     }
 
     return true;

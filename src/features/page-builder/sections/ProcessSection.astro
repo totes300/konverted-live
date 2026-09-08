@@ -1,0 +1,258 @@
+---
+import { stegaClean } from "@sanity/client/stega";
+import Icon from "~/components/Icon/Icon.astro";
+import { ProcessSectionQ } from "~/features/page-builder/queries";
+import SectionFrame from "~/features/page-builder/SectionFrame.astro";
+import type { SectionProps } from "~/features/page-builder/types";
+import type { ProcessSectionQResult } from "~/sanity/types";
+import { getDraftModeProps } from "../../../sanity/lib/draft-mode";
+import { loadQuery } from "../../../sanity/lib/load-query";
+
+type Props = SectionProps;
+
+const { docId, sectionKey } = Astro.props;
+
+const { data: section } = await loadQuery<ProcessSectionQResult>({
+  query: ProcessSectionQ,
+  params: { docId, sectionKey },
+  ...getDraftModeProps(Astro),
+});
+
+// The hand-drawn underline wraps an exact phrase of the headline, so the split happens on the
+// clean value: stega characters inside `headline` would keep `underline` from ever matching.
+const headline = stegaClean(section?.content?.headline) ?? "";
+const underline = stegaClean(section?.content?.underline) ?? "";
+const underlineAt = underline ? headline.indexOf(underline) : -1;
+const headlineParts =
+  underlineAt >= 0 ? { before: headline.slice(0, underlineAt), after: headline.slice(underlineAt + underline.length) } : null;
+
+const oldSteps = section?.content?.oldSteps ?? [];
+const totalDays = oldSteps.reduce((sum, step) => sum + step.days, 0) || 1;
+
+/** The rest between two blocks, in px, so a block's width still reads as its duration. */
+const BLOCK_GAP = 6;
+
+// Offsets are cumulative and in percent of the track, so a duration change never needs a hand-edited
+// `left`, and a block's width equals its duration at any viewport.
+let elapsed = 0;
+const oldLane = oldSteps.map((step, index) => {
+  const start = (elapsed / totalDays) * 100;
+  elapsed += step.days;
+
+  return {
+    ...step,
+    start,
+    span: (step.days / totalDays) * 100,
+    duration: step.days === 1 ? "1 day" : `${step.days} days`,
+    gap: index === oldSteps.length - 1 ? 0 : BLOCK_GAP,
+  };
+});
+
+const daySpan = 100 / totalDays;
+
+const newSteps = section?.content?.newSteps ?? [];
+const narrowSteps = newSteps.filter((step) => step.showOnMobile !== false);
+
+const ROW = "lg:grid lg:grid-cols-12 lg:gap-x-24";
+const TRACK = "lg:col-span-9 lg:col-start-4";
+const MUTED = "text-ink-soft/45";
+const LANE_TITLE = "font-display text-title-20";
+
+// Each cell of the mark carries its own offset, so it reads as rendering itself rather than blinking
+// on and off as one shape. `Icon` renders the file whole, so the paths are reached from the outside.
+const MARK = [
+  "[&_path]:motion-safe:animate-mark-cell",
+  "[&_path:nth-child(2)]:[animation-delay:110ms]",
+  "[&_path:nth-child(3)]:[animation-delay:220ms]",
+  "[&_path:nth-child(4)]:[animation-delay:330ms]",
+  "[&_path:nth-child(5)]:[animation-delay:440ms]",
+  "[&_path:nth-child(6)]:[animation-delay:550ms]",
+].join(" ");
+---
+
+{
+  section?.content && (
+    <SectionFrame
+      settings={section.settings}
+      id={stegaClean(section.settings?.hash) ?? undefined}
+      data-page-builder-section="processSection"
+    >
+      <p class="text-eyebrow text-accent uppercase">( {section.content.eyebrow} )</p>
+      <div class="mt-16 border-t border-line lg:mt-20" />
+
+      <div class={`mt-48 items-end lg:mt-72 ${ROW}`}>
+        <h2 class="font-display text-headline-20 whitespace-pre-line text-accent lg:col-span-7">
+          {headlineParts ? (
+            <>
+              {headlineParts.before}
+              <span class="relative whitespace-nowrap">
+                {underline}
+                <Icon name="underline-scribble" class="absolute inset-x-0 -bottom-[0.04em] h-auto w-full text-accent" />
+              </span>
+              {headlineParts.after}
+            </>
+          ) : (
+            headline
+          )}
+        </h2>
+
+        {section.content.lede && (
+          <p class="mt-32 max-w-[62ch] text-body-10 text-ink-soft lg:col-span-4 lg:col-start-9 lg:mt-0">
+            {section.content.lede}
+          </p>
+        )}
+      </div>
+
+      {/* Below `lg` the timeline is a simplification, not a reflow: same beats stacked, durations
+          kept, ruler dropped — a 1044px track scaled to a phone renders "Design concept" at 4px. */}
+      <div class="mt-64 flex flex-col gap-40 lg:hidden">
+        <div class="flex flex-col gap-16">
+          <div class="flex flex-col gap-4">
+            <span class={`${LANE_TITLE} text-ink`}>{section.content.oldTitle}</span>
+            <span class={`text-caption ${MUTED}`}>{section.content.oldCaption}</span>
+          </div>
+
+          <ul class="flex list-none flex-col gap-8 rounded-12 bg-paper-warm p-12">
+            {oldLane.map((step) => (
+              <li class="flex items-center justify-between rounded-8 bg-white px-16 py-12 inset-ring-1 inset-ring-ink/5">
+                <span class="text-cta text-ink">{step.label}</span>
+                <span class={`text-caption ${MUTED}`}>{step.duration}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div class="flex flex-col gap-16">
+          <div class="flex flex-col gap-4">
+            <span class={`${LANE_TITLE} text-accent`}>{section.content.newTitle}</span>
+            <span class={`text-caption ${MUTED}`}>{section.content.newCaption}</span>
+          </div>
+
+          <div class="flex flex-col gap-16 rounded-12 bg-accent/6 p-12">
+            <span class="flex w-fit items-center gap-10 rounded-8 bg-accent px-12 py-10">
+              <Icon name="webos-pixel" class={`size-20 text-white ${MARK}`} />
+              <span class="text-eyebrow text-white/85">{section.content.newLabel}</span>
+            </span>
+
+            <div class="flex items-center">
+              {narrowSteps.map((step, index) => (
+                <>
+                  {index > 0 && <span class="mx-6 h-px min-w-8 flex-1 bg-accent/30" />}
+                  <span class="flex shrink-0 items-center gap-8">
+                    <span
+                      class:list={[
+                        "flex size-28 items-center justify-center rounded-8",
+                        step.isFinal ? "bg-accent text-white" : "bg-accent/15 text-accent",
+                      ]}
+                    >
+                      {step.icon && <Icon name={step.icon} class="size-14" />}
+                    </span>
+                    <span class:list={["text-caption", step.isFinal ? "text-accent" : "text-ink"]}>{step.label}</span>
+                  </span>
+                </>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-96 hidden lg:block">
+        <div class={`items-end pb-12 ${ROW}`}>
+          <span class={`text-eyebrow uppercase lg:col-span-3 ${MUTED}`}>{section.content.timelineLabel}</span>
+
+          <div class={`relative flex h-36 ${TRACK}`}>
+            {Array.from({ length: totalDays }, (_, index) => (
+              <div class="relative h-36" style={`width:${daySpan}%`}>
+                <span class={`absolute top-0 w-full text-center text-caption ${MUTED}`}>
+                  {index === 0 ? "Day 1" : index + 1}
+                </span>
+                <span class="absolute bottom-0 left-0 h-16 w-px bg-ink-soft/45" />
+                <span class="absolute bottom-0 left-1/2 h-8 w-px bg-line" />
+              </div>
+            ))}
+            <span class="absolute right-0 bottom-0 h-16 w-px bg-ink-soft/45" />
+          </div>
+        </div>
+
+        <div class="h-px bg-line" />
+
+        <div class={`items-center py-32 ${ROW}`}>
+          <div class="flex flex-col gap-4 lg:col-span-3">
+            <span class={`${LANE_TITLE} text-ink`}>{section.content.oldTitle}</span>
+            <span class={`text-caption ${MUTED}`}>{section.content.oldCaption}</span>
+          </div>
+
+          <div class={`relative isolate h-104 ${TRACK}`}>
+            <div class="absolute inset-y-0 -inset-x-12 rounded-12 bg-paper-warm" />
+            {oldLane.map((step) => (
+              <div
+                class="absolute top-12 z-1 flex h-80 flex-col items-center justify-center gap-4 overflow-hidden rounded-8 bg-white px-8 inset-ring-1 inset-ring-ink/5"
+                style={`left:${step.start}%;width:calc(${step.span}% - ${step.gap}px)`}
+              >
+                <span class="text-caption whitespace-nowrap text-ink">{step.label}</span>
+                <span class={`text-caption whitespace-nowrap ${MUTED}`}>{step.duration}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div class="h-px bg-line" />
+
+        {/* The four steps are deliberately not boxes: a box here means calendar time, so a second row
+            of them would read as extra days. They ride a rail that stops early — the empty right-hand
+            side of the track is the section's argument. */}
+        <div class={`items-center py-32 ${ROW}`}>
+          <div class="flex flex-col gap-4 lg:col-span-3">
+            <span class={`${LANE_TITLE} text-accent`}>{section.content.newTitle}</span>
+            <span class={`text-caption ${MUTED}`}>{section.content.newCaption}</span>
+          </div>
+
+          <div class={`relative isolate h-104 ${TRACK}`}>
+            <div class="absolute inset-y-0 -inset-x-12 rounded-12 bg-accent/6" />
+
+            <div
+              class="absolute top-12 left-0 z-1 flex h-80 flex-col items-center justify-center gap-8 rounded-8 bg-accent"
+              style={`width:calc(${daySpan}% - ${BLOCK_GAP}px)`}
+            >
+              <Icon name="webos-pixel" class={`size-32 text-white ${MARK}`} />
+              <span class="text-eyebrow text-white/85">{section.content.newLabel}</span>
+            </div>
+
+            <div class="absolute inset-y-0 z-1 flex items-center" style={`left:calc(${daySpan}% - ${BLOCK_GAP}px)`}>
+              {newSteps.map((step) => (
+                <>
+                  <span class="mx-10 h-px w-20 bg-accent/30 xl:mx-16 xl:w-32" />
+                  <span class="flex items-center gap-10">
+                    <span
+                      class:list={[
+                        "flex size-32 items-center justify-center rounded-8",
+                        step.isFinal ? "bg-accent text-white" : "bg-accent/15 text-accent",
+                      ]}
+                    >
+                      {step.icon && <Icon name={step.icon} class="size-16" />}
+                    </span>
+                    <span class:list={["text-cta whitespace-nowrap", step.isFinal ? "text-accent" : "text-ink"]}>
+                      {step.label}
+                    </span>
+                  </span>
+                </>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div class="h-px bg-line" />
+      </div>
+
+      {section.content.closingTitle && (
+        <div class={`mt-48 ${ROW}`}>
+          <div class={`flex flex-col gap-12 ${TRACK}`}>
+            <p class={`${LANE_TITLE} text-accent`}>{section.content.closingTitle}</p>
+            {section.content.closingText && <p class="max-w-[84ch] text-cta text-ink-soft">{section.content.closingText}</p>}
+          </div>
+        </div>
+      )}
+    </SectionFrame>
+  )
+}
+

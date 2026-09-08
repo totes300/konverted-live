@@ -7,9 +7,13 @@ export const SANITY_SINGLETON_SITE_ID = "site";
 export const SANITY_SINGLETON_SITE_SETTINGS_ID = "siteSettings";
 export const SANITY_SINGLETON_HOMEPAGE_ID = "homepage";
 export const SANITY_SINGLETON_BLOG_ID = "blog";
+export const SANITY_SINGLETON_WORK_ID = "work";
 
 /** Path the blog index singleton is served at. Articles slug under it (`/blog/<slug>`). */
 export const SANITY_BLOG_INDEX_URI = "/blog";
+
+/** Path the work index singleton is served at. Case studies slug under it (`/work/<slug>`). */
+export const SANITY_WORK_INDEX_URI = "/work";
 
 /** Path people slug under (`/blog/authors/<slug>`). Nested under the blog so one prefix covers an article and the author panels it opens over itself. */
 export const SANITY_AUTHOR_PATH_PREFIX = "/blog/authors";
@@ -22,6 +26,7 @@ export const SINGLETON_IDS = {
   siteSettings: SANITY_SINGLETON_SITE_SETTINGS_ID,
   homepage: SANITY_SINGLETON_HOMEPAGE_ID,
   blog: SANITY_SINGLETON_BLOG_ID,
+  work: SANITY_SINGLETON_WORK_ID,
   // PLOP: Add Singleton ID
 } as const;
 
@@ -29,12 +34,14 @@ export const SINGLETON_IDS = {
 export const SINGLETON_ROUTES = {
   [SINGLETON_IDS.homepage]: "/",
   [SINGLETON_IDS.blog]: SANITY_BLOG_INDEX_URI,
+  [SINGLETON_IDS.work]: SANITY_WORK_INDEX_URI,
   // PLOP: Add Singleton Route
 } as const;
 
 /** Submission schema types; only delete and discardChanges are allowed in the Studio. */
 export const API_ONLY_DOCUMENTS = {
   contactFormSubmission: "contactFormSubmission",
+  leadFormSubmission: "leadFormSubmission",
 } as const;
 
 /**
@@ -62,3 +69,5 @@ export const SANITY_ARTICLE_DOCUMENT_TYPE = "article" as const;
 export const SANITY_ARTICLE_CATEGORY_DOCUMENT_TYPE = "articleCategory" as const;
 export const SANITY_PERSON_DOCUMENT_TYPE = "person" as const;
 export const SANITY_LEGAL_PAGE_DOCUMENT_TYPE = "legalPage" as const;
+export const SANITY_CASE_STUDY_DOCUMENT_TYPE = "caseStudy" as const;
+export const SANITY_SERVICE_DOCUMENT_TYPE = "service" as const;

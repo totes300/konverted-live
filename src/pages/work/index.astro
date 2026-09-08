@@ -1,0 +1,79 @@
+---
+import JsonLd from "~/components/JsonLd.astro";
+import CaseStudyGrid from "~/features/case-study/CaseStudyGrid.astro";
+import SiteShell from "~/features/site/SiteShell.astro";
+import { breadcrumbLd, itemListLd, jsonLdGraph, webPageLd } from "~/features/site/seo/structured-data";
+import Web from "~/layouts/Web.astro";
+import { CACHE_TTL, docCacheTags, SITE_WIDE_CACHE_TAGS } from "~/lib/cache";
+import { absoluteUrl, PUBLIC_SITE_URL } from "~/lib/env";
+import { SANITY_CASE_STUDY_DOCUMENT_TYPE, SANITY_SERVICE_DOCUMENT_TYPE, SANITY_WORK_INDEX_URI } from "~/sanity/constants";
+import type { CaseStudyListQResult, WorkPageQResult } from "~/sanity/types";
+import { getDraftModeProps } from "../../sanity/lib/draft-mode";
+import { loadQuery } from "../../sanity/lib/load-query";
+import { CaseStudyListQ, WorkPageQ } from "../../sanity/queries";
+import SanityRichText from "../../sanity/rich-text/SanityRichText.astro";
+import { loadSite, seo } from "../../sanity/seo";
+
+// The index of the `/work/<slug>` prefix route: a `work` singleton, fetched by id.
+const [{ data: page }, { data: caseStudies }, { data: site }] = await Promise.all([
+  loadQuery<WorkPageQResult>({ query: WorkPageQ, ...getDraftModeProps(Astro) }),
+  loadQuery<CaseStudyListQResult>({ query: CaseStudyListQ, ...getDraftModeProps(Astro) }),
+  loadSite(Astro),
+]);
+
+if (!page) {
+  return new Response(null, { status: 404 });
+}
+
+// The case study type so publishing any project refreshes the grid, and the service type so renaming
+// one relabels every card that carries it.
+Astro.cache.set({
+  ...CACHE_TTL,
+  tags: [...docCacheTags(page), SANITY_CASE_STUDY_DOCUMENT_TYPE, SANITY_SERVICE_DOCUMENT_TYPE, ...SITE_WIDE_CACHE_TAGS],
+});
+
+const canonical = absoluteUrl(SANITY_WORK_INDEX_URI);
+const { title, description, image, robots } = page.seoMetadata ?? {};
+const seoProps = seo(site, {
+  robots,
+  title: title ?? page.title,
+  description,
+  image,
+  canonical,
+});
+
+const pageJsonLd = jsonLdGraph([
+  webPageLd({ name: seoProps.title, url: canonical, description: seoProps.description, siteUrl: PUBLIC_SITE_URL }),
+  itemListLd({
+    pageId: canonical,
+    id: `${canonical}#work`,
+    name: page.heading ?? page.title ?? undefined,
+    items: (caseStudies ?? [])
+      .filter((caseStudy) => Boolean(caseStudy.href))
+      .map((caseStudy) => ({ name: caseStudy.title ?? "", url: absoluteUrl(caseStudy.href ?? "") })),
+  }),
+  breadcrumbLd([
+    { name: "Home", url: absoluteUrl("/") },
+    { name: page.title ?? "", url: canonical },
+  ]),
+]);
+---
+
+<Web {...seoProps}>
+  <JsonLd data={pageJsonLd} />
+  <SiteShell showHeader={page.showHeader} showFooter={page.showFooter}>
+    <div class="mx-auto w-full max-w-(--page-width) px-(--page-gutter) py-64 lg:py-96">
+      {page.eyebrow && <p class="text-eyebrow text-accent uppercase">( {page.eyebrow} )</p>}
+      <h1 class="mt-16 font-display text-headline-20 text-accent lg:mt-20">{page.heading}</h1>
+      {page.intro && (
+        <div class="mt-32 max-w-[60ch] text-body-20 text-ink-soft">
+          <SanityRichText value={page.intro} />
+        </div>
+      )}
+
+      <div class="mt-64 lg:mt-96">
+        <CaseStudyGrid caseStudies={caseStudies ?? []} headingLevel="h2" />
+      </div>
+    </div>
+  </SiteShell>
+</Web>

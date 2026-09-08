@@ -1,0 +1,115 @@
+---
+import JsonLd from "~/components/JsonLd.astro";
+import PageSections from "~/features/page-builder/PageSections.astro";
+import { PageSectionsQ } from "~/features/page-builder/queries";
+import SanityLink from "~/features/sanity/link/SanityLink.astro";
+import SiteShell from "~/features/site/SiteShell.astro";
+import { breadcrumbLd, jsonLdGraph, webPageLd } from "~/features/site/seo/structured-data";
+import Web from "~/layouts/Web.astro";
+import { CACHE_TTL, docCacheTags, SITE_WIDE_CACHE_TAGS } from "~/lib/cache";
+import { absoluteUrl, PUBLIC_SITE_URL } from "~/lib/env";
+import { SANITY_SERVICE_DOCUMENT_TYPE, SANITY_WORK_INDEX_URI } from "~/sanity/constants";
+import type { CaseStudyPageQResult, PageSectionsQResult } from "~/sanity/types";
+
+import { getDraftModeProps } from "../../sanity/lib/draft-mode";
+import { loadQuery } from "../../sanity/lib/load-query";
+import SanityImage from "../../sanity/media/SanityImage.astro";
+import { CaseStudyPageQ } from "../../sanity/queries";
+import SanityRichText from "../../sanity/rich-text/SanityRichText.astro";
+import { loadSite, seo } from "../../sanity/seo";
+
+// Prefix route for `caseStudy` documents: uris look like /work/<slug>.
+const uri = `${SANITY_WORK_INDEX_URI}/${Astro.params.slug}`;
+
+// The section list runs alongside the document query rather than after it; each section then fetches
+// its own slice by `docId`.
+const [{ data: page }, { data: pageSections }, { data: site }] = await Promise.all([
+  loadQuery<CaseStudyPageQResult>({ query: CaseStudyPageQ, params: { uri }, ...getDraftModeProps(Astro) }),
+  loadQuery<PageSectionsQResult>({ query: PageSectionsQ, params: { uri }, ...getDraftModeProps(Astro) }),
+  loadSite(Astro),
+]);
+
+if (!page) {
+  return new Response(null, { status: 404 });
+}
+
+// `service` too, so renaming one relabels the services listed at the top of the page.
+Astro.cache.set({
+  ...CACHE_TTL,
+  tags: [...docCacheTags(page), SANITY_SERVICE_DOCUMENT_TYPE, ...SITE_WIDE_CACHE_TAGS],
+});
+
+const canonical = absoluteUrl(uri);
+const { title, description, image, robots } = page.seoMetadata ?? {};
+const seoProps = seo(site, {
+  robots,
+  title: title ?? page.title,
+  description,
+  image,
+  canonical,
+});
+
+const services = (page.services ?? []).filter((service): service is string => Boolean(service));
+const facts = page.facts ?? [];
+
+const pageJsonLd = jsonLdGraph([
+  webPageLd({ name: seoProps.title, url: canonical, description: seoProps.description, siteUrl: PUBLIC_SITE_URL }),
+  breadcrumbLd([
+    { name: "Home", url: absoluteUrl("/") },
+    { name: page.workTitle ?? "Work", url: absoluteUrl(SANITY_WORK_INDEX_URI) },
+    { name: page.title ?? "", url: canonical },
+  ]),
+]);
+---
+
+<Web {...seoProps}>
+  <JsonLd data={pageJsonLd} />
+  <SiteShell showHeader={page.showHeader} showFooter={page.showFooter}>
+    <article>
+      <header class="mx-auto w-full max-w-(--page-width) px-(--page-gutter) pt-48 lg:pt-64">
+        <div class="lg:grid lg:grid-cols-2 lg:gap-x-32">
+          <h1 class="font-display text-headline-20 text-accent">{page.title}</h1>
+          {page.lede && <p class="mt-24 text-body-20 text-ink-soft lg:mt-0">{page.lede}</p>}
+        </div>
+      </header>
+
+      {/* The cover is the page's own image, so the card can rest on a different cut for the grid. */}
+      {page.cover?._id && (
+        <div class="mt-40 w-full lg:mt-56">
+          <SanityImage media={{ type: "image", image: page.cover }} priority sizes="100vw" class="w-full object-cover" />
+        </div>
+      )}
+
+      {/* The overview column: the label sits in the left margin, everything readable in the right one. */}
+      <div class="mx-auto w-full max-w-(--page-width) px-(--page-gutter) pt-64 lg:grid lg:grid-cols-2 lg:gap-x-32 lg:pt-96">
+        <p class="text-eyebrow text-accent uppercase">( Overview )</p>
+        <div class="mt-24 lg:mt-0">
+          {page.content && <SanityRichText value={page.content} class="text-body-20 text-ink" />}
+
+          {services.length > 0 && (
+            <p class="mt-32 text-body-10 text-ink-soft">({services.join(", ")})</p>
+          )}
+
+          {facts.length > 0 && (
+            <dl class="mt-48 grid grid-cols-2 gap-x-32 gap-y-24">
+              {facts.map((fact) => (
+                <div>
+                  <dt class="text-body-10 text-ink-soft">{fact.label}</dt>
+                  <dd class="mt-4 text-body-10 text-ink">{fact.value}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
+
+          {page.website?.href && (
+            <SanityLink link={page.website} class="mt-40 inline-block text-body-10 text-ink underline underline-offset-4">
+              Visit website
+            </SanityLink>
+          )}
+        </div>
+      </div>
+
+      <PageSections docId={page._id} docType={page._type} pageSections={pageSections} />
+    </article>
+  </SiteShell>
+</Web>

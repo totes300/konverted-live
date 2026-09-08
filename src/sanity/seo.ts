@@ -1,5 +1,6 @@
 import type { ImageFragmentResult } from "~/features/sanity/media/fragment";
-import { type BuilderOptions, builder, getImageDimensions } from "~/features/sanity/media/image/utils";
+import { type BuilderOptions, getImageDimensions } from "~/features/sanity/media/image/dimensions";
+import { builder } from "~/features/sanity/media/image/utils";
 import { SiteQuery } from "~/features/site/query";
 import { getFaviconImageSrc } from "~/features/site/seo/favicon";
 import type { FaviconFragmentResult } from "~/features/site/seo/fragment";

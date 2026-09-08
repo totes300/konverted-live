@@ -1,0 +1,41 @@
+---
+import Button from "~/components/Button.astro";
+import Icon from "~/components/Icon/Icon.astro";
+import { cx } from "~/features/style/utils";
+
+// A Cal.com booking calendar, inline. `calLink` is the Cal handle and event type ("konverted/30min");
+// `namespace` scopes the booker so a page can hold more than one event type.
+type Props = {
+  calLink: string;
+  namespace?: string;
+  class?: string;
+};
+
+const { calLink, namespace = "default", class: className } = Astro.props;
+
+const bookingUrl = `https://cal.com/${calLink}`;
+---
+
+<cal-embed
+  data-cal-link={calLink}
+  data-cal-namespace={namespace}
+  class={cx('block w-full', className)}
+>
+  <div data-cal-target class="w-full"></div>
+
+  {/* The booker is third-party JavaScript, so the plain link is what the section promises without it.
+      Its height doubles as the space the booker will take, so the page settles rather than jumps. */}
+  <div data-cal-fallback class="flex min-h-480 items-center justify-center">
+    <Button href={bookingUrl} target="_blank" rel="noopener noreferrer">
+      Book a time
+      <Icon name="arrow-up-right" class="size-16" slot="right-icon" />
+    </Button>
+  </div>
+</cal-embed>
+
+<script>
+  import { lazyCustomElement } from '~/lib/lazy-hydrate'
+
+  // The booker pulls Cal's own bundle, so it stays out of the page load until the section is near.
+  lazyCustomElement('cal-embed', () => import('./CalEmbedElement'))
+</script>

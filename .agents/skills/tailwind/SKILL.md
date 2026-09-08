@@ -56,7 +56,7 @@ Apply when styling any `.astro` or component, adding utilities, editing `src/sty
 
 - `src/styles/tailwind.css`: entry point (`@import` chain), `@theme` (layout bounds, breakpoints, spacing, radii), the base-layer shell measurements (`--header-height`, `--page-width`, `--page-gutter`), the `hover` custom variant, and the `scrollbar-invisible` utility.
 - `src/styles/colors.css`: the palette, deliberately minimal (black, white, plus `current`/`transparent`/`inherit`; Tailwind's default palette is reset).
-- `src/styles/typography.css`: font tokens (`sans`, `mono`, five `pixel-*` faces) and the fluid type scales (`caption`, `cta`, `body-10`, `body-20`, `headline-10`, `headline-20`) with weight/line-height/letter-spacing.
+- `src/styles/typography.css`: font tokens (`sans`, `mono`, five `pixel-*` faces) and the fluid type scales (`caption`, `cta`, `body-10`, `body-15`, `body-20`, `headline-10`, `headline-20`) with weight/line-height/letter-spacing.
 - `src/styles/fonts.css`: Geist variable faces via `@fontsource-variable`, plus `@font-face` for the Geist Pixel faces self-hosted from `public/fonts/geist-pixel/`.
 - `src/styles/global.css`, `animations.css`: base layer (the locked `html`/`body`, focus ring, selection) and keyframes (`fade-in`, `fade-out`).
 - `src/styles/sanity-rich-text.css`: element styles for portable-text output.
@@ -82,7 +82,7 @@ Apply when styling any `.astro` or component, adding utilities, editing `src/sty
 
 ### Fluid typography
 
-- Type scales are `clamp()`-based, fluid between the `--layout-min-w` (375) and `--layout-max-w` (1600) bounds, each with companion weight, line-height, and letter-spacing tokens. Tailwind's default sizes are reset, so `text-sm`/`text-lg` do not exist: use `text-caption`, `text-cta`, `text-body-10`, `text-body-20`, `text-headline-10`, `text-headline-20`.
+- Type scales are `clamp()`-based, fluid from the `--layout-min-w` (375) floors through the `--layout-max-w` (1440, the Figma artboard) reference and proportionally beyond — no upper clamp, each with companion weight, line-height, and letter-spacing tokens. Tailwind's default sizes are reset, so `text-sm`/`text-lg` do not exist: use `text-caption`, `text-cta`, `text-body-10`, `text-body-15`, `text-body-20`, `text-headline-10`, `text-headline-20`.
 
 ### The loading model
 

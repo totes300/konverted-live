@@ -1,0 +1,133 @@
+---
+import { stegaClean } from "@sanity/client/stega";
+import Icon from "~/components/Icon/Icon.astro";
+import { WebosSectionQ } from "~/features/page-builder/queries";
+import SectionFrame from "~/features/page-builder/SectionFrame.astro";
+import type { SectionProps } from "~/features/page-builder/types";
+import type { WebosSectionQResult } from "~/sanity/types";
+import { getDraftModeProps } from "../../../../sanity/lib/draft-mode";
+import { loadQuery } from "../../../../sanity/lib/load-query";
+import StepAgentCard from "./StepAgentCard.astro";
+import StepSiteCard from "./StepSiteCard.astro";
+import StepStackCard from "./StepStackCard.astro";
+
+type Props = SectionProps;
+
+const { docId, sectionKey } = Astro.props;
+
+const { data: section } = await loadQuery<WebosSectionQResult>({
+  query: WebosSectionQ,
+  params: { docId, sectionKey },
+  ...getDraftModeProps(Astro),
+});
+
+// The hand-drawn underline wraps an exact phrase of the headline, so the split happens on the
+// clean value: stega characters inside `headline` would keep `underline` from ever matching.
+const headline = stegaClean(section?.content?.headline) ?? "";
+const underline = stegaClean(section?.content?.underline) ?? "";
+const underlineAt = underline ? headline.indexOf(underline) : -1;
+const headlineParts =
+  underlineAt >= 0 ? { before: headline.slice(0, underlineAt), after: headline.slice(underlineAt + underline.length) } : null;
+
+const items = section?.content?.items ?? [];
+---
+
+{
+  section?.content && (
+    <SectionFrame
+      settings={section.settings}
+      id={stegaClean(section.settings?.hash) ?? undefined}
+      data-page-builder-section="webosSection"
+    >
+      {section.content.eyebrow && (
+        <>
+          <p class="text-eyebrow text-accent uppercase">( {section.content.eyebrow} )</p>
+          <div class="mt-16 border-t border-accent lg:mt-20" />
+        </>
+      )}
+      {/* Editorial stagger: the headline runs wide on the left, the supporting copy steps down into
+          the right half under it, so neither column ends up with a hole whatever the copy length. */}
+      <div class="mt-48 lg:mt-72">
+        <h2 class="max-w-[25ch] font-display text-headline-20 whitespace-pre-line text-accent">
+          {headlineParts ? (
+            <>
+              {headlineParts.before}
+              <span class="relative whitespace-nowrap">
+                {underline}
+                <Icon name="underline-scribble" class="absolute inset-x-0 -bottom-[0.04em] h-auto w-full text-ink-soft" />
+              </span>
+              {headlineParts.after}
+            </>
+          ) : (
+            headline
+          )}
+        </h2>
+        {section.content.body && (
+          <p class="mt-32 max-w-[44ch] text-body-20 whitespace-pre-line text-ink-soft lg:mt-48 lg:ml-auto">
+            {section.content.body}
+          </p>
+        )}
+      </div>
+
+      {/* The diagram is design-owned artwork, not CMS content, and purely decorative to a reader.
+          Proportions come from the Figma panel (1220x530): every length is a percentage, so the
+          whole stage scales with the fluid page. */}
+      <webos-diagram class="mt-96 block lg:mt-128">
+        <div aria-hidden="true" class="relative isolate overflow-hidden rounded-16 bg-accent lg:aspect-[1220/530]">
+          {/* The atmosphere, layered under the figures: two blurred gradient washes drifting slowly
+              against each other, the dot grid, and a grain pass on top. All decorative, all
+              compositor-driven, all still under reduced motion. */}
+          {/* Blob centers are in this oversized layer's own space: panel-x maps to (x+12)/124. */}
+          <div class="absolute inset-[-12%] -z-10 bg-[radial-gradient(60%_70%_at_73%_86%,#ffd3bf_0%,transparent_60%),radial-gradient(42%_50%_at_92%_15%,#ffc9b2_0%,transparent_55%),radial-gradient(35%_45%_at_54%_100%,rgba(255,236,229,0.85)_0%,transparent_60%)] blur-[36px] motion-safe:animate-drift-slow" />
+          <div class="absolute inset-[-12%] -z-10 bg-[radial-gradient(18%_85%_at_6%_50%,rgba(255,187,192,0.8)_0%,transparent_70%),radial-gradient(10%_24%_at_10%_23%,rgba(255,224,226,0.9)_0%,transparent_70%),radial-gradient(11%_26%_at_9%_52%,rgba(255,216,219,0.85)_0%,transparent_70%),radial-gradient(10%_22%_at_8%_77%,rgba(255,205,210,0.8)_0%,transparent_70%),radial-gradient(36%_34%_at_79%_57%,rgba(255,224,214,0.6)_0%,transparent_60%)] blur-[28px] motion-safe:animate-drift-slower" />
+          <div class="absolute inset-0 -z-10 bg-[radial-gradient(rgba(255,255,255,0.4)_1px,transparent_1.3px)] bg-[size:22px_22px] opacity-35" />
+          <div class="absolute inset-0 -z-10 bg-[url(/images/webos/noise.svg)] bg-[size:240px_240px] opacity-40 mix-blend-soft-light" />
+
+          <div class="flex flex-col items-center gap-48 px-24 py-48 lg:h-full lg:flex-row lg:justify-between lg:px-[7.4%] lg:py-0">
+            <div data-diagram-part class="w-full max-w-281 lg:w-[27%] lg:max-w-none">
+              <StepAgentCard />
+            </div>
+            <div
+              data-diagram-part
+              data-diagram-arrow
+              class="hidden text-white lg:absolute lg:top-[20%] lg:left-[30.6%] lg:flex lg:aspect-[97/106] lg:w-[7.9%] lg:-scale-x-100"
+            >
+              <Icon name="webos-arrow" class="size-full" />
+            </div>
+            <div data-diagram-part class="w-full max-w-281 lg:w-[27%] lg:max-w-none">
+              <StepStackCard />
+            </div>
+            <div
+              data-diagram-part
+              data-diagram-arrow
+              class="hidden text-white lg:absolute lg:top-[48%] lg:left-[61.7%] lg:flex lg:aspect-[97/106] lg:w-[7.9%] lg:-scale-x-100"
+            >
+              <Icon name="webos-arrow" class="size-full" />
+            </div>
+            <div data-diagram-part class="w-full max-w-281 lg:w-[27%] lg:max-w-none">
+              <StepSiteCard />
+            </div>
+          </div>
+        </div>
+      </webos-diagram>
+
+      {items.length > 0 && (
+        <div class="mt-64 flex flex-col gap-64 lg:mt-96 lg:grid lg:grid-cols-3 lg:gap-x-[4.706%]">
+          {items.map((item, index) => (
+            <div class="flex flex-col">
+              <p class="text-body-10 text-accent">( {(index + 1).toString().padStart(2, "0")} )</p>
+              <div class="mt-24 flex flex-col gap-32 border-t border-line pt-36 lg:mt-36">
+                <h3 class="font-display text-title-20 text-accent">{item.title}</h3>
+                <p class="text-body-15 text-ink-soft">{item.text}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </SectionFrame>
+  )
+}
+
+<script>
+  import "./WebosDiagramElement";
+</script>

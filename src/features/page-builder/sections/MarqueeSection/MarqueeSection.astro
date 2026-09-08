@@ -1,0 +1,89 @@
+---
+import { stegaClean } from "@sanity/client/stega";
+import { MarqueeSectionQ } from "~/features/page-builder/queries";
+import SectionFrame from "~/features/page-builder/SectionFrame.astro";
+import type { SectionProps } from "~/features/page-builder/types";
+import type { MarqueeSectionQResult } from "~/sanity/types";
+import { getDraftModeProps } from "../../../../sanity/lib/draft-mode";
+import { loadQuery } from "../../../../sanity/lib/load-query";
+import { MARK_BASE, MARK_CORNER, MARK_VIEWBOX } from "./mark";
+
+type Props = SectionProps;
+
+const { docId, sectionKey } = Astro.props;
+
+const { data: section } = await loadQuery<MarqueeSectionQResult>({
+  query: MarqueeSectionQ,
+  params: { docId, sectionKey },
+  ...getDraftModeProps(Astro),
+});
+
+// Stega metadata would split into the words, so the strip renders the cleaned value; the sr-only
+// heading keeps the raw one as the Presentation click target.
+const headline = section?.content?.headline;
+const words = stegaClean(headline ?? "")
+  .split(/\s+/)
+  .filter(Boolean);
+
+// Enough copies of the run that the strip still covers the viewport at the end of its travel.
+const RUNS = 3;
+
+// The morph source's document id; keyed by the section so two strips on one page stay independent.
+const markId = `marquee-mark-${sectionKey}`;
+---
+
+{/* The strip's line is meant to overflow the viewport on both sides, so the section runs Edge to
+    Edge (the editor's width setting) and clips its own overflow. */}
+{
+  words.length > 0 && (
+    <SectionFrame
+      settings={section?.settings}
+      id={stegaClean(section?.settings?.hash) ?? undefined}
+      data-page-builder-section="marqueeSection"
+    >
+      <h2 class="sr-only">{headline}</h2>
+      {/* Decorative from here down: the run repeats, so only the heading is read out. */}
+      <marquee-strip class="block overflow-x-clip" aria-hidden="true">
+        {/* The morph animates these source squares once; every mark on the strip mirrors them via <use>. */}
+        <svg class="absolute size-0" focusable="false">
+          <defs>
+            <g id={markId} data-marquee-mark>
+              {MARK_BASE.map((cell) => (
+                <rect x={cell.x} y={cell.y} width={cell.s} height={cell.s} rx={cell.s * MARK_CORNER} fill="currentColor" />
+              ))}
+            </g>
+          </defs>
+        </svg>
+        <div data-marquee-track class="flex w-max items-center gap-[0.24em] font-display text-display-20 text-accent uppercase">
+          {Array.from({ length: RUNS }, () =>
+            words.map((word) => (
+              <>
+                <span>{word}</span>
+                <svg viewBox={MARK_VIEWBOX} class="aspect-[143/142] h-[0.38em]">
+                  <use href={`#${markId}`} />
+                </svg>
+              </>
+            ))
+          )}
+        </div>
+      </marquee-strip>
+      {/* The lead-in to the case studies. Its own box inside the frame: the section runs edge to
+          edge for the strip, so the copy brings back the page gutter and the content column. */}
+      {(section?.content?.statement || section?.content?.lede) && (
+        <div class="mx-auto mt-96 flex max-w-(--page-width) flex-col items-center gap-24 px-(--page-gutter) text-center lg:mt-160">
+          {section.content.statement && (
+            <p class="max-w-[24ch] font-display text-headline-20 text-accent">{section.content.statement}</p>
+          )}
+          {section.content.lede && <p class="max-w-[56ch] text-body-20 text-ink-soft">{section.content.lede}</p>}
+        </div>
+      )}
+    </SectionFrame>
+  )
+}
+
+<script>
+  import { lazyCustomElement } from "~/lib/lazy-hydrate";
+
+  // GSAP is heavy; hold it out of the initial load until the strip nears the viewport.
+  lazyCustomElement("marquee-strip", () => import("./MarqueeStripElement"));
+</script>

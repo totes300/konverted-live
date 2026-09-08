@@ -1,0 +1,87 @@
+---
+import { stegaClean } from "@sanity/client/stega";
+import { createDataAttribute } from "@sanity/visual-editing";
+import { GallerySectionQ } from "~/features/page-builder/queries";
+import SectionFrame from "~/features/page-builder/SectionFrame.astro";
+import type { SectionProps } from "~/features/page-builder/types";
+import type { GallerySectionQResult } from "~/sanity/types";
+import { getDraftModeProps, isDraftMode } from "../../../../sanity/lib/draft-mode";
+import { loadQuery } from "../../../../sanity/lib/load-query";
+import SanityImage from "../../../../sanity/media/SanityImage.astro";
+
+type Props = SectionProps;
+
+const { docId, docType, sectionKey, isFirst = false } = Astro.props;
+
+const { data: section } = await loadQuery<GallerySectionQResult>({
+  query: GallerySectionQ,
+  params: { docId, sectionKey },
+  ...getDraftModeProps(Astro),
+});
+
+const images = section?.content?.images ?? [];
+const cycleMs = section?.content?.cycleMs ?? 400;
+
+// Images carry no stega, so without an explicit edit intent the Presentation tool resolves a click
+// to the image ASSET document. The data attribute points it at this section's images array item
+// on the owning document instead; draft mode only, the public page has no use for it.
+const isDraft = isDraftMode(Astro);
+const imagesPath = `pageBuilder.sectionsArray[_key=="${sectionKey}"].sectionContent.images`;
+const frameEditAttribute = (imageKey: string | undefined) =>
+  isDraft && imageKey
+    ? createDataAttribute({ id: docId, type: docType, path: `${imagesPath}[_key=="${imageKey}"]` }).toString()
+    : undefined;
+
+/** The stage's proportions at every width; also passed to the crop so hotspots are honoured. */
+const STAGE_RATIO = 1360 / 780;
+---
+
+{/* The stage rests at its CSS width (pure CSS, so no-JS and reduced-motion keep it there);
+    GalleryCyclerElement widens it to the full viewport as the section scrolls in, and hard-cuts
+    the frames every 400ms while it is on screen. The animation reaches the viewport edge, so the
+    section runs Edge to Edge (the editor's width setting). */}
+{
+  images.length > 0 && (
+    <SectionFrame
+      settings={section?.settings}
+      id={stegaClean(section?.settings?.hash) ?? undefined}
+      data-page-builder-section="gallerySection"
+    >
+      <gallery-cycler class="block" data-cycle-ms={cycleMs}>
+        {/* Rest width lines up with the hero text: below `lg` the page gutter, above it the shared
+            `--linear-margin` the linear hero composition uses, so the edges stay on one line. */}
+        <div
+          data-gallery-stage
+          class="relative mx-auto w-[calc(100%-2*var(--page-gutter))] overflow-hidden lg:w-[calc(100%-2*var(--linear-margin))]"
+          style={`aspect-ratio: ${STAGE_RATIO}`}
+        >
+          {images.map((image, index) => (
+            <div
+              data-gallery-frame
+              data-active={index === 0 ? "" : undefined}
+              data-sanity={frameEditAttribute(image._key ?? undefined)}
+              class="absolute inset-0 opacity-0 data-active:opacity-100"
+            >
+              {/* Frame 0 is the stage's rest state, so it is painted whether or not the cycler ever
+                  runs and can sit above the fold under a short hero: lazy would leave a hole there,
+                  and it is the frame the first hard cut replaces. It claims real priority only when
+                  the gallery opens the page; the rest of the run stays lazy. */}
+              <SanityImage
+                media={{ type: "image", image, aspectRatio: STAGE_RATIO }}
+                sizes="100vw"
+                class="size-full object-cover"
+                priority={isFirst && index === 0}
+                eager={index === 0}
+                data-sanity={frameEditAttribute(image._key ?? undefined)}
+              />
+            </div>
+          ))}
+        </div>
+      </gallery-cycler>
+    </SectionFrame>
+  )
+}
+
+<script>
+  import "./GalleryCyclerElement";
+</script>

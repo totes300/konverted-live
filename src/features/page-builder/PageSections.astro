@@ -1,31 +1,59 @@
 ---
 import type { PageSectionsQResult } from "~/sanity/types";
+import CaseStudySection from "./sections/CaseStudySection.astro";
 import ContactFormSection from "./sections/ContactFormSection/ContactFormSection.astro";
 import CtaSection from "./sections/CtaSection.astro";
+import GallerySection from "./sections/GallerySection/GallerySection.astro";
+import HeroSection from "./sections/HeroSection.astro";
+import ImageGridSection from "./sections/ImageGridSection.astro";
+import IntersectionSection from "./sections/IntersectionSection/IntersectionSection.astro";
+import LeadFormSection from "./sections/LeadFormSection/LeadFormSection.astro";
+import LogoStripSection from "./sections/LogoStripSection.astro";
+import LogoWallSection from "./sections/LogoWallSection/LogoWallSection.astro";
+import MarqueeSection from "./sections/MarqueeSection/MarqueeSection.astro";
 import MediaSection from "./sections/MediaSection.astro";
+import ProcessSection from "./sections/ProcessSection.astro";
+import SolutionSection from "./sections/SolutionSection.astro";
+import StatementSection from "./sections/StatementSection.astro";
+import TeamSection from "./sections/TeamSection/TeamSection.astro";
 import TextSection from "./sections/TextSection.astro";
+import WebosSection from "./sections/WebosSection/WebosSection.astro";
 
 // PLOP: Add Import
 
 // The route fetches the section list so it can run alongside its own document query; each section
 // still fetches its own content.
-type Props = { docId: string; pageSections: PageSectionsQResult };
+type Props = { docId: string; docType: string; pageSections: PageSectionsQResult };
 
-const { docId, pageSections } = Astro.props;
+const { docId, docType, pageSections } = Astro.props;
 
 const sections = {
   mediaSectionField: MediaSection,
   ctaSectionField: CtaSection,
   textSectionField: TextSection,
   contactFormSectionField: ContactFormSection,
+  heroSectionField: HeroSection,
+  gallerySectionField: GallerySection,
+  imageGridSectionField: ImageGridSection,
+  statementSectionField: StatementSection,
+  solutionSectionField: SolutionSection,
+  webosSectionField: WebosSection,
+  marqueeSectionField: MarqueeSection,
+  caseStudySectionField: CaseStudySection,
+  logoWallSectionField: LogoWallSection,
+  logoStripSectionField: LogoStripSection,
+  processSectionField: ProcessSection,
+  intersectionSectionField: IntersectionSection,
+  teamSectionField: TeamSection,
+  leadFormSectionField: LeadFormSection,
   // PLOP: Add Export
 } as const;
 ---
 
 {/* Rhythm between sections only; each section's `SectionFrame` owns its own width. */}
-<div class="flex w-full flex-col gap-80 py-64 lg:gap-120 lg:py-96">
+<div class="flex w-full flex-col gap-(--section-gap) py-64 lg:py-96">
   {(pageSections ?? []).map((section, index) => {
     const Component = sections[section._type as keyof typeof sections]
-    return Component ? <Component docId={docId} sectionKey={section._key} isFirst={index === 0} /> : null
+    return Component ? <Component docId={docId} docType={docType} sectionKey={section._key} isFirst={index === 0} /> : null
   })}
 </div>

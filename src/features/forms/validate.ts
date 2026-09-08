@@ -13,6 +13,10 @@ export type FormValidation<Data> = { ok: true; data: Data } | { ok: false; field
 
 type FormSchema = z.ZodObject<Record<string, z.ZodType>>;
 
+/** An option list as the tuple `z.enum` wants, so a control's labels and its accepted values stay one list. */
+export const optionValues = <T extends readonly { value: string }[]>(options: T) =>
+  options.map(({ value }) => value) as [T[number]["value"], ...T[number]["value"][]];
+
 /**
  * A checkbox group submits its name once per checked box, so its field is read with `getAll`. Which
  * fields those are is the schema's business like everything else here: a scalar schema turns an array

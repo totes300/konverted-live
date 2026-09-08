@@ -1,0 +1,70 @@
+---
+import { MARK_BASE, MARK_CORNER, MARK_VIEWBOX } from "~/features/page-builder/sections/MarqueeSection/mark";
+import type { LinkFragmentResult } from "~/features/sanity/link/fragment";
+import SanityLink from "~/features/sanity/link/SanityLink.astro";
+
+// The work grid's masthead, in the index-card shape: a meta rail that says what the block is, what
+// went into it and where the full list lives, ruled off by a hairline; then the title set large
+// enough to dominate the column; then the catalogue stamp under it as a closing tick. The rail
+// carries the small print, which is what lets the title stay a single loud word per line.
+type Props = {
+  /** The marker on the left of the rail, e.g. `Projects`. */
+  label?: string | null;
+  /** Set one word per line, so keep it to two or three words. */
+  title: string;
+  /** The disciplines this work ran through; joined with slashes in the middle of the rail. */
+  services?: (string | null)[] | null;
+  /** The studio's short code, stamped beside the mark under the title. */
+  code?: string | null;
+  /** How many projects the grid below holds; padded to two digits. */
+  count?: number;
+  link?: LinkFragmentResult | null;
+};
+
+const { label, title, services, code, count, link } = Astro.props;
+
+const lines = title.split(/\s+/).filter(Boolean);
+const disciplines = (services ?? []).filter((service): service is string => Boolean(service));
+---
+
+<header class="flex flex-col gap-48 lg:gap-64">
+  <div
+    class="flex flex-col gap-16 border-line border-b pb-16 text-eyebrow text-ink-soft uppercase lg:grid lg:grid-cols-3 lg:items-start lg:gap-24"
+  >
+    {
+      label && (
+        <p class="flex items-center gap-8">
+          <span class="size-6 shrink-0 rounded-full bg-accent" aria-hidden="true" />
+          {label}
+        </p>
+      )
+    }
+
+    {disciplines.length > 0 && <p class="lg:col-start-2 lg:text-center">{disciplines.join(" / ")}</p>}
+
+    <SanityLink link={link} class="underline underline-offset-4 hover:text-accent lg:justify-self-end" />
+  </div>
+
+  <div class="flex flex-col items-center gap-32 lg:gap-48">
+    <h2 class="text-center font-display text-display text-accent uppercase lg:text-display-15">
+      {/* One word per line, with the space kept so the accessible name reads as the title, not one run-on word. */}
+      {lines.map((line) => <span class="block">{`${line} `}</span>)}
+    </h2>
+
+    {/* The catalogue stamp reads as one glyph run rather than a logo, so the mark is sized in `em`
+        and rides the text it sits in. */}
+    {
+      code && (
+        <p class="inline-flex items-center gap-2 text-eyebrow text-ink-soft uppercase">
+          <span>{code}</span>
+          <svg viewBox={MARK_VIEWBOX} class="aspect-[143/142] h-[0.9em]" aria-hidden="true" focusable="false">
+            {MARK_BASE.map((cell) => (
+              <rect x={cell.x} y={cell.y} width={cell.s} height={cell.s} rx={cell.s * MARK_CORNER} fill="currentColor" />
+            ))}
+          </svg>
+          {count !== undefined && <span>/{String(count).padStart(2, "0")}</span>}
+        </p>
+      )
+    }
+  </div>
+</header>

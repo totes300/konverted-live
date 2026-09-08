@@ -1,0 +1,217 @@
+---
+import Button from "~/components/Button.astro";
+import Web from "~/layouts/Web.astro";
+
+// Internal reference page for the design system: tokens straight from src/styles/*, no Sanity
+// content. Resize the window to watch the fluid scale work; the live px badges are measured
+// from the rendered samples, so they show the truth, not the formula.
+
+const typeScale = [
+  { token: "text-eyebrow", figma: "caption-size-small", range: "12 → 14", note: "0.04em tracking, uppercase, accent" },
+  { token: "text-caption", figma: "text-size-tiny", range: "13 → 14", note: "lh 1.5" },
+  { token: "text-cta", figma: "text-size-small", range: "14 → 16", note: "lh 1.5 · nav, gombok" },
+  { token: "text-body-10", figma: "text-size-small → regular", range: "16 → 18", note: "lh 1.5" },
+  { token: "text-body-15", figma: "(nincs) kártya leírás title-20 alatt", range: "17 → 20", note: "lh 1.5 · a title-20 fele" },
+  { token: "text-body-20", figma: "text-size-medium → large", range: "18 → 24", note: "lh 1.5 · hero lede: 20" },
+  { token: "text-title", figma: "portfolio row title", range: "20 → 24", note: "lh 1.375" },
+  { token: "text-title-20", figma: "solution card title (Serif)", range: "28 → 40", note: "lh 1.1 · accent" },
+  { token: "text-headline-10", figma: "statement (Serif)", range: "28 → 50", note: "lh 1.5 · kéttónusú ink" },
+  { token: "text-headline-20", figma: "section title (Serif)", range: "44 → 95", note: "lh 1.13 · −0.01em · accent" },
+  { token: "text-display", figma: "hero display (Serif)", range: "56 → 148", note: "lh 1.0 · −0.01em · accent" },
+];
+
+const palette = [
+  { util: "bg-accent", varName: "--color-accent", hex: "#EC5532", figma: "orange-claude-01", dark: false },
+  { util: "bg-ink", varName: "--color-ink", hex: "#1A0401", figma: "black-claude-01", dark: true },
+  { util: "bg-ink-soft", varName: "--color-ink-soft", hex: "#360C06", figma: "black-claude-02", dark: true },
+  { util: "bg-paper", varName: "--color-paper", hex: "#FCFBF9", figma: "beige-claude-01", dark: false },
+  { util: "bg-paper-warm", varName: "--color-paper-warm", hex: "#F6F1EC", figma: "beige-claude-02", dark: false },
+  { util: "bg-paper-deep", varName: "--color-paper-deep", hex: "#ECE3CF", figma: "dark-beige-01", dark: false },
+  { util: "bg-line", varName: "--color-line", hex: "#D9D9D9", figma: "gray-02", dark: false },
+  { util: "bg-danger", varName: "--color-danger", hex: "#FF4A3D", figma: "(semantic)", dark: false },
+];
+
+const families = [
+  {
+    cls: "font-display",
+    name: "Instrument Serif",
+    role: "Display / headline-ok (a Figma így szedi)",
+    sample: "Strategic websites built for an agentic world.",
+  },
+  {
+    cls: "font-sans-alt",
+    name: "Instrument Sans (wdth)",
+    role: "UI-tartalék, width-tengellyel — token: font-sans-alt",
+    sample: "Strategic websites built for an agentic world.",
+  },
+  {
+    cls: "font-sans",
+    name: "PP Neue Montreal Book",
+    role: "Body / UI",
+    sample: "We make your brand ready to win in the agentic era.",
+  },
+  {
+    cls: "font-sans font-medium",
+    name: "PP Neue Montreal Medium",
+    role: "Body kiemelés",
+    sample: "We make your brand ready to win in the agentic era.",
+  },
+];
+---
+
+<Web title="Style guide" noindex>
+  <main>
+    <token-meter class="block">
+    <header class="mx-auto w-full max-w-(--page-width) px-(--page-gutter) pt-64 pb-40 lg:pt-96">
+      <p class="text-eyebrow font-sans text-accent uppercase">( Style guide )</p>
+      <h1 class="mt-16 font-display text-headline-20 text-ink">Konverted design system</h1>
+      <p class="mt-16 max-w-[52ch] text-body-20">
+        Every value on this page is read from the live tokens in <code>src/styles/</code>. Resize the window: the
+        fluid scale grows from its 375&nbsp;px floors, hits the authored sizes at the 1440&nbsp;px artboard and keeps
+        scaling proportionally beyond it — the badges follow.
+      </p>
+      <p class="mt-24 font-pixel-square text-cta text-ink uppercase">
+        Viewport: <span data-viewport-w>—</span>px
+      </p>
+    </header>
+
+    <section class="mx-auto w-full max-w-(--page-width) px-(--page-gutter) pb-64">
+      <h2 class="border-b border-ink/10 pb-8 text-eyebrow text-ink/50 uppercase">( 01 ) — Colors</h2>
+      <ul class="mt-24 grid grid-cols-2 gap-16 md:grid-cols-3 lg:grid-cols-6">
+        {
+          palette.map((c) => (
+            <li>
+              <div class:list={["h-96 rounded-8 border border-ink/10", c.util]} />
+              <p class="mt-8 text-caption font-medium text-ink">{c.varName}</p>
+              <p class="text-caption text-ink-soft/70">
+                {c.hex} · {c.figma}
+              </p>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="mt-16 text-caption text-ink-soft/70">
+        Studio brand ramp (content-facing): brand-black · brand-white · brand-off-white · brand-grey · brand-accent —
+        same values, picked by editors in rich text.
+      </p>
+    </section>
+
+    <section class="mx-auto w-full max-w-(--page-width) px-(--page-gutter) pb-64">
+      <h2 class="border-b border-ink/10 pb-8 text-eyebrow text-ink/50 uppercase">( 02 ) — Families</h2>
+      <ul class="mt-24 flex flex-col gap-32">
+        {
+          families.map((f) => (
+            <li class="grid gap-8 lg:grid-cols-[240px_1fr] lg:items-baseline">
+              <div>
+                <p class="text-caption font-medium text-ink">{f.name}</p>
+                <p class="text-caption text-ink-soft/70">{f.role}</p>
+              </div>
+              <p class:list={["text-headline-10 text-ink", f.cls]}>{f.sample}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="mx-auto w-full max-w-(--page-width) px-(--page-gutter) pb-64">
+      <h2 class="border-b border-ink/10 pb-8 text-eyebrow text-ink/50 uppercase">( 03 ) — Type scale</h2>
+      <ul class="mt-24 flex flex-col gap-32">
+        {
+          typeScale.map((t) => (
+            <li class="grid gap-8 lg:grid-cols-[240px_1fr] lg:items-baseline">
+              <div>
+                <p class="text-caption font-medium text-ink">{t.token}</p>
+                <p class="text-caption text-ink-soft/70">
+                  {t.range}px · <span class="font-pixel-square text-accent" data-px-of={t.token}>—</span>
+                </p>
+                <p class="text-caption text-ink-soft/70">{t.figma}</p>
+                <p class="text-caption text-ink-soft/70">{t.note}</p>
+              </div>
+              <p
+                class:list={[
+                  t.token,
+                  t.token === "text-display" || t.token.startsWith("text-headline") ? "font-display" : "font-sans",
+                  t.token === "text-display" || t.token === "text-headline-20" ? "text-accent" : "text-ink",
+                  t.token === "text-eyebrow" && "text-accent uppercase",
+                ]}
+                data-type-sample={t.token}
+              >
+                {
+                  t.token === "text-eyebrow" ? (
+                    "( The agentic era )"
+                  ) : t.token === "text-headline-10" ? (
+                    <>
+                      A new era has begun. Websites are no longer static assets.
+                      <span class="text-ink-soft/40"> Konverted is an AI-native digital agency built for the next era.</span>
+                    </>
+                  ) : (
+                    "Websites built to sell, not to decorate."
+                  )
+                }
+              </p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="mx-auto w-full max-w-(--page-width) px-(--page-gutter) pb-64">
+      <h2 class="border-b border-ink/10 pb-8 text-eyebrow text-ink/50 uppercase">( 04 ) — Buttons</h2>
+      <p class="mt-16 text-caption text-ink-soft/70">
+        Template defaults, still styled for a dark surface — rebranding them is a later, deliberate step.
+      </p>
+      <div class="mt-24 flex flex-wrap items-center gap-24 rounded-8 bg-ink p-32">
+        <Button>Primary button</Button>
+        <Button variant="underline">Underline button</Button>
+        <Button disabled>Disabled</Button>
+      </div>
+      <div class="mt-16 flex flex-wrap items-center gap-24 rounded-8 bg-paper-warm p-32">
+        <Button class="bg-accent text-white hover:bg-accent/85">Accent preview</Button>
+        <Button class="bg-ink text-white hover:bg-ink/85">Ink preview</Button>
+        <Button variant="underline" class="text-ink">Underline on light</Button>
+      </div>
+    </section>
+
+    <section class="pb-96">
+      <div data-gutter-probe class="mx-auto w-full max-w-(--page-width) px-(--page-gutter)">
+        <h2 class="border-b border-ink/10 pb-8 text-eyebrow text-ink/50 uppercase">( 05 ) — Fluid & containers</h2>
+        <p class="mt-16 max-w-[52ch] text-body-10">
+          The gutter is <span class="font-pixel-square text-accent" data-gutter-px>—</span> (16px, 48px from
+          <code>lg</code>), the content column is 1344px at the 1440 artboard and stays that proportion of wider
+          viewports. The stripes below are the page builder's three section widths.
+        </p>
+      </div>
+
+      <div class="mt-24 bg-accent py-24 text-center">
+        <p class="text-cta font-medium text-white uppercase">Edge to edge — 100% viewport width</p>
+      </div>
+
+      <div class="mt-16 w-full px-(--page-gutter)">
+        <div class="rounded-8 bg-paper-deep py-24 text-center">
+          <p class="text-cta font-medium text-ink uppercase">Full bleed — no cap, px-gutter kept</p>
+        </div>
+      </div>
+
+      <div class="mx-auto mt-16 w-full max-w-(--page-width) px-(--page-gutter)">
+        <div class="rounded-8 bg-ink py-24 text-center">
+          <p class="text-cta font-medium text-white uppercase">Contained — max-w-page + px-gutter</p>
+        </div>
+      </div>
+
+      <div class="mt-16 bg-paper-warm py-40">
+        <div class="mx-auto w-full max-w-(--page-width) px-(--page-gutter)">
+          <p class="text-title font-display text-ink">Band pattern</p>
+          <p class="mt-8 max-w-[52ch] text-body-10">
+            Full-bleed background, contained content — the section recipe the page builder uses. The background
+            touches the viewport edge, the text keeps the gutter.
+          </p>
+        </div>
+      </div>
+    </section>
+    </token-meter>
+  </main>
+</Web>
+
+<script>
+  import "~/features/style/token-meter/TokenMeterElement";
+</script>

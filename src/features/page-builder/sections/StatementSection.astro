@@ -1,0 +1,40 @@
+---
+import { stegaClean } from "@sanity/client/stega";
+import GradientWaveText from "~/components/GradientWaveText/GradientWaveText.astro";
+import { StatementSectionQ } from "~/features/page-builder/queries";
+import SectionFrame from "~/features/page-builder/SectionFrame.astro";
+import type { SectionProps } from "~/features/page-builder/types";
+import type { StatementSectionQResult } from "~/sanity/types";
+import { getDraftModeProps } from "../../../sanity/lib/draft-mode";
+import { loadQuery } from "../../../sanity/lib/load-query";
+
+type Props = SectionProps;
+
+const { docId, sectionKey } = Astro.props;
+
+const { data: section } = await loadQuery<StatementSectionQResult>({
+  query: StatementSectionQ,
+  params: { docId, sectionKey },
+  ...getDraftModeProps(Astro),
+});
+---
+
+{
+  section?.content && (
+    <SectionFrame
+      settings={section.settings}
+      id={stegaClean(section.settings?.hash) ?? undefined}
+      data-page-builder-section="statementSection"
+      class="lg:grid lg:grid-cols-[1fr_4fr] lg:gap-x-24"
+    >
+      <h2 class="mb-24 text-eyebrow text-accent uppercase lg:mb-0 lg:pt-12">( {section.content.headline} )</h2>
+      <GradientWaveText>
+        <p data-gradient-wave-text class="font-display text-headline-10 text-ink">
+          {section.content.statement}
+          {/* The explicit space survives template whitespace collapsing between the two tones. */}
+          {section.content.support && <span class="text-ink-soft">{` ${section.content.support}`}</span>}
+        </p>
+      </GradientWaveText>
+    </SectionFrame>
+  )
+}

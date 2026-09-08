@@ -7,9 +7,11 @@
 @import "./sanity-rich-text.css";
 
 @theme {
-  /* Content width bounds (px); also reference values for responsive calc. */
+  /* The fluid scale's reference points (px). The max is the 1440 Figma artboard: every fluid
+     token carries the size authored there, hits it exactly at this viewport, and keeps scaling
+     proportionally beyond it — this is a reference, not a cap (see typography.css). */
   --layout-min-w: 375;
-  --layout-max-w: 1600;
+  --layout-max-w: 1440;
 
   /* Reset default TW breakpoints. */
   --breakpoint-\*: initial;
@@ -49,17 +51,36 @@
       --header-height: --spacing(120);
     }
 
-    /* The content column's width, as `max-w-(--page-width)`. Distinct from `--layout-max-w`, which
-       is only the upper bound the fluid type scales interpolate to. */
-    --page-width: --spacing(1200);
+    /* The content column's width, as `max-w-(--page-width)`. The page is fully fluid, so the cap
+       never binds and the fluid `--page-gutter` alone shapes the column: 100vw minus two gutters,
+       which is 1344px at the 1440 artboard and stays that proportion of wider viewports. The token
+       is kept as the seam — give it a length again and every container re-caps at once. */
+    --page-width: 100vw;
+
+    /* The rhythm between page builder sections, as `gap-(--section-gap)`. Named rather than written
+       into `PageSections.astro` so a section can cancel it (`-mt-(--section-gap)`) and weld itself to
+       the one above without restating the two values. */
+    --section-gap: --spacing(80);
+
+    @variant lg {
+      --section-gap: --spacing(120);
+    }
 
     /* The page's side margin, as `px-(--page-gutter)`. Every page-level container reads it, so the
-       distance from the viewport to the content is one value rather than a pair per container. */
+       distance from the viewport to the content is one value rather than a pair per container.
+       From `lg` it is 48px up to the 1440 artboard (where 3.333vw = 48px), then scales with the
+       viewport so full-bleed sections keep their inner edges on the fluid content column. */
     --page-gutter: --spacing(16);
 
     @variant lg {
-      --page-gutter: --spacing(48);
+      --page-gutter: max(--spacing(48), 3.333vw);
     }
+
+    /* The side margin the linear (vw-proportional) compositions share from `lg` up — the hero
+       headline and the gallery's rest state read it so their left edges sit on one line. It is
+       deliberately tighter than `--page-gutter` (39px vs 48px at the 1440 artboard): the Figma
+       runs its showcase pieces on this margin, the ordinary content column on the gutter. */
+    --linear-margin: 2.708%;
   }
 }
 

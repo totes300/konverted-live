@@ -27,6 +27,12 @@ if (PUBLIC_SITE_URL && siteUrl !== PUBLIC_SITE_URL.trim()) {
   console.warn(`[astro.config] PUBLIC_SITE_URL has a trailing slash; using "${siteUrl}". Drop the slash in your env.`);
 }
 
+// `astro dev` and every other astro command share `node_modules/.vite`, so a build or a type check
+// run while the dev server is up rewrites the exact dep chunks an open tab is holding. The Studio is
+// a client-only island, so its 504 shows as a blank page rather than an error: only `dev` keeps the
+// default cache, everything else gets its own.
+const isDevServer = process.argv[2] === "dev";
+
 // Identifies this build, baked into the bundle below and read by the route cache to empty itself
 // once per release (src/lib/route-cache/deploy-purge.ts). A compile-time constant rather than a
 // host's deployment id: it cannot be switched off in a dashboard, it works the same on every host,
@@ -147,6 +153,7 @@ export default defineConfig({
   ],
   vite: {
     plugins: [tailwindcss()],
+    cacheDir: isDevServer ? "node_modules/.vite" : "node_modules/.vite-build",
     define: { __ROUTE_CACHE_BUILD_ID__: JSON.stringify(buildId) },
     // Every dep Vite discovers after startup rewrites node_modules/.vite/deps, which 504s an open
     // /studio tab ("Outdated Optimize Dep"), so the initial scan has to find all of them.

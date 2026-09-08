@@ -8,7 +8,7 @@ import type { MediaType, MediaValue, VideoProps } from "./types";
 
 // Flat props are only what every renderer shares; renderer-specific props live in their own bag.
 // `sizes` is a Tailwind-style breakpoint shorthand, e.g. '100vw md:50vw' (see responsiveSizes).
-type ImageProps = { sizes?: string };
+type ImageProps = { sizes?: string; eager?: boolean };
 type Props = {
   media?: MediaValue | null;
   width?: number;

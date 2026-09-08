@@ -1,0 +1,36 @@
+---
+import { cx } from "~/features/style/utils";
+
+// Scroll-scrubbed character reveal: the slotted text colors in line by line as the page scrolls,
+// each character flashing through the wave color (see GradientWaveTextElement). Mark the text
+// element inside the slot with `data-gradient-wave-text`; multi-tone spans keep their end colors.
+type Props = {
+  class?: string;
+  /** ScrollTrigger positions; defaults follow the resource ("top 90%" / "center 40%"). */
+  scrollStart?: string;
+  scrollEnd?: string;
+  /** Colors default to the design tokens: muted ink-soft start, accent wave. */
+  startColor?: string;
+  waveColor?: string;
+  duration?: number;
+  scrub?: number;
+};
+
+const { class: className, scrollStart, scrollEnd, startColor, waveColor, duration, scrub } = Astro.props;
+---
+
+<gradient-wave-text
+  class={cx("block", className)}
+  data-gradient-wave-scroll-start={scrollStart}
+  data-gradient-wave-scroll-end={scrollEnd}
+  data-gradient-wave-color-start={startColor}
+  data-gradient-wave-color-wave={waveColor}
+  data-gradient-wave-duration={duration}
+  data-gradient-wave-scrub={scrub}
+>
+  <slot />
+</gradient-wave-text>
+
+<script>
+  import "./GradientWaveTextElement";
+</script>

@@ -32,7 +32,8 @@ Use this path if you are new to the repository:
 - Manage redirect behavior -> [Redirects](./features/redirects.md)
 - Build a validated form (shared schema, inline errors) -> [Forms](./features/forms.md)
 - Add form anti-spam protection -> [Spam Prevention](./features/spam-prevention.md)
-- Configure contact form email notifications -> [Contact Form Notifications](./features/contact-form-notifications.md)
+- Configure form email notifications -> [Form Notifications](./features/contact-form-notifications.md)
+- Embed or repoint the booking calendar -> [Booking Calendar (Cal.com)](./features/booking-calendar.md)
 - Add analytics tracking events -> [Umami Tracking](./features/umami-tracking.md)
 - Generate and serve an llms.txt for AI assistants -> [llms.txt and AI agents](./features/llms-txt.md)
 - Auto-generate image alt text on upload (Sanity AI) -> [Automatic alt text](./features/auto-alt-text.md)
@@ -43,6 +44,7 @@ Use this path if you are new to the repository:
 - Add a modal, or open a page as an overlay over another -> [Dialogs and overlay routes](./features/dialogs-and-overlay-routes.md)
 - Change route view transitions or page fades -> [View transitions](./features/view-transitions.md)
 - Maintain animated content / motion entrances -> [Animated content](./features/animated-content.md)
+- Set a case study's cover, its work-grid card image, and the Image grid frames -> [Case study images](./features/case-study-images.md)
 
 ## Deployment
 
@@ -70,9 +72,11 @@ Use this path if you are new to the repository:
 - [Code Generation (Plop)](./features/code-generation.md)
 - [Forms](./features/forms.md): one `defineForm(schema)` shared by markup, element and endpoint; the form components in `src/components/Form/`
 - [Spam Prevention](./features/spam-prevention.md)
-- [Contact Form Notifications](./features/contact-form-notifications.md)
+- [Form Notifications](./features/contact-form-notifications.md)
+- [Booking Calendar (Cal.com)](./features/booking-calendar.md)
 - [Umami Tracking](./features/umami-tracking.md)
 - [Animated content](./features/animated-content.md): line-split intros via `AnimatedText` (`src/components/AnimatedText/`), on GSAP SplitText
+- [Case study images](./features/case-study-images.md): the cover and card image fields, the Image grid section with per-frame full/half width, and the card-cycle opt-in
 - [View transitions](./features/view-transitions.md): Astro's `<ClientRouter />` + GSAP presets in `src/lib/transitions/`
 - [Dialogs and overlay routes](./features/dialogs-and-overlay-routes.md): the reusable `Dialog` (native `<dialog>`, no focus-trap dependency) and the blog author panel that opens a real URL over the page it was linked from
 - [llms.txt and AI agents](./features/llms-txt.md): AI-generated `/llms.txt`, editable in the Settings Agents tab (Sanity Agent Actions)

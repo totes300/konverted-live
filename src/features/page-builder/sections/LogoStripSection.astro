@@ -1,0 +1,86 @@
+---
+import { stegaClean } from "@sanity/client/stega";
+import { createDataAttribute } from "@sanity/visual-editing";
+import Marquee from "~/components/Marquee/Marquee.astro";
+import { LogoStripSectionQ } from "~/features/page-builder/queries";
+import SectionFrame from "~/features/page-builder/SectionFrame.astro";
+import type { SectionProps } from "~/features/page-builder/types";
+import type { LogoStripSectionQResult } from "~/sanity/types";
+import { getDraftModeProps, isDraftMode } from "../../../sanity/lib/draft-mode";
+import { loadQuery } from "../../../sanity/lib/load-query";
+
+type Props = SectionProps;
+
+const { docId, docType, sectionKey } = Astro.props;
+
+const { data: section } = await loadQuery<LogoStripSectionQResult>({
+  query: LogoStripSectionQ,
+  params: { docId, sectionKey },
+  ...getDraftModeProps(Astro),
+});
+
+const logos = (section?.content?.logos ?? []).filter((logo) => Boolean(logo.url));
+
+const statement = section?.content?.statement ?? "";
+
+// A logo carries no stega, so a Presentation click would resolve to nothing, or to the image ASSET
+// document. These point it at this section's own fields instead.
+const isDraft = isDraftMode(Astro);
+const contentPath = `pageBuilder.sectionsArray[_key=="${sectionKey}"].sectionContent`;
+const editAttribute = (path: string) =>
+  isDraft ? createDataAttribute({ id: docId, type: docType, path: `${contentPath}.${path}` }).toString() : undefined;
+---
+
+{/* A credit under the image cycle rather than a block of its own: the section cancels the page
+    builder's rhythm so the band sits on the picture's bottom edge, and the rules are inset by the
+    page gutter while the image above runs edge to edge. */}
+{
+  logos.length > 0 && (
+    <SectionFrame
+      as="div"
+      settings={section?.settings}
+      id={stegaClean(section?.settings?.hash) ?? undefined}
+      data-page-builder-section="logoStripSection"
+      class="-mt-(--section-gap)"
+    >
+      <div class="flex flex-col gap-16 border-line border-y py-32 lg:grid lg:grid-cols-[1fr_4fr] lg:items-center lg:gap-x-24 lg:py-44">
+        <p data-sanity={editAttribute('statement')} class="text-eyebrow font-medium text-ink uppercase">
+          {statement}
+        </p>
+        {/* `gap` is the seam between repeats, so it matches the `gap-64` between two logos; the ends are
+            faded only while the run loops, since one standing still has nothing arriving at an edge. */}
+        <Marquee
+          loop="always"
+          speed={40}
+          gap={64}
+          pauseOnHover
+          class="w-full min-w-0 data-marquee:mask-l-from-transparent data-marquee:mask-l-from-0 data-marquee:mask-l-to-black data-marquee:mask-l-to-48 data-marquee:mask-r-from-transparent data-marquee:mask-r-from-0 data-marquee:mask-r-to-black data-marquee:mask-r-to-48"
+        >
+          <ul class="flex items-center gap-64">
+            {logos.map((logo) => {
+              const Tag = logo.href ? 'a' : 'span'
+
+              return (
+                <li class="flex items-center">
+                  <Tag
+                    href={logo.href ?? undefined}
+                    data-sanity={editAttribute(`logos[_key=="${logo._key}"]`)}
+                    class="group/logo flex items-center"
+                  >
+                    <span class="sr-only">{logo.name}</span>
+                    {/* A mask, not an image: the shape is the file's and the colour the palette's, so mixed artwork reads as one material. */}
+                    <span
+                      aria-hidden="true"
+                      class="mask-alpha mask-contain mask-center mask-no-repeat block h-24 bg-ink-soft opacity-80 transition-opacity duration-300 ease-out group-hover/logo:opacity-100 motion-reduce:transition-none lg:h-32"
+                      style={`mask-image: url("${logo.url}"); aspect-ratio: ${logo.ratio}`}
+                    />
+                  </Tag>
+                </li>
+              )
+            })}
+          </ul>
+        </Marquee>
+      </div>
+    </SectionFrame>
+  )
+}

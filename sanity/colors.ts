@@ -17,11 +17,11 @@ export type BrandColor = {
 };
 
 export const BRAND_COLORS: readonly BrandColor[] = [
-  { name: "brand-black", title: "Black", swatch: "#000" },
+  { name: "brand-black", title: "Black", swatch: "#1a0401" },
   { name: "brand-white", title: "White", swatch: "#fff" },
-  { name: "brand-off-white", title: "Off White", swatch: "#f2f0ed" },
+  { name: "brand-off-white", title: "Off White", swatch: "#fcfbf9" },
   { name: "brand-grey", title: "Grey", swatch: "#8a8a8a" },
-  { name: "brand-accent", title: "Accent", swatch: "#ff9100" },
+  { name: "brand-accent", title: "Accent", swatch: "#ec5532" },
 ];
 
 export function findBrandColor(name: string | undefined): BrandColor | undefined {

@@ -1,0 +1,29 @@
+---
+import CaseStudyCard from "~/features/case-study/CaseStudyCard.astro";
+import { type CaseStudyCardFragmentResult, isFullWidthCard } from "~/features/case-study/fragment";
+
+// The work grid. One column on a phone; from `lg` it is two, and a case study set to Full row spans
+// both — which is what lets half cards pair up beside each other the way the design lays them out.
+type Props = {
+  caseStudies: (CaseStudyCardFragmentResult | null)[];
+  headingLevel?: "h2" | "h3";
+};
+
+const { caseStudies, headingLevel } = Astro.props;
+
+const items = caseStudies.filter((caseStudy): caseStudy is CaseStudyCardFragmentResult => Boolean(caseStudy));
+---
+
+{
+  items.length > 0 && (
+    <div class="grid gap-x-32 gap-y-64 lg:grid-cols-2 lg:gap-y-96">
+      {items.map((caseStudy) => (
+        <CaseStudyCard
+          caseStudy={caseStudy}
+          headingLevel={headingLevel}
+          class={isFullWidthCard(caseStudy.card) ? "lg:col-span-2" : undefined}
+        />
+      ))}
+    </div>
+  )
+}

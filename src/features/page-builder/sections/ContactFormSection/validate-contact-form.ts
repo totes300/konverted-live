@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { defineForm } from "~/features/forms/validate";
+import { defineForm, optionValues } from "~/features/forms/validate";
 
 const MAX_NAME_LENGTH = 100;
 const MIN_MESSAGE_LENGTH = 10;
@@ -23,9 +23,6 @@ export const CONTACT_SERVICES = [
   { value: "content", label: "Content" },
   { value: "seo", label: "SEO" },
 ] as const;
-
-const values = <T extends readonly { value: string }[]>(options: T) =>
-  options.map(({ value }) => value) as [T[number]["value"], ...T[number]["value"][]];
 
 /**
  * Everything the form submits, minus the spam-prevention fields (those belong to `detectSpam`).
@@ -56,13 +53,13 @@ const ContactFormSchema = z.object({
     .trim()
     .regex(/^[0-9 ()-]*$/, "Phone can only contain digits and separators")
     .max(20, "Phone must be 20 characters or fewer"),
-  topic: z.enum(values(CONTACT_TOPICS), "Choose a topic"),
+  topic: z.enum(optionValues(CONTACT_TOPICS), "Choose a topic"),
   startDate: z
     .string()
     .trim()
     .regex(/^$|^\d{4}-\d{2}-\d{2}$/, "Enter a valid date"),
-  budget: z.enum(values(CONTACT_BUDGETS)).or(z.literal("")),
-  services: z.array(z.enum(values(CONTACT_SERVICES))).min(1, "Pick at least one service"),
+  budget: z.enum(optionValues(CONTACT_BUDGETS)).or(z.literal("")),
+  services: z.array(z.enum(optionValues(CONTACT_SERVICES))).min(1, "Pick at least one service"),
   message: z
     .string()
     .trim()

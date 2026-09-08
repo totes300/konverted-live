@@ -4,7 +4,11 @@ Every public form on the site is the same three pieces: one definition, one cust
 endpoint. The definition is shared by all three, so a rule written once shows up in the markup, in
 the browser and on the server without being restated anywhere. The contact form section
 (`src/features/page-builder/sections/ContactFormSection/`) is the worked example: it renders one
-field of every control type against this exact plumbing.
+field of every control type against this exact plumbing. The lead form section
+(`src/features/page-builder/sections/LeadFormSection/`) carries a second definition on the same
+plumbing, kept to three required answers and consent; its section renders a Cal.com booker today
+(see [Booking calendar](./booking-calendar.md)), so that form and `/api/lead-form` are wired but not
+rendered anywhere.
 
 ## One definition per form
 
@@ -122,7 +126,10 @@ than those means the behaviour belongs in `FormElement`, where every form gets i
 ## The endpoint
 
 Endpoints run `check()` again, because a client can always be bypassed, and answer in the shape
-`FormElement` knows how to report (`src/features/forms/response.ts`):
+`FormElement` knows how to report (`src/features/forms/response.ts`). Storing the submission is the
+endpoint's own business; the notification email is not, so it goes through
+`sendSubmissionNotification` (`src/features/forms/notification.ts`), which owns the recipient list
+every form shares (see [Form Notifications](./contact-form-notifications.md)):
 
 ```ts
 const validation = contactForm.check(formData);

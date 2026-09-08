@@ -61,7 +61,7 @@ Apply when writing or editing GROQ, adding/changing schema types or fields, rend
 - `src/sanity/lib/load-query.ts`: the fetch helper (perspective, token, stega).
 - `src/sanity/lib/draft-mode.ts`: page-level draft detection.
 - `src/sanity/media/`: `SanityMedia.astro` (the dispatch), `SanityImage.astro`, `SanityMuxVideo.astro`, `SanityNativeVideo.astro`, `SanityLottie.astro`, `SanityRive.astro` plus `RiveElement.ts`, and `types.ts`.
-- `src/features/sanity/media/`: the GROQ `fragment.ts` and the URL builders (`image/utils.ts` for `srcset`/dimensions/LQIP, `utils.ts` for aspect ratios).
+- `src/features/sanity/media/`: the GROQ `fragment.ts` and the URL builders (`image/utils.ts` for `srcset`/LQIP, `image/dimensions.ts` for the env-free size math it is built from, `utils.ts` for aspect ratios).
 - `src/sanity/rich-text/SanityRichText.astro` and `components/*.astro`: portable-text rendering via `astro-portabletext`.
 - `sanity.config.ts`, `sanity.cli.ts`: Studio config and the typegen scan paths.
 - `sanity/constants.ts`: singleton IDs and API-only doc types.
@@ -82,7 +82,7 @@ Apply when writing or editing GROQ, adding/changing schema types or fields, rend
 
 ### Rendering content
 
-- Media: render `SanityMedia.astro` and let it pick the renderer; its `renderers` map is `satisfies Record<MediaType, unknown>`, so the build fails until every media kind has one. `SanityImage.astro` builds a responsive `srcset` (never upscaling) through `src/features/sanity/media/image/utils.ts`; the Mux, Lottie, and Rive renderers defer their runtimes with `lazyCustomElement` (see `lazy-hydration`).
+- Media: render `SanityMedia.astro` and let it pick the renderer; its `renderers` map is `satisfies Record<MediaType, unknown>`, so the build fails until every media kind has one. `SanityImage.astro` builds a responsive `srcset` (never upscaling, and every descriptor is the width the CDN actually returns) through `src/features/sanity/media/image/utils.ts`; the Mux, Lottie, and Rive renderers defer their runtimes with `lazyCustomElement` (see `lazy-hydration`).
 - Rich text: `SanityRichText.astro` registers custom `.astro` overrides (block, link, list/list item, text and highlight color, underline, sup, indent, inline and block media) on `astro-portabletext`. All renderers are `.astro`, never React.
 
 ### The Studio (React)

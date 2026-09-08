@@ -62,6 +62,6 @@ const pageJsonLd = jsonLdGraph([
 <Web {...seoProps}>
   <JsonLd data={pageJsonLd} />
   <SiteShell showHeader={page.showHeader} showFooter={page.showFooter}>
-    {page._type === 'legalPage' ? <LegalPage page={page} /> : <PageSections docId={page._id} pageSections={pageSections} />}
+    {page._type === 'legalPage' ? <LegalPage page={page} /> : <PageSections docId={page._id} docType={page._type} pageSections={pageSections} />}
   </SiteShell>
 </Web>

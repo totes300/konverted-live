@@ -1,5 +1,6 @@
 import type { ImageFragmentResult } from "~/features/sanity/media/fragment";
-import { builder, getImageDimensions } from "~/features/sanity/media/image/utils";
+import { getImageDimensions } from "~/features/sanity/media/image/dimensions";
+import { builder } from "~/features/sanity/media/image/utils";
 import type { FaviconFragmentResult } from "~/features/site/seo/fragment";
 
 /**

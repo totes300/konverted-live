@@ -75,6 +75,34 @@ export function buildStructure(S: StructureBuilder) {
 
       S.divider(),
 
+      // Work: the index singleton (the case study grid is rendered by the route), the case studies
+      // themselves, and the service vocabulary they are labelled with.
+      S.listItem()
+        .title("Work")
+        .icon(() => <>🏆</>)
+        .child(
+          S.list()
+            .title("Work")
+            .items([
+              singleton(S, {
+                title: "Index",
+                schemaType: "work",
+                documentId: SINGLETON_IDS.work,
+                icon: () => <>🗂</>,
+              }),
+              S.listItem()
+                .title("Case Studies")
+                .icon(() => <>🏆</>)
+                .child(S.documentTypeList("caseStudy").title("Case Studies")),
+              S.listItem()
+                .title("Services")
+                .icon(() => <>🛠️</>)
+                .child(S.documentTypeList("service").title("Services")),
+            ])
+        ),
+
+      S.divider(),
+
       // Blog: the index singleton (the article list is rendered by the route) plus its articles.
       S.listItem()
         .title("Blog")

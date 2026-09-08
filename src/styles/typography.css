@@ -1,9 +1,15 @@
 @theme {
   /*
-   * Geist faces are declared in fonts.css, which sets the `--font-geist-*` vars.
-   * Each `--font-pixel-*` becomes `font-pixel-square`, `font-pixel-line`, etc.
+   * Faces are declared in fonts.css. Display runs on Instrument Serif — that is what the
+   * CreativeBuild Figma actually sets its headlines in (hero 148, section titles, statement).
+   * Body/UI is PP Neue Montreal; Instrument Sans (wdth build) stays available for UI accents.
    */
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --font-sans:
+    var(--font-neue-montreal), var(--font-geist-sans), ui-sans-serif, system-ui, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol";
+  --font-display: var(--font-instrument-serif), Georgia, serif;
+  --font-sans-alt: var(--font-instrument-sans), var(--font-sans);
+  --font-hand: var(--font-caveat), "Segoe Script", cursive;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
   --font-pixel-square: var(--font-geist-pixel-square), ui-monospace, monospace;
   --font-pixel-grid: var(--font-geist-pixel-grid), ui-monospace, monospace;
@@ -15,56 +21,103 @@
   --text-\*: initial;
 
   /*
-    By default, this will clamp the fluid font size between
-    its maximum and minimum values. This approach works well when the site design
-    has a defined max-width. For fully fluid designs, consider removing
-    the clamping from each text rule to allow unlimited scaling.
+    The site is fully fluid: every size has a mobile floor (the `max()`) and then scales linearly
+    with the viewport, with no upper clamp — the page is a proportional render of the design at
+    every width, so type, the content column (`--page-width`) and the gutters all grow together.
   */
   --fluid-min-w: var(--layout-min-w, 375);
-  --fluid-max-w: var(--layout-max-w, 1600);
+  --fluid-max-w: var(--layout-max-w, 1440);
   --fluid-slope: calc((100vw - --spacing(var(--fluid-min-w))) / (var(--fluid-max-w) - var(--fluid-min-w)));
 
-  /* 10px - 11px. The micro label: a field's floating label and its error, which sit ON a border and
-     have a hairline of room rather than a line of it. Tracked, unlike every other token here: at this size
-     uppercase letterforms close up, and the pixel faces this is set in are the worst of it. */
-  --text-eyebrow: clamp(--spacing(10), --spacing(10) + (11 - 10) * var(--fluid-slope), --spacing(11));
+  /*
+   * The scale below is extracted from the CreativeBuild Figma (values at the 1440 artboard;
+   * Figma stores letter-spacing in percent, carried here as em). The second number is the size
+   * at the 1440 artboard — the scale keeps growing proportionally past it; the first is the
+   * mobile floor.
+   */
+
+  /* 12px - 14px. Figma: caption-size-small — spaced uppercase eyebrow, `( ... )`, accent. */
+  --text-eyebrow: max(--spacing(12), --spacing(12) + (14 - 12) * var(--fluid-slope));
   --text-eyebrow--font-weight: 400;
-  --text-eyebrow--line-height: 1;
-  --text-eyebrow--letter-spacing: 0.08em;
+  --text-eyebrow--line-height: 1.2;
+  --text-eyebrow--letter-spacing: 0.04em;
 
-  /* 12px - 14px */
-  --text-caption: clamp(--spacing(12), --spacing(12) + (14 - 12) * var(--fluid-slope), --spacing(14));
+  /* 13px - 14px. Figma: text-size-tiny. */
+  --text-caption: max(--spacing(13), --spacing(13) + (14 - 13) * var(--fluid-slope));
   --text-caption--font-weight: 400;
-  --text-caption--line-height: 1.25;
-  --text-caption--letter-spacing: normal;
+  --text-caption--line-height: 1.5;
+  --text-caption--letter-spacing: 0.01em;
 
-  /* 14px - 16px */
-  --text-cta: clamp(--spacing(14), --spacing(14) + (16 - 14) * var(--fluid-slope), --spacing(16));
+  /* 14px - 16px. Figma: text-size-small; nav links and button labels sit here. */
+  --text-cta: max(--spacing(14), --spacing(14) + (16 - 14) * var(--fluid-slope));
   --text-cta--font-weight: 400;
-  --text-cta--line-height: 1.25;
-  --text-cta--letter-spacing: normal;
+  --text-cta--line-height: 1.5;
+  --text-cta--letter-spacing: 0.01em;
 
-  /* 14px - 18px */
-  --text-body-10: clamp(--spacing(14), --spacing(14) + (18 - 14) * var(--fluid-slope), --spacing(18));
+  /* 16px - 18px. Figma: text-size-small -> text-size-regular. */
+  --text-body-10: max(--spacing(16), --spacing(16) + (18 - 16) * var(--fluid-slope));
   --text-body-10--font-weight: 400;
-  --text-body-10--line-height: 1.25;
-  --text-body-10--letter-spacing: normal;
+  --text-body-10--line-height: 1.5;
+  --text-body-10--letter-spacing: 0.01em;
 
-  /* 16px - 24px */
-  --text-body-20: clamp(--spacing(16), --spacing(16) + (24 - 16) * var(--fluid-slope), --spacing(24));
+  /* 17px - 20px. Not a Figma step: the running copy under a `title-20` card title (the WebOS and
+     solution cards). `body-10` reads small against the 40px serif at the artboard because
+     Instrument Serif carries a low x-height, so this step lands at half the title (2:1) without
+     pulling nav, forms, and footer up with it. Numbered 15 because it sits between `body-10` and
+     `body-20`. */
+  --text-body-15: max(--spacing(17), --spacing(17) + (20 - 17) * var(--fluid-slope));
+  --text-body-15--font-weight: 400;
+  --text-body-15--line-height: 1.5;
+  --text-body-15--letter-spacing: 0.01em;
+
+  /* 18px - 24px. Figma: text-size-medium -> text-size-large; the hero lede is 20 on this curve. */
+  --text-body-20: max(--spacing(18), --spacing(18) + (24 - 18) * var(--fluid-slope));
   --text-body-20--font-weight: 400;
-  --text-body-20--line-height: 1.25;
-  --text-body-20--letter-spacing: normal;
+  --text-body-20--line-height: 1.5;
+  --text-body-20--letter-spacing: 0.01em;
 
-  /* 32px - 48px */
-  --text-headline-10: clamp(--spacing(32), --spacing(32) + (48 - 32) * var(--fluid-slope), --spacing(48));
+  /* 20px - 24px. Portfolio row titles (24px, 33px line box in the design). */
+  --text-title: max(--spacing(20), --spacing(20) + (24 - 20) * var(--fluid-slope));
+  --text-title--font-weight: 400;
+  --text-title--line-height: 1.375;
+  --text-title--letter-spacing: normal;
+
+  /* 28px - 40px. Figma: the solution-section card titles (Serif, 40/1.1). */
+  --text-title-20: max(--spacing(28), --spacing(28) + (40 - 28) * var(--fluid-slope));
+  --text-title-20--font-weight: 400;
+  --text-title-20--line-height: 1.1;
+  --text-title-20--letter-spacing: normal;
+
+  /* 28px - 50px. Figma: the statement headline (Serif, 1.5, two-tone ink via markup). */
+  --text-headline-10: max(--spacing(28), --spacing(28) + (50 - 28) * var(--fluid-slope));
   --text-headline-10--font-weight: 400;
-  --text-headline-10--line-height: 1.1;
+  --text-headline-10--line-height: 1.5;
   --text-headline-10--letter-spacing: normal;
 
-  /* 40px - 80px */
-  --text-headline-20: clamp(--spacing(40), --spacing(40) + (80 - 40) * var(--fluid-slope), --spacing(80));
+  /* 44px - 96px. Figma: large section title ("We make your brand ready..."), 96/1.1, -2%. */
+  --text-headline-20: max(--spacing(44), --spacing(44) + (96 - 44) * var(--fluid-slope));
   --text-headline-20--font-weight: 400;
   --text-headline-20--line-height: 1.1;
-  --text-headline-20--letter-spacing: normal;
+  --text-headline-20--letter-spacing: -0.02em;
+
+  /* 56px - 148px. Figma: the hero display (Serif, accent, tracking -1%). */
+  --text-display: max(--spacing(56), --spacing(56) + (148 - 56) * var(--fluid-slope));
+  --text-display--font-weight: 400;
+  --text-display--line-height: 1;
+  --text-display--letter-spacing: -0.01em;
+
+  /* 80px - 200px. The work masthead's stacked title (Serif, uppercase): a step between the hero
+     display and the marquee strip, for a line that is meant to dominate the column without
+     overflowing it. Numbered 15 because it sits between `display` and `display-20`. */
+  --text-display-15: max(--spacing(80), --spacing(80) + (200 - 80) * var(--fluid-slope));
+  --text-display-15--font-weight: 400;
+  --text-display-15--line-height: 1;
+  --text-display-15--letter-spacing: -0.01em;
+
+  /* 100px - 260px. The marquee strip (Serif, uppercase): a size above the hero display, defined
+     only for the full-width strip whose line is meant to overflow the viewport. */
+  --text-display-20: max(--spacing(100), --spacing(100) + (260 - 100) * var(--fluid-slope));
+  --text-display-20--font-weight: 400;
+  --text-display-20--line-height: 1;
+  --text-display-20--letter-spacing: -0.01em;
 }

@@ -14,6 +14,18 @@
   /* Semantic, so deliberately not in the brand ramp below: content picking "danger" would be picking
      a meaning rather than a colour, and the value is free to change with the design system. */
   --color-danger: #ff4a3d;
+
+  /* Konverted palette, extracted from the CreativeBuild Figma — only the variables the landing page
+     actually uses (the file also carries stale client-brand variables; those stay out on purpose).
+     Figma names in comments so the two sides stay traceable. */
+  --color-accent: #ec5532; /* orange-claude-01 */
+  --color-ink: #1a0401; /* black-claude-01 — darkest ink, display headings */
+  --color-ink-soft: #360c06; /* black-claude-02 / Texts/Primary text — body copy */
+  --color-paper: #fcfbf9; /* beige-claude-01 — page background */
+  --color-paper-warm: #f6f1ec; /* beige-claude-02 — warm surface / cards */
+  --color-paper-deep: #ece3cf; /* dark-beige-01 — media stage backgrounds */
+  --color-line: #d9d9d9; /* gray-02 — hairline dividers */
+  --color-graphite: #212121; /* neutral near-black — dark section surfaces; trial for the Intersection section */
 }
 
 /* The brand ramp: the only tokens content is allowed to paint with, and the palette the Studio offers
@@ -28,9 +40,9 @@
    Kept apart from `--color-black`/`--color-white` above, which are the raw utilities the design system
    itself uses: a brand token is content-facing and may be redefined per project, those two never are. */
 @theme static {
-  --color-brand-black: #000;
+  --color-brand-black: #1a0401;
   --color-brand-white: #fff;
-  --color-brand-off-white: #f2f0ed;
+  --color-brand-off-white: #fcfbf9;
   --color-brand-grey: #8a8a8a;
-  --color-brand-accent: #ff9100;
+  --color-brand-accent: #ec5532;
 }

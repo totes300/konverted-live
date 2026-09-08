@@ -1,0 +1,104 @@
+---
+import { stegaClean } from "@sanity/client/stega";
+import { createDataAttribute } from "@sanity/visual-editing";
+import { LogoWallSectionQ } from "~/features/page-builder/queries";
+import SectionFrame from "~/features/page-builder/SectionFrame.astro";
+import type { SectionProps } from "~/features/page-builder/types";
+import { cx } from "~/features/style/utils";
+import type { LogoWallSectionQResult } from "~/sanity/types";
+import { getDraftModeProps, isDraftMode } from "../../../../sanity/lib/draft-mode";
+import { loadQuery } from "../../../../sanity/lib/load-query";
+
+type Props = SectionProps;
+
+const { docId, docType, sectionKey } = Astro.props;
+
+const { data: section } = await loadQuery<LogoWallSectionQResult>({
+  query: LogoWallSectionQ,
+  params: { docId, sectionKey },
+  ...getDraftModeProps(Astro),
+});
+
+const logos = (section?.content?.logos ?? []).filter((logo) => Boolean(logo.url));
+const swapMs = section?.content?.swapMs ?? 1500;
+
+/** The wall's shape: three by two on the phone, four by two from `lg` up. Everything past the last
+    slot is still rendered — hidden, as the pool the cycle draws its next logo from. */
+const MOBILE_SLOTS = 6;
+const SLOTS = 8;
+
+const slotClass = (index: number) => {
+  if (index >= SLOTS) {
+    return "hidden";
+  }
+
+  if (index >= MOBILE_SLOTS) {
+    return "hidden lg:flex";
+  }
+
+  return "";
+};
+
+// Logos carry no stega, so a Presentation click would resolve to the image ASSET document. The data
+// attribute points it at this section's array item on the owning document instead; draft mode only.
+const isDraft = isDraftMode(Astro);
+const logosPath = `pageBuilder.sectionsArray[_key=="${sectionKey}"].sectionContent.logos`;
+const logoEditAttribute = (logoKey: string | null) =>
+  isDraft && logoKey
+    ? createDataAttribute({ id: docId, type: docType, path: `${logosPath}[_key=="${logoKey}"]` }).toString()
+    : undefined;
+---
+
+{/* No heading of its own, so the block stays out of the document outline: the trust line and the
+    wall are one statement the hero above them introduces. */}
+{
+  logos.length > 0 && (
+    <SectionFrame
+      as="div"
+      settings={section?.settings}
+      id={stegaClean(section?.settings?.hash) ?? undefined}
+      data-page-builder-section="logoWallSection"
+      class="flex flex-col items-center gap-32 lg:gap-48"
+    >
+      {section?.content?.statement && (
+        <p class="max-w-[46ch] text-center text-body-20 text-ink-soft">
+          {/* The explicit space survives template whitespace collapsing between the two tones. */}
+          {section.content.metric && <span class="text-accent">{`${section.content.metric} `}</span>}
+          {section.content.statement}
+        </p>
+      )}
+      {/* The wall repeats and rotates, so the names are read out once from the list above it. */}
+      <ul class="sr-only">
+        {logos.map((logo) => (
+          <li>{logo.name}</li>
+        ))}
+      </ul>
+      <logo-wall class="block w-full" data-swap-ms={swapMs} aria-hidden="true">
+        <div data-logo-wall-list class="grid grid-cols-3 gap-x-16 gap-y-16 lg:grid-cols-4 lg:gap-y-32">
+          {logos.map((logo, index) => (
+            <div
+              data-logo-wall-item
+              class={cx("relative flex h-48 items-center justify-center overflow-hidden lg:h-80", slotClass(index))}
+            >
+              {/* The logo is a mask, not an image: the shape comes from the file and the colour from
+                  the palette, so a wall of mixed client artwork reads as one material. */}
+              <span
+                data-logo-wall-target
+                data-sanity={logoEditAttribute(logo._key)}
+                class="mask-alpha mask-contain mask-center mask-no-repeat absolute inset-0 m-auto h-[76%] w-[86%] bg-ink-soft lg:h-[60%] lg:w-[64%]"
+                style={`mask-image: url("${logo.url}")`}
+              />
+            </div>
+          ))}
+        </div>
+      </logo-wall>
+    </SectionFrame>
+  )
+}
+
+<script>
+  import { lazyCustomElement } from "~/lib/lazy-hydrate";
+
+  // GSAP is heavy; hold it out of the initial load until the wall nears the viewport.
+  lazyCustomElement("logo-wall", () => import("./LogoWallElement"));
+</script>

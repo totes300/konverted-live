@@ -26,7 +26,47 @@
     }
   }
 
+  /* Decorative background drift: two washes glide slowly against each other with a breathing
+     opacity. A drifting layer is oversized (negative inset) so the travel never shows an edge;
+     apply as `motion-safe:` so reduced motion keeps the still composition. */
+  @keyframes driftA {
+    from {
+      transform: translate3d(-3%, -2%, 0) scale(1);
+      opacity: 0.8;
+    }
+    to {
+      transform: translate3d(3%, 2.5%, 0) scale(1.12);
+      opacity: 1;
+    }
+  }
+
+  @keyframes driftB {
+    from {
+      transform: translate3d(2.5%, 2%, 0) scale(1.1);
+      opacity: 1;
+    }
+    to {
+      transform: translate3d(-3%, -2.5%, 0) scale(1);
+      opacity: 0.7;
+    }
+  }
+
+  /* The pixel mark's cells breathe one after another (each carries its own delay), so the mark reads
+     as rendering itself rather than blinking on and off as one shape. Rests on its finished state. */
+  @keyframes markCell {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    42% {
+      opacity: 0.35;
+    }
+  }
+
   --animate-fade-in: fadeIn 400ms ease-in-out;
   --animate-fade-out: fadeOut 400ms ease-in-out;
+  --animate-mark-cell: markCell 2.8s ease-in-out infinite;
   --animate-marquee: marquee 20s linear infinite;
+  --animate-drift-slow: driftA 14s ease-in-out infinite alternate;
+  --animate-drift-slower: driftB 20s ease-in-out infinite alternate;
 }

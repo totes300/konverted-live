@@ -1,0 +1,123 @@
+---
+import { stegaClean } from "@sanity/client/stega";
+import CalEmbed from "~/components/CalEmbed/CalEmbed.astro";
+import Icon from "~/components/Icon/Icon.astro";
+import { LeadFormSectionQ } from "~/features/page-builder/queries";
+import SectionFrame from "~/features/page-builder/SectionFrame.astro";
+import type { SectionProps } from "~/features/page-builder/types";
+import type { LeadFormSectionQResult } from "~/sanity/types";
+import { getDraftModeProps } from "../../../../sanity/lib/draft-mode";
+import { loadQuery } from "../../../../sanity/lib/load-query";
+import SanityImage from "../../../../sanity/media/SanityImage.astro";
+
+type Props = SectionProps;
+
+const { docId, sectionKey } = Astro.props;
+
+const { data: section } = await loadQuery<LeadFormSectionQResult>({
+  query: LeadFormSectionQ,
+  params: { docId, sectionKey },
+  ...getDraftModeProps(Astro),
+});
+
+// The hand-drawn underline wraps an exact phrase of the headline, so the split happens on the
+// clean value: stega characters inside `headline` would keep `underline` from ever matching.
+const headline = stegaClean(section?.content?.headline) ?? "";
+const underline = stegaClean(section?.content?.underline) ?? "";
+const underlineAt = underline ? headline.indexOf(underline) : -1;
+const headlineParts =
+  underlineAt >= 0 ? { before: headline.slice(0, underlineAt), after: headline.slice(underlineAt + underline.length) } : null;
+
+const contact = section?.content?.contact;
+
+// Cleaned: both reach the booker as a URL, and a stega character in one is a 404 rather than a booking.
+const calLink = stegaClean(section?.content?.calLink) ?? "";
+const calNamespace = stegaClean(section?.content?.calNamespace) ?? "default";
+---
+
+{
+  section?.content && (
+    <SectionFrame
+      settings={section.settings}
+      id={stegaClean(section.settings?.hash) ?? undefined}
+      data-page-builder-section="leadFormSection"
+    >
+      <p class="text-eyebrow text-accent uppercase">( {section.content.eyebrow} )</p>
+      <div class="mt-16 border-t border-line lg:mt-20" />
+
+      <div class="mt-48 lg:mt-72 lg:grid lg:grid-cols-12 lg:gap-x-24">
+        <div class="lg:col-span-5 lg:flex lg:flex-col">
+          <h2 class="font-display text-headline-20 whitespace-pre-line text-accent">
+            {headlineParts ? (
+              <>
+                {headlineParts.before}
+                <span class="relative whitespace-nowrap">
+                  {underline}
+                  <Icon name="underline-scribble" class="absolute inset-x-0 -bottom-[0.04em] h-auto w-full text-ink-soft" />
+                </span>
+                {headlineParts.after}
+              </>
+            ) : (
+              headline
+            )}
+          </h2>
+
+          {section.content.lede && <p class="mt-32 max-w-[52ch] text-body-10 text-ink-soft">{section.content.lede}</p>}
+
+          {contact?.name && (
+            <div class="mt-40 flex items-center gap-16">
+              {contact.portrait && (
+                <SanityImage
+                  media={{ type: "image", image: contact.portrait, aspectRatio: 3 / 4 }}
+                  sizes="80px"
+                  class="w-72 shrink-0 rounded-8 object-cover"
+                />
+              )}
+
+              <div class="flex flex-col gap-2">
+                <p class="text-body-10 text-ink">{contact.name}</p>
+                {contact.role && <p class="text-caption text-ink-soft/60">{contact.role}</p>}
+                {contact.note && <p class="mt-6 text-caption text-ink-soft/80">{contact.note}</p>}
+
+                <div class="mt-6 flex flex-wrap gap-x-16">
+                  {contact.email && (
+                    <a
+                      href={`mailto:${stegaClean(contact.email)}`}
+                      class="text-caption text-ink underline underline-offset-4 hover:text-accent"
+                    >
+                      {contact.email}
+                    </a>
+                  )}
+                  {contact.phone && (
+                    <a
+                      href={`tel:${stegaClean(contact.phone).replace(/\s/g, '')}`}
+                      class="text-caption text-ink underline underline-offset-4 hover:text-accent"
+                    >
+                      {contact.phone}
+                    </a>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div class="mt-40 lg:col-span-7 lg:col-start-6 lg:mt-0">
+          {section.content.bookingIntro && <p class="text-body-10 text-ink-soft">{section.content.bookingIntro}</p>}
+
+          {calLink && (
+            <CalEmbed
+              calLink={calLink}
+              namespace={calNamespace}
+              class="mt-24 overflow-hidden rounded-16 bg-paper-warm p-8 lg:p-12"
+            />
+          )}
+
+          {section.content.reassurance && (
+            <p class="mt-16 text-caption text-ink-soft/70">{section.content.reassurance}</p>
+          )}
+        </div>
+      </div>
+    </SectionFrame>
+  )
+}

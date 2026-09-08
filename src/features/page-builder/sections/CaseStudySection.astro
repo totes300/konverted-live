@@ -1,0 +1,48 @@
+---
+import { stegaClean } from "@sanity/client/stega";
+import CaseStudyGrid from "~/features/case-study/CaseStudyGrid.astro";
+import WorkIndexHeader from "~/features/case-study/WorkIndexHeader.astro";
+import { CaseStudySectionQ } from "~/features/page-builder/queries";
+import SectionFrame from "~/features/page-builder/SectionFrame.astro";
+import type { SectionProps } from "~/features/page-builder/types";
+import type { CaseStudySectionQResult } from "~/sanity/types";
+import { getDraftModeProps } from "../../../sanity/lib/draft-mode";
+import { loadQuery } from "../../../sanity/lib/load-query";
+
+type Props = SectionProps;
+
+const { docId, sectionKey } = Astro.props;
+
+const { data: section } = await loadQuery<CaseStudySectionQResult>({
+  query: CaseStudySectionQ,
+  params: { docId, sectionKey },
+  ...getDraftModeProps(Astro),
+});
+
+const content = section?.content;
+const caseStudies = content?.caseStudies ?? [];
+---
+
+{/* The masthead opens a chapter, so the frame takes more air above it than the shared section gap gives. */}
+{
+  caseStudies.length > 0 && (
+    <SectionFrame
+      settings={section?.settings}
+      id={stegaClean(section?.settings?.hash) ?? undefined}
+      data-page-builder-section="caseStudySection"
+      class="flex flex-col gap-96 pt-96 lg:gap-160 lg:pt-160"
+    >
+      {content?.title && (
+        <WorkIndexHeader
+          label={content.label}
+          title={content.title}
+          services={content.services}
+          code={content.code}
+          count={caseStudies.length}
+          link={content.link}
+        />
+      )}
+      <CaseStudyGrid caseStudies={caseStudies} headingLevel={content?.title ? "h3" : "h2"} />
+    </SectionFrame>
+  )
+}

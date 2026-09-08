@@ -6,9 +6,24 @@ import arrowRight from "./icon-arrow-right.svg?raw";
 import arrowUp from "./icon-arrow-up.svg?raw";
 import arrowUpRight from "./icon-arrow-up-right.svg?raw";
 import calendar from "./icon-calendar.svg?raw";
+import chatSend from "./icon-chat-send.svg?raw";
+import chatSpinner from "./icon-chat-spinner.svg?raw";
 import check from "./icon-check.svg?raw";
 import chevronDown from "./icon-chevron-down.svg?raw";
+import claudeSpark from "./icon-claude-spark.svg?raw";
 import close from "./icon-close.svg?raw";
+import heroScribble from "./icon-hero-scribble.svg?raw";
+import konvertedMark from "./icon-konverted-mark.svg?raw";
+import solutionArrow from "./icon-solution-arrow.svg?raw";
+import sparkle from "./icon-sparkle.svg?raw";
+import underlineScribble from "./icon-underline-scribble.svg?raw";
+import webosArrow from "./icon-webos-arrow.svg?raw";
+import webosBrand from "./icon-webos-brand.svg?raw";
+import webosBuild from "./icon-webos-build.svg?raw";
+import webosGrowth from "./icon-webos-growth.svg?raw";
+import webosLogo from "./icon-webos-logo.svg?raw";
+import webosPixel from "./icon-webos-pixel.svg?raw";
+import webosStrategy from "./icon-webos-strategy.svg?raw";
 
 // The single registry: every inline SVG on a public page is imported here and nowhere else.
 const icons = {
@@ -21,6 +36,21 @@ const icons = {
   check,
   "chevron-down": chevronDown,
   close,
+  "hero-scribble": heroScribble,
+  "chat-send": chatSend,
+  "chat-spinner": chatSpinner,
+  "claude-spark": claudeSpark,
+  "konverted-mark": konvertedMark,
+  "solution-arrow": solutionArrow,
+  sparkle,
+  "underline-scribble": underlineScribble,
+  "webos-arrow": webosArrow,
+  "webos-brand": webosBrand,
+  "webos-build": webosBuild,
+  "webos-growth": webosGrowth,
+  "webos-logo": webosLogo,
+  "webos-pixel": webosPixel,
+  "webos-strategy": webosStrategy,
 } as const;
 
 export type IconName = keyof typeof icons;

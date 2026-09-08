@@ -1,0 +1,98 @@
+---
+import { stegaClean } from "@sanity/client/stega";
+import Icon from "~/components/Icon/Icon.astro";
+import { SolutionSectionQ } from "~/features/page-builder/queries";
+import SectionFrame from "~/features/page-builder/SectionFrame.astro";
+import type { SectionProps } from "~/features/page-builder/types";
+import type { SolutionSectionQResult } from "~/sanity/types";
+import { getDraftModeProps } from "../../../sanity/lib/draft-mode";
+import { loadQuery } from "../../../sanity/lib/load-query";
+import SanityImage from "../../../sanity/media/SanityImage.astro";
+
+type Props = SectionProps;
+
+const { docId, sectionKey } = Astro.props;
+
+const { data: section } = await loadQuery<SolutionSectionQResult>({
+  query: SolutionSectionQ,
+  params: { docId, sectionKey },
+  ...getDraftModeProps(Astro),
+});
+
+// The hand-drawn underline wraps an exact phrase of the headline, so the split happens on the
+// clean value: stega characters inside `headline` would keep `underline` from ever matching.
+const headline = stegaClean(section?.content?.headline) ?? "";
+const underline = stegaClean(section?.content?.underline) ?? "";
+const underlineAt = underline ? headline.indexOf(underline) : -1;
+const headlineParts =
+  underlineAt >= 0 ? { before: headline.slice(0, underlineAt), after: headline.slice(underlineAt + underline.length) } : null;
+
+const items = section?.content?.items ?? [];
+
+/** The card stage's Figma proportions (384x377 at the 1440 artboard). */
+const STAGE_RATIO = 384 / 377;
+---
+
+{
+  section?.content && (
+    <SectionFrame
+      settings={section.settings}
+      id={stegaClean(section.settings?.hash) ?? undefined}
+      data-page-builder-section="solutionSection"
+    >
+      <p class="text-eyebrow text-accent uppercase">( {section.content.eyebrow} )</p>
+      <div class="mt-16 border-t border-accent lg:mt-20" />
+
+      {/* Header row: the arrow keeps the artboard's left column (495/1360), the copy the rest. */}
+      <div class="mt-48 lg:mt-72 lg:grid lg:grid-cols-[495fr_865fr]">
+        <Icon name="solution-arrow" class="aspect-[45/49] h-auto w-32 text-accent lg:w-[3.125vw]" />
+        <div class="mt-32 lg:mt-0">
+          <h2 class="font-display text-headline-20 whitespace-pre-line text-accent">
+            {headlineParts ? (
+              <>
+                {headlineParts.before}
+                <span class="relative whitespace-nowrap">
+                  {underline}
+                  <Icon
+                    name="underline-scribble"
+                    class="absolute inset-x-0 -bottom-[0.04em] h-auto w-full text-ink-soft"
+                  />
+                </span>
+                {headlineParts.after}
+              </>
+            ) : (
+              headline
+            )}
+          </h2>
+          {section.content.lede && <p class="mt-32 text-body-20 text-ink-soft">{section.content.lede}</p>}
+        </div>
+      </div>
+
+      {items.length > 0 && (
+        <div class="mt-96 flex flex-col gap-64 lg:mt-128 lg:grid lg:grid-cols-3 lg:gap-x-[4.706%]">
+          {items.map((item, index) => (
+            <div class="flex flex-col">
+              <p class="text-body-10 text-accent">( {(index + 1).toString().padStart(2, "0")} )</p>
+              <div class="mt-24 flex flex-col gap-32 border-t border-line pt-36 lg:mt-36">
+                {/* The stage keeps its surface while the image is still to come. */}
+                <div class="overflow-hidden bg-paper-deep" style={`aspect-ratio: ${STAGE_RATIO}`}>
+                  {item.image && (
+                    <SanityImage
+                      media={{ type: "image", image: item.image, aspectRatio: STAGE_RATIO }}
+                      sizes="(min-width: 64rem) 33vw, 100vw"
+                      class="size-full object-cover"
+                    />
+                  )}
+                </div>
+                <div class="flex flex-col gap-12">
+                  <h3 class="text-title font-medium leading-[1.2] tracking-[-0.01em] text-balance text-ink">{item.title}</h3>
+                  <p class="text-body-15 text-ink-soft">{item.text}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </SectionFrame>
+  )
+}

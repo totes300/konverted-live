@@ -23,6 +23,12 @@ type Block = {
 // aliases they care about, so adding a field needs no change to this type.
 type RawSection = Record<string, unknown>;
 
+type ProcessLane = {
+  title?: string | null;
+  caption?: string | null;
+  steps?: ({ label?: string | null; days?: number | null } | null)[] | null;
+};
+
 export type AgentMarkdownPage = {
   _type?: string | null;
   uri?: string | null;
@@ -31,6 +37,8 @@ export type AgentMarkdownPage = {
   publishedAt?: string | null;
   author?: string | null;
   categories?: (string | null)[] | null;
+  // Case studies only: what we ran on the project.
+  services?: (string | null)[] | null;
   sections?: (RawSection | null)[] | null;
   // Articles only: the body is one rich text field on the document, not a page-builder section.
   content?: (Block | null)[] | null;
@@ -38,12 +46,21 @@ export type AgentMarkdownPage = {
   heading?: string | null;
   intro?: (Block | null)[] | null;
   articles?: (ArticleListItem | null)[] | null;
+  // Work index only, the same shape one level over.
+  caseStudies?: (CaseStudyListItem | null)[] | null;
 };
 
 type ArticleListItem = {
   uri?: string | null;
   title?: string | null;
   description?: string | null;
+  publishedAt?: string | null;
+};
+
+type CaseStudyListItem = {
+  uri?: string | null;
+  title?: string | null;
+  services?: (string | null)[] | null;
   publishedAt?: string | null;
 };
 
@@ -236,8 +253,176 @@ const renderCaption: SectionRenderer = (section) => {
   return caption ? `_${singleLine(caption)}_` : "";
 };
 
-/** Section renderers in output order: the factory defaults plus this project's `headline` / `caption`. */
-export const sectionRenderers: SectionRenderer[] = [renderHeadline, renderRichText, renderMedia, renderCaption, renderLink];
+// The statement section's two tones are one continuous thought, so they serialize as one paragraph;
+// the logo wall's metric opens its sentence the same way it does on the page.
+const renderStatement: SectionRenderer = (section) => {
+  const parts = [readString(section, "metric"), readString(section, "statement"), readString(section, "statementSupport")]
+    .map((part) => singleLine(part))
+    .filter(Boolean);
+
+  return parts.join(" ");
+};
+
+/** `lede` (hero, solution) -> the paragraph under the section's headline. */
+const renderLede: SectionRenderer = (section) => singleLine(readString(section, "lede"));
+
+/** `images` (gallery) -> one Markdown image per frame; frames without a resolvable URL are skipped. */
+const renderImages: SectionRenderer = (section) => {
+  const images = section.images;
+
+  if (!Array.isArray(images)) {
+    return "";
+  }
+
+  return images
+    .map((image) => {
+      const { alt, imageUrl } = (image ?? {}) as { alt?: string | null; imageUrl?: string | null };
+      return imageUrl ? `![${alt ?? ""}](${imageUrl})` : "";
+    })
+    .filter(Boolean)
+    .join("\n");
+};
+
+/** `moments` (team) -> one Markdown image per postcard, captioned where the editor wrote one. */
+const renderMoments: SectionRenderer = (section) => {
+  const moments = section.moments;
+
+  if (!Array.isArray(moments)) {
+    return "";
+  }
+
+  return moments
+    .map((moment) => {
+      const { caption, alt, imageUrl } = (moment ?? {}) as {
+        caption?: string | null;
+        alt?: string | null;
+        imageUrl?: string | null;
+      };
+      return imageUrl ? `![${singleLine(caption ?? alt ?? "")}](${imageUrl})` : "";
+    })
+    .filter(Boolean)
+    .join("\n");
+};
+
+/** `outro` (team) -> the paragraph that closes the section after the moments. */
+const renderOutro: SectionRenderer = (section) => singleLine(readString(section, "outro"));
+
+/** `logos` (logo wall) -> the client names as one line; the wall itself is decoration. */
+const renderLogos: SectionRenderer = (section) => {
+  const logos = section.logos;
+
+  if (!Array.isArray(logos)) {
+    return "";
+  }
+
+  const names = logos.map((logo) => singleLine(((logo ?? {}) as { name?: string | null }).name ?? "")).filter(Boolean);
+
+  return names.length > 0 ? `Clients: ${names.join(", ")}` : "";
+};
+
+/** `items` (solution) -> each numbered column as a sub-heading plus its paragraph. */
+const renderItems: SectionRenderer = (section) => {
+  const items = section.items;
+
+  if (!Array.isArray(items)) {
+    return "";
+  }
+
+  return items
+    .map((item) => {
+      const { title, text } = (item ?? {}) as { title?: string | null; text?: string | null };
+      const heading = singleLine(title ?? "");
+      const body = singleLine(text ?? "");
+
+      if (!heading) {
+        return body;
+      }
+
+      return body ? `### ${heading}\n\n${body}` : `### ${heading}`;
+    })
+    .filter(Boolean)
+    .join("\n\n");
+};
+
+/** `caseStudies` (case study section) -> one linked row per project, with the services beside it. */
+const renderCaseStudies: SectionRenderer = (section, ctx) => {
+  const caseStudies = section.caseStudies;
+
+  if (!Array.isArray(caseStudies)) {
+    return "";
+  }
+
+  return caseStudies
+    .map((caseStudy) => caseStudyRow(caseStudy as CaseStudyListItem | null, ctx.baseUrl))
+    .filter(Boolean)
+    .join("\n");
+};
+
+/** `processLanes` (process) -> each lane as a sub-heading plus its steps in order, durations kept. */
+const renderProcessLanes: SectionRenderer = (section) => {
+  const lanes = section.processLanes;
+
+  if (!Array.isArray(lanes)) {
+    return "";
+  }
+
+  return lanes
+    .map((lane) => {
+      const { title, caption, steps } = (lane ?? {}) as ProcessLane;
+      const heading = singleLine(title ?? "");
+
+      if (!heading) {
+        return "";
+      }
+
+      const beats = (steps ?? [])
+        .map((step) => {
+          const label = singleLine(step?.label ?? "");
+          const days = step?.days;
+
+          if (!label) {
+            return "";
+          }
+
+          return days ? `${label} (${days === 1 ? "1 day" : `${days} days`})` : label;
+        })
+        .filter(Boolean)
+        .join(" -> ");
+
+      const body = [singleLine(caption ?? ""), beats].filter(Boolean).join(": ");
+
+      return body ? `### ${heading}\n\n${body}` : `### ${heading}`;
+    })
+    .filter(Boolean)
+    .join("\n\n");
+};
+
+/** `closingTitle` / `closingText` (process) -> the paragraph the section lands on. */
+const renderClosing: SectionRenderer = (section) => {
+  const title = singleLine(readString(section, "closingTitle"));
+  const text = singleLine(readString(section, "closingText"));
+
+  return [title, text].filter(Boolean).join(" ");
+};
+
+/** Section renderers in output order: the factory defaults plus this project's `headline` / `caption` / statement. */
+export const sectionRenderers: SectionRenderer[] = [
+  renderHeadline,
+  renderStatement,
+  renderLede,
+  renderRichText,
+  renderMedia,
+  renderImages,
+  renderMoments,
+  renderOutro,
+  renderCaption,
+  renderLink,
+  renderItems,
+  renderLogos,
+  renderCaseStudies,
+  renderProcessLanes,
+  renderClosing,
+];
 
 function renderSection(section: RawSection, baseUrl: string): string {
   return sectionRenderers
@@ -249,7 +434,12 @@ function renderSection(section: RawSection, baseUrl: string): string {
 // The blog index's whole body. Not a page-builder section: it belongs to the `blog` document
 // (`AgentMarkdownArticleListFragment` in query.ts), so it is rendered like an article's body would be.
 function renderArticleList(page: AgentMarkdownPage, baseUrl: string): string {
-  const rows = (page.articles ?? [])
+  // The projected array, not the heading, says whose index this is: both carry heading + intro.
+  if (!Array.isArray(page.articles)) {
+    return "";
+  }
+
+  const rows = page.articles
     .filter((article): article is ArticleListItem => Boolean(article))
     .map((article) => {
       const title = singleLine(article.title ?? "");
@@ -289,7 +479,46 @@ function renderArticleList(page: AgentMarkdownPage, baseUrl: string): string {
     .join("\n\n");
 }
 
-function renderArticleMeta(page: AgentMarkdownPage): string {
+/** One work-grid row, shared by the case study section and the work index. */
+function caseStudyRow(caseStudy: CaseStudyListItem | null, baseUrl: string): string {
+  const title = singleLine(caseStudy?.title ?? "");
+  const uri = (caseStudy?.uri ?? "").trim();
+
+  if (!title || !uri) {
+    return "";
+  }
+
+  const row = `- [${title}](${absolutize(uri, baseUrl)})`;
+  const services = (caseStudy?.services ?? []).filter((service): service is string => Boolean(service));
+
+  return services.length > 0 ? `${row}: ${services.join(", ")}` : row;
+}
+
+// The work index's whole body, the counterpart to `renderArticleList`: the listing belongs to the
+// `work` document (`AgentMarkdownCaseStudyListFragment` in query.ts), not to a page-builder section.
+function renderCaseStudyList(page: AgentMarkdownPage, baseUrl: string): string {
+  if (!Array.isArray(page.caseStudies)) {
+    return "";
+  }
+
+  const rows = page.caseStudies
+    .map((caseStudy) => caseStudyRow(caseStudy, baseUrl))
+    .filter(Boolean)
+    .join("\n");
+
+  const heading = singleLine(page.heading ?? "");
+  const intro = renderBlocks(
+    (page.intro ?? []).filter((block): block is Block => Boolean(block)),
+    baseUrl
+  );
+
+  return [heading ? `## ${heading}` : "", intro, rows]
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .join("\n\n");
+}
+
+function renderDocumentMeta(page: AgentMarkdownPage): string {
   const bits: string[] = [];
 
   if (page.author) {
@@ -300,10 +529,10 @@ function renderArticleMeta(page: AgentMarkdownPage): string {
     bits.push(page.publishedAt.slice(0, 10));
   }
 
-  const categories = (page.categories ?? []).filter((category): category is string => Boolean(category));
+  const labels = [...(page.categories ?? []), ...(page.services ?? [])].filter((label): label is string => Boolean(label));
 
-  if (categories.length > 0) {
-    bits.push(categories.join(", "));
+  if (labels.length > 0) {
+    bits.push(labels.join(", "));
   }
 
   return bits.length > 0 ? `_${bits.join(" · ")}_` : "";
@@ -315,7 +544,7 @@ export function pageToMarkdown(page: AgentMarkdownPage, baseUrl: string): string
 
   const blocks: string[] = [`# ${title}`];
 
-  const meta = renderArticleMeta(page);
+  const meta = renderDocumentMeta(page);
 
   if (meta) {
     blocks.push(meta);
@@ -329,6 +558,12 @@ export function pageToMarkdown(page: AgentMarkdownPage, baseUrl: string): string
 
   if (articleList) {
     blocks.push(articleList);
+  }
+
+  const caseStudyList = renderCaseStudyList(page, baseUrl);
+
+  if (caseStudyList) {
+    blocks.push(caseStudyList);
   }
 
   // An article's body: a rich text field on the document, so it renders before any section loop.

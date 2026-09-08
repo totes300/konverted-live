@@ -20,10 +20,21 @@ declare global {
     "author-dialog": import("./features/blog/author/AuthorDialogElement").AuthorDialogElement;
     "lenis-scroll": import("~/components/Lenis/LenisElement").LenisElement;
     "marquee-line": import("~/components/Marquee/MarqueeElement").MarqueeElement;
+    "marquee-strip": import("./features/page-builder/sections/MarqueeSection/MarqueeStripElement") | null;
     "form-field": import("~/components/Form/FormFieldElement").FormFieldElement;
     "site-announcement": import("./features/site/site-announcement/SiteAnnouncementElement").SiteAnnouncementElement;
     "inner-parallax": import("~/components/InnerParallax/InnerParallaxElement") | null;
     "contact-form": import("./features/page-builder/sections/ContactFormSection/ContactFormElement").ContactFormElement;
+    "lead-form": import("./features/page-builder/sections/LeadFormSection/LeadFormElement").LeadFormElement;
+    "cal-embed": import("~/components/CalEmbed/CalEmbedElement").CalEmbedElement;
+    "webos-diagram": import("./features/page-builder/sections/WebosSection/WebosDiagramElement").WebosDiagramElement;
+    "gradient-wave-text": import("~/components/GradientWaveText/GradientWaveTextElement").GradientWaveTextElement;
+    "logo-wall": import("./features/page-builder/sections/LogoWallSection/LogoWallElement").LogoWallElement;
+    "gallery-cycler": import("./features/page-builder/sections/GallerySection/GalleryCyclerElement").GalleryCyclerElement;
+    "venn-diagram": import("./features/page-builder/sections/IntersectionSection/VennDiagramElement").VennDiagramElement;
+    "team-moments": import("./features/page-builder/sections/TeamSection/TeamMomentsElement").TeamMomentsElement;
+    "case-study-card": import("./features/case-study/CaseStudyCardElement").CaseStudyCardElement;
+    "token-meter": import("./features/style/token-meter/TokenMeterElement").TokenMeterElement;
     "rive-canvas": import("./sanity/media/RiveElement") | null;
   }
 }

@@ -1,12 +1,28 @@
 ---
-import { getImageDimensions, getImageSrc, getImageSrcSet } from "~/features/sanity/media/image/utils";
+import { getImageDimensions } from "~/features/sanity/media/image/dimensions";
+import { getImageSrc, getImageSrcSet } from "~/features/sanity/media/image/utils";
 import { responsiveSizes } from "~/lib/responsive-sizes";
 import type { MediaValue } from "./types";
 
 // `sizes` is a Tailwind-style shorthand (e.g. '100vw md:50vw'); see responsiveSizes.
-type Props = { media: MediaValue; width?: number; sizes?: string; priority?: boolean; class?: string };
+// Data attributes pass through to the img, e.g. a visual-editing `data-sanity` edit intent.
+type Props = {
+  media: MediaValue;
+  width?: number;
+  sizes?: string;
+  /** This image can be the LCP element: load it up front and let it outrank the rest of the page. */
+  priority?: boolean;
+  /**
+   * Load with the page but claim no priority. For an image that is painted before it can be
+   * scrolled to — an above-the-fold frame, a slide sitting at rest — where `loading="lazy"` shows
+   * a hole, but `fetchpriority="high"` would outrank whatever the real LCP element is.
+   */
+  eager?: boolean;
+  class?: string;
+  [key: `data-${string}`]: string | undefined;
+};
 
-const { media, width, sizes, priority = false, class: className } = Astro.props;
+const { media, width, sizes, priority = false, eager = false, class: className, ...data } = Astro.props;
 
 const image = media.image;
 const aspectRatio = media.aspectRatio ?? undefined;
@@ -21,7 +37,7 @@ const resolvedSizes = sizes ? responsiveSizes(sizes) : fallbackSizes;
   image?._id && (
     <img
       class={className}
-      loading={priority ? 'eager' : 'lazy'}
+      loading={priority || eager ? 'eager' : 'lazy'}
       decoding={priority ? 'auto' : 'async'}
       src={getImageSrc(image, builderOptions)}
       srcset={getImageSrcSet(image, builderOptions) || undefined}
@@ -30,6 +46,7 @@ const resolvedSizes = sizes ? responsiveSizes(sizes) : fallbackSizes;
       width={dimensions?.width}
       height={dimensions?.height}
       fetchpriority={priority ? 'high' : undefined}
+      {...data}
     />
   )
 }

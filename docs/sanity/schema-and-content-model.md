@@ -10,6 +10,7 @@
   - `page`
   - `legalPage`
   - `contactFormSubmission`
+  - `leadFormSubmission`
   - `blog` (the `/blog` index singleton)
   - `article`
   - `articleCategory`
@@ -76,7 +77,7 @@ Defined in `sanity/schemas/documents/site-settings.tsx`, listed in the Studio as
 - `basicAuth` (object, Security group): toggles only (`siteWideEnabled`); HTTP Basic Auth credentials live in deployment env, not the CMS. See [Basic Authentication](../features/basic-auth.md)
 - `llms` (object, Agents group): `enabled` (serve toggle), `guidance` (AI steer), and `content` (Markdown served at `/llms.txt`). The Agents group holds one object per AI surface (more can be added beside `llms`). The field has a Generate button powered by [Agent Actions](./agent-actions.md). See [llms.txt and AI agents](../features/llms-txt.md)
 - `altText` (object, Agents group): `enabled` (describe new uploads) and `guidance` (AI steer) for automatic image alt text, plus the backfill panel (`AltTextInput`). Descriptions are written to `sanity.imageAsset.altText`, not to the singleton. See [Automatic alt text](../features/auto-alt-text.md)
-- `contactFormNotificationEmails` (array of emails, Email Notifications group). See [Contact form notifications](../features/contact-form-notifications.md)
+- `contactFormNotificationEmails` (array of emails, Email Notifications group). See [Form notifications](../features/contact-form-notifications.md)
 
 A field belongs here when it configures how the site is served, and on `site` when it is content that renders.
 
@@ -98,6 +99,7 @@ Defined in `sanity/schemas/documents/legal-page.tsx`. A policy document (privacy
 - `articleCategory`
 - `person`: an article's byline, and a routed document in its own right. `name`, `role`, a portrait, a `bio` rich text field, and `links` (`appLink` array, published as the Person's `sameAs` in structured data). Auto-slugs under `SANITY_AUTHOR_PATH_PREFIX` (`/blog/authors/{slug}`); the page is served by its own prefix route, and an article's byline opens the same profile as a panel (see [Dialogs and overlay routes](../features/dialogs-and-overlay-routes.md))
 - `contactFormSubmission` (API-only content, written by `/api/contact-form`)
+- `leadFormSubmission` (API-only content, written by `/api/lead-form`)
 
 ## Field Factories and Reusable Types
 
@@ -146,6 +148,13 @@ For **Lottie**:
 - **`aspectRatio`**: when `withCustomRatio` is enabled on the field, editors can override the ratio used in the frontend; the GROQ fragment prefers explicit `aspectRatio`, then Lottie dimensions, then defaults.
 
 **Runtime:** `src/sanity/media/SanityMedia.astro` branches on `type` and renders the matching `.astro` component: `SanityImage`, `SanityMuxVideo` (`<mux-player>`), `SanityNativeVideo`, `SanityLottie` (the `<dotlottie-wc>` web component), or `SanityRive` (a `rive-canvas` custom element wrapping `@rive-app/canvas`, `src/sanity/media/RiveElement.ts`). Loop/autoplay follow the CMS options; the Lottie and Rive elements are lazily hydrated via `lazyCustomElement` so their runtimes stay out of the initial bundle.
+
+**Responsive delivery:** `SanityImage.astro` builds the `srcset` in `src/features/sanity/media/image/utils.ts`, on the size math in the sibling `image/dimensions.ts` (env-free, so `image/dimensions.test.ts` can guard it). Two rules matter when reading a generated URL:
+
+- **A descriptor is the width the CDN actually returns**, never the width that was asked for. `DEFAULT_MAX_HEIGHT` shrinks a tall frame, and a candidate claiming more than it delivers would outrank the sharper ones below it. Candidates that collapse to the same width are emitted once.
+- **The ladder is `DEFAULT_SOURCE_WIDTHS`, cut where the source runs out and topped with the source's own width.** An image whose native width sits between two rungs still offers everything it has instead of dropping to the rung below.
+
+The ceilings live in `src/features/sanity/media/constants.ts`. `DEFAULT_MAX_HEIGHT` is a valve for extreme proportions, not a routine bound: because clamping a tall frame's height clamps its width too, it has to stay clear of the widest source divided by a portrait ratio.
 
 **Queries:** reuse **`MediaFragment`** from `src/features/sanity/media/fragment.ts` wherever `appMedia` is projected so `type`, Rive/Lottie URLs, dimensions, and options stay in sync with the UI.
 

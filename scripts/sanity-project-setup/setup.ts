@@ -77,10 +77,14 @@ function parseProjectId(obj: Record<string, unknown>): string {
 }
 
 function parseTokenKey(obj: Record<string, unknown>): string {
-  if (typeof obj.key !== "string" || !obj.key) {
-    throw new Error(`Unexpected token JSON (missing key): ${JSON.stringify(obj)}`);
+  // Older Sanity CLIs returned the secret as `key`; newer ones as `token`.
+  const value = typeof obj.key === "string" && obj.key ? obj.key : obj.token;
+
+  if (typeof value !== "string" || !value) {
+    throw new Error(`Unexpected token JSON (missing key/token): ${JSON.stringify(obj)}`);
   }
-  return obj.key;
+
+  return value;
 }
 
 async function main() {

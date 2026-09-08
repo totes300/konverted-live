@@ -1,0 +1,72 @@
+---
+import { type CaseStudyCardFragmentResult, isFullWidthCard, isVideoCard } from "~/features/case-study/fragment";
+import { cx } from "~/features/style/utils";
+import SanityImage from "../../sanity/media/SanityImage.astro";
+import SanityMedia from "../../sanity/media/SanityMedia.astro";
+
+// One row of the work grid: a stage that previews the project under the cursor, and the project's
+// name beside the services we ran on it. The card is a single link, so the whole row is the target.
+type Props = {
+  caseStudy: CaseStudyCardFragmentResult;
+  /** `h2` when the grid follows the page heading directly, `h3` under a section headline. */
+  headingLevel?: "h2" | "h3";
+  class?: string;
+};
+
+const { caseStudy, headingLevel: Heading = "h3", class: className } = Astro.props;
+
+const card = caseStudy.card;
+const isFull = isFullWidthCard(card);
+const isVideo = isVideoCard(card);
+type CardImage = NonNullable<NonNullable<CaseStudyCardFragmentResult["card"]>["images"]>[number];
+
+// The card's own image rests on top; the marked Image grid frames cut past it under the cursor.
+const images = isVideo
+  ? []
+  : [card?.image, ...(card?.images ?? [])].filter((image): image is NonNullable<CardImage> => Boolean(image?._id));
+const video = isVideo ? (card?.media ?? null) : null;
+
+// Two stage proportions, from the Figma work grid: a full row is wide and cinematic, a half row is
+// nearly square. Fixed per width rather than taken from the media, so a gallery can cut between
+// frames of different shapes without the row resizing under the cursor.
+const stageRatio = isFull ? "aspect-[16/9]" : "aspect-[6/5]";
+const sizes = isFull ? "100vw" : "100vw lg:50vw";
+
+const services = (caseStudy.services ?? []).filter((service): service is string => Boolean(service));
+---
+
+{
+  caseStudy.href && (images.length > 0 || video) && (
+    <case-study-card class={cx("block", className)} data-cycle-ms={card?.cycleMs ?? undefined}>
+      <a href={caseStudy.href} class="block">
+        <div class={cx("relative overflow-hidden bg-paper-deep", stageRatio)}>
+          {images.map((image, index) => (
+            <div data-card-frame data-active={index === 0 ? "" : undefined} class="absolute inset-0 opacity-0 data-active:opacity-100">
+              <SanityImage
+                media={{ type: "image", image, aspectRatio: isFull ? 16 / 9 : 6 / 5 }}
+                sizes={sizes}
+                class="size-full object-cover"
+              />
+            </div>
+          ))}
+          {video && (
+            <SanityMedia
+              media={video}
+              class="size-full object-cover"
+              videoProps={{ autoPlay: false, loop: true, muted: true, noControls: true }}
+            />
+          )}
+        </div>
+
+        <div class="mt-16 flex flex-col gap-4 lg:flex-row lg:items-baseline lg:justify-between lg:gap-24">
+          <Heading class="text-title uppercase text-ink">{caseStudy.title}</Heading>
+          {services.length > 0 && <p class="text-title text-ink-soft">({services.join(", ")})</p>}
+        </div>
+      </a>
+    </case-study-card>
+  )
+}
+
+<script>
+  import "./CaseStudyCardElement";
+</script>

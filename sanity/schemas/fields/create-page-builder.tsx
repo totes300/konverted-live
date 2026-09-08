@@ -129,11 +129,20 @@ export function PageBuilderSectionItem(props: ObjectItemProps) {
 // could ever use belongs in that section's own schema instead.
 const sectionLayoutFields = [
   defineField({
-    type: "boolean",
-    name: "fullBleed",
-    title: "Full Bleed",
-    initialValue: false,
-    description: "Run this section to both viewport edges instead of capping it to the page column. The page margin stays.",
+    type: "string",
+    name: "width",
+    title: "Width",
+    initialValue: "column",
+    options: {
+      layout: "radio",
+      list: [
+        { title: "Content column", value: "column" },
+        { title: "Full bleed — margin kept", value: "bleed" },
+        { title: "Edge to edge", value: "edge" },
+      ],
+    },
+    description:
+      "Content column caps the section to the page column. Full bleed drops the cap but keeps the page margin. Edge to edge runs the section to both viewport edges with no margin — the section lays out its own insides.",
   }),
 ];
 

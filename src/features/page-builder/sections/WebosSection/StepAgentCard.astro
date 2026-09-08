@@ -1,0 +1,41 @@
+---
+import Icon from "~/components/Icon/Icon.astro";
+
+// The AI Agent chat mockup. Every length is in cqw (percent of the card's own width), converted
+// from the Figma card's 281px artboard, so the whole composition scales as one picture.
+---
+
+<div class="@container aspect-[281/351] w-full">
+  <div class="flex size-full flex-col rounded-[2.85cqw] bg-paper-warm p-[5.69cqw]">
+  <div data-diagram-piece class="flex items-center gap-[3.91cqw]">
+    <Icon name="claude-spark" class="size-[8.54cqw]" />
+    <p class="text-[4.98cqw] text-black/50">AI Agent</p>
+  </div>
+
+  <div data-diagram-piece class="mt-[13.88cqw] flex w-[72.6cqw] items-start gap-[4.27cqw] rounded-[2.85cqw] bg-white p-[4.27cqw]">
+    <span class="mt-[0.9cqw] size-[4.98cqw] shrink-0 rounded-full bg-accent"></span>
+    <p class="text-[4.63cqw] leading-[1.5] text-black/50">Create a landing page for CFOs on speeding up reconciliation</p>
+  </div>
+
+  {/* One reply: the tool call and its progress belong together. */}
+  <div data-diagram-piece class="mt-[8.9cqw] flex flex-col items-end gap-[4.27cqw] self-end">
+    <div class="flex items-center gap-[3.91cqw]">
+      <span class="flex size-[7.83cqw] items-center justify-center rounded-[1.6cqw] bg-white">
+        <Icon name="webos-pixel" class="size-[4.27cqw] text-accent" />
+      </span>
+      <p class="text-[4.98cqw] text-black/50">Use WebOS</p>
+    </div>
+    <div class="flex items-center gap-[3.91cqw]">
+      <span data-spinner class="flex size-[5.7cqw]">
+        <Icon name="chat-spinner" class="size-full text-accent" />
+      </span>
+      <p class="text-[4.98cqw] text-black/50">Working on it...</p>
+    </div>
+  </div>
+
+  <div data-diagram-piece class="mt-auto flex h-[16.01cqw] items-center justify-between rounded-[2.85cqw] bg-white px-[4.98cqw]">
+    <p class="text-[4.98cqw] text-black/50">Message...</p>
+    <Icon name="chat-send" class="size-[3.56cqw] text-black/55" />
+  </div>
+</div>
+</div>

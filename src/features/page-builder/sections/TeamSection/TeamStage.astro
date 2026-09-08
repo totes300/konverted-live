@@ -1,0 +1,80 @@
+---
+import Icon from "~/components/Icon/Icon.astro";
+import Marquee from "~/components/Marquee/Marquee.astro";
+import type { TeamSectionQResult } from "~/sanity/types";
+import SanityMedia from "../../../../sanity/media/SanityMedia.astro";
+
+// The editorial layout: an ink stage with the copy up top and every moment on a filmstrip that
+// runs left on its own, so nobody has to scroll or drag to see the whole set.
+type Props = { content: NonNullable<NonNullable<TeamSectionQResult>["content"]> };
+
+const { content } = Astro.props;
+
+const moments = content.moments ?? [];
+
+// A moment on the strip plays as decoration, never as a player: it drifts past at the size of a
+// postcard, and the marquee's copies of it would each carry a control bar.
+const STRIP_VIDEO = { autoPlay: true, loop: true, muted: true, noControls: true };
+
+// A strip only reads as a strip while it moves: the loop runs whatever the set's width, and at a
+// walking pace, so the last moment is never more than a minute away. The marquee stands still and
+// scrolls by hand under reduced motion.
+const STRIP_SPEED = 60;
+---
+
+<div class="mx-auto w-full max-w-(--page-width) px-(--page-gutter)">
+  <p class="text-eyebrow uppercase">( {content.eyebrow} )</p>
+  <div class="mt-16 border-t border-paper/20 lg:mt-20" />
+
+  <div class="mt-48 lg:mt-72 lg:grid lg:grid-cols-12 lg:gap-x-24">
+    <div class="flex flex-col gap-32 lg:col-span-8 lg:col-start-5 lg:gap-40">
+      <h2 class="font-display text-headline-20 whitespace-pre-line">{content.headline}</h2>
+
+      {/* The brand's solid arrow, and the copy set a clear step in from it: the arrow is a mark in
+          the margin, not the first character of the paragraph. */}
+      {content.lede && (
+        <div class="flex gap-32 lg:gap-48">
+          <Icon name="solution-arrow" class="mt-4 aspect-[45/49] h-auto w-20 shrink-0 self-start lg:w-24" />
+          <p class="max-w-[52ch] text-body-20 text-paper/80">{content.lede}</p>
+        </div>
+      )}
+    </div>
+  </div>
+</div>
+
+{/* Every moment sits at one height and keeps its own width, so portraits and landscapes share the
+    row the way prints share a lightbox. The strip is decorative past the first pass: the copies
+    the loop adds are hidden from readers by the marquee. */}
+<Marquee loop="always" speed={STRIP_SPEED} gap={24} class="mt-64 w-full lg:mt-96">
+  <ul class="flex list-none items-start gap-12 lg:gap-24">
+    {moments.map((moment) => (
+      <li class="shrink-0">
+        <figure class="m-0 flex flex-col gap-12">
+          <div class="h-[62vw] lg:h-[30vw]">
+            <SanityMedia
+              media={moment.media}
+              class="h-full w-auto max-w-none"
+              imageProps={{ sizes: "90vw lg:45vw" }}
+              videoProps={STRIP_VIDEO}
+            />
+          </div>
+          {moment.caption && (
+            <figcaption class="flex items-center gap-12">
+              <span class="size-6 shrink-0 bg-paper" />
+              <span class="font-mono text-[0.6875rem] tracking-[0.14em] whitespace-nowrap text-paper/50 uppercase">{moment.caption}</span>
+            </figcaption>
+          )}
+        </figure>
+      </li>
+    ))}
+  </ul>
+</Marquee>
+
+{content.outro && (
+  <div class="mx-auto mt-64 w-full max-w-(--page-width) px-(--page-gutter) lg:mt-80">
+    <div class="border-t border-paper/20" />
+    <div class="mt-40 lg:grid lg:grid-cols-12 lg:gap-x-24">
+      <p class="text-body-20 whitespace-pre-line text-paper/80 lg:col-span-6 lg:col-start-7">{content.outro}</p>
+    </div>
+  </div>
+)}
