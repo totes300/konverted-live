@@ -51,14 +51,18 @@ const headlineEditAttribute = isDraftMode(Astro)
 
     The hero opens the page, so it cancels the page column's top padding and hangs its own opening
     distance off the header instead: the canvas's `top-[6.111vw]` is the only space above the
-    display line. */}
+    display line.
+
+    On a phone the hero and the picture under it have to share one screen, so the hero spends part of
+    the gap below it: the full `--section-gap` there pushes the cycler and the logo strip off the
+    fold, and reads as a hole under a lede that is already the end of the block. */}
 {
   section?.content && (
     <SectionFrame
       settings={section.settings}
       id={stegaClean(section.settings?.hash) ?? undefined}
       data-page-builder-section="heroSection"
-      class="lg:-mt-(--section-block)"
+      class="-mb-(--section-block) lg:mb-0 lg:-mt-(--section-block)"
     >
       {/* Canvas height is the Figma hero frame's own 421px (29.24vw at 1440), so the two display
           lines and the lede fit without dead air under the composition. */}

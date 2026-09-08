@@ -30,7 +30,8 @@ const headlineParts =
 
 const items = section?.content?.items ?? [];
 
-/** The card stage's Figma proportions (384x377 at the 1440 artboard); phones run 3:2, since three near-square cards at column width are three screens. */
+/** The card stage's Figma proportions (384x377 at the 1440 artboard), at every width: the crop is
+    cut to this ratio, so a phone box of any other shape would cover away a third of the picture. */
 const STAGE_RATIO = 384 / 377;
 ---
 
@@ -73,7 +74,7 @@ const STAGE_RATIO = 384 / 377;
               <p class="text-body-10 text-accent">( {(index + 1).toString().padStart(2, "0")} )</p>
               <div class="mt-24 flex flex-col gap-32 border-t border-line pt-36 lg:mt-36">
                 {/* The stage keeps its surface while the image is still to come. */}
-                <div class="aspect-[3/2] overflow-hidden bg-paper-deep lg:aspect-(--stage-ratio)" style={`--stage-ratio: ${STAGE_RATIO}`}>
+                <div class="aspect-(--stage-ratio) overflow-hidden bg-paper-deep" style={`--stage-ratio: ${STAGE_RATIO}`}>
                   {item.image && (
                     <SanityImage
                       media={{ type: "image", image: item.image, aspectRatio: STAGE_RATIO }}
