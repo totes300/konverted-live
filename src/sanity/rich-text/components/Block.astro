@@ -21,15 +21,15 @@ const indentStyle = getIndentStyle(node.markDefs);
       <slot />
     </h3>
   ) : style === "h4" ? (
-    <h3 class="font-pixel-square text-caption tracking-wider text-white/50 uppercase" data-text style={indentStyle}>
+    <h3 class="font-pixel-square text-caption tracking-wider uppercase opacity-50" data-text style={indentStyle}>
       <slot />
     </h3>
   ) : style === "caption" ? (
-    <div class="font-pixel-square text-caption text-white/50 empty:hidden" data-text style={indentStyle}>
+    <div class="font-pixel-square text-caption opacity-50 empty:hidden" data-text style={indentStyle}>
       <slot />
     </div>
   ) : (
-    <div class="text-white/75 empty:hidden" data-text style={indentStyle}>
+    <div class="empty:hidden" data-text style={indentStyle}>
       <slot />
     </div>
   )

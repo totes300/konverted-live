@@ -57,12 +57,12 @@ const components: SomePortableTextComponents = {
         splitSelector="[data-text]"
         animationDelay={animationDelay}
         viewport={viewport}
-        class={cx('sanity-rich-text flex flex-col gap-[1em]', className)}
+        class={cx('sanity-rich-text flex flex-col gap-[1em] text-ink-soft', className)}
       >
         <BasePortableText value={value} components={components} onMissingComponent={false} />
       </AnimatedText>
     ) : (
-      <div class={cx('sanity-rich-text', className)}>
+      <div class={cx('sanity-rich-text text-ink-soft', className)}>
         <BasePortableText value={value} components={components} onMissingComponent={false} />
       </div>
     ))

@@ -20,7 +20,10 @@
 }
 
 .sanity-rich-text code {
-  @apply rounded-4 bg-white/10 px-[0.4em] py-[0.1em] font-mono text-[0.9em];
+  @apply rounded-4 px-[0.4em] py-[0.1em] font-mono text-[0.9em];
+
+  /* Tints itself from the inherited text color, so it reads on a light and a dark surface alike. */
+  background-color: color-mix(in oklab, currentColor 10%, transparent);
 }
 
 .sanity-rich-text figure img,
